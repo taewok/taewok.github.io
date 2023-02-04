@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
 
   # Chirpy Jekyll Theme
@@ -104,3 +105,6 @@ This work is published under [MIT](https://github.com/cotes2020/jekyll-theme-chi
 
 [jb]: https://www.jetbrains.com/?from=jekyll-theme-chirpy
 [cn-donation]: https://sponsor.cotes.page/
+=======
+# taewok.github.io
+>>>>>>> af8a152bb5d04445c0bb5a6d0c2ce70269ae6416
