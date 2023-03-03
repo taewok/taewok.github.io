@@ -32,7 +32,7 @@
             event.data.direction === ModeToggle.ID) {
         /* global theme mode changed */
         const mode = event.data.message;
-        theme = (mode === ModeToggle.DARK_MODE ? lightTheme : darkTheme);
+        theme = (mode === ModeToggle.DARK_MODE ? darkTheme : lightTheme);
 
       } else {
         return;
