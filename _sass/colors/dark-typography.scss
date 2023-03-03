@@ -2,7 +2,7 @@
  * The main dark mode styles
  */
 
-@mixin dark-scheme {
+@mixin light-scheme {
   /* Framework color */
   --body-bg: var(--main-bg);
   --mask-bg: rgb(68, 69, 70);

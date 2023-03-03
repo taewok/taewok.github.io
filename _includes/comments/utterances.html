@@ -12,12 +12,12 @@
     const iframe = "iframe.utterances-frame";
     const lightTheme = "github-light";
     const darkTheme = "github-dark";
-    let initTheme = darkTheme;
+    let initTheme = lightTheme;
 
     if ($("html[data-mode=dark]").length > 0
         || ($("html[data-mode]").length == 0
             && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      initTheme = lightTheme;
+      initTheme = darkTheme;
     }
 
     addEventListener("message", (event) => {
