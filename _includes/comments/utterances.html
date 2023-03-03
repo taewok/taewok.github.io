@@ -10,14 +10,14 @@
   $(function() {
     const origin = "https://utteranc.es";
     const iframe = "iframe.utterances-frame";
-    const lightTheme = "github-dark";
-    const darkTheme = "github-light";
-    let initTheme = lightTheme;
+    const lightTheme = "github-light";
+    const darkTheme = "github-dark";
+    let initTheme = darkTheme;
 
     if ($("html[data-mode=dark]").length > 0
         || ($("html[data-mode]").length == 0
             && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      initTheme = darkTheme;
+      initTheme = lightTheme;
     }
 
     addEventListener("message", (event) => {
@@ -32,7 +32,7 @@
             event.data.direction === ModeToggle.ID) {
         /* global theme mode changed */
         const mode = event.data.message;
-        theme = (mode === ModeToggle.DARK_MODE ? darkTheme : lightTheme);
+        theme = (mode === ModeToggle.DARK_MODE ? lightTheme : darkTheme);
 
       } else {
         return;
