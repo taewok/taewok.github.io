@@ -8,7 +8,7 @@ tags: [react, react-github-calendar] #소문자만 가능
 ---
 
 ## <b style="border-bottom:2px solid gray">사용하게된 이유</b>
-<p>백엔드에서 user에 github 정보를 받아오는데 잔디까지 가져오는데 어려움이 있어 직접 알아보니 프론트에서 <strong style="color:orange">react-github-calendar</strong>라는 라이브러리를 사용하면 간편하게 잔디를 가져올 수 있다고 한다.</p>
+<p>백엔드에서 user에 github 정보를 받아오는데 잔디까지 가져오는데 어려움이 있어 직접 알아보니 프론트에서 <strong style="color:#ff526f">react-github-calendar</strong>라는 라이브러리를 사용하면 간편하게 잔디를 가져올 수 있다고 한다.</p>
 
 ***
 

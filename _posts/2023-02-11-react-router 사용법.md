@@ -8,7 +8,7 @@ tags: [react,react-router] #소문자만 가능
 ---
 
 ## <b style="border-bottom:2px solid gray">react-router란?</b>
-<p>a태그를 사용해 페이지 이동을 한다면 새로고침과 같은 현상이 일어난다. 하지만 <strong style="color:orange">react-router</strong>는 신규 페이지를 렌더링 하지 않고 url 주소에 따라 선택된 데이터를 하나의 페이지에서 렌더링 해주는 라이브러리 라고 볼 수 있다.</p>
+<p>a태그를 사용해 페이지 이동을 한다면 새로고침과 같은 현상이 일어난다. 하지만 <strong style="color:#ff526f">react-router</strong>는 신규 페이지를 렌더링 하지 않고 url 주소에 따라 선택된 데이터를 하나의 페이지에서 렌더링 해주는 라이브러리 라고 볼 수 있다.</p>
 
 ***
 
@@ -45,8 +45,8 @@ function App() {
 }
 export default App;
 ```
-+ <strong>BrowserRouter:</strong> 모든 <strong style="color:orange">Routes,Route</strong>의 최상위에서 감싸줘야 한다. SPA의 장점인 브라우저가 깜빡이지 않고 다른 페이지로 이동할 수 있게 만들어준다. 
-+ <strong>Routes:</strong> 여러 <strong style="color:orange">Route</strong>를 감싸서 그 중 규칙이 일치하는 <strong style="color:orange">Route</strong> 단 하나만을 렌더링 시켜주는 역할을 한다. 
++ <strong>BrowserRouter:</strong> 모든 <strong style="color:#ff526f">Routes,Route</strong>의 최상위에서 감싸줘야 한다. SPA의 장점인 브라우저가 깜빡이지 않고 다른 페이지로 이동할 수 있게 만들어준다. 
++ <strong>Routes:</strong> 여러 <strong style="color:#ff526f">Route</strong>를 감싸서 그 중 규칙이 일치하는 <strong style="color:#ff526f">Route</strong> 단 하나만을 렌더링 시켜주는 역할을 한다. 
 + <strong>Route</strong> 
     - <b>path:</b> path 속성에는 원하는 경로를 입력 
         - ex) "/" => "http://localhost:3000/"

@@ -57,7 +57,7 @@ function App() {
 export default App;
 ```
 
-<p><b style="color:orange">import {AiFillLock} from "react-icons/ai"</b>이런 식으로 불러오는데 2가지만 기억하자</p>
+<p><b style="color:#ff526f">import {AiFillLock} from "react-icons/ai"</b>이런 식으로 불러오는데 2가지만 기억하자</p>
 
 1. 가져오고 싶은 아이콘 이름을 {}안에 넣는다.
 2. "react-icons"이 기본 주소인데 아이콘 이름 맨 앞 두글자를 소문자로 추가해줘야 한다. ex)"react-icons/ai"

@@ -12,7 +12,7 @@ tags: [react,onClick] #소문자만 가능
 ***
 ## <b style="border-bottom:2px solid gray">onClick 기본 사용법</b>
 ### App.js
-- onClick은 클릭했을떄 함수를 실행하는 것 이기 떄문에 <strong style="color:orange">()=></strong>를 사용해 함수를 만들어준다.
+- onClick은 클릭했을떄 함수를 실행하는 것 이기 떄문에 <strong style="color:#ff526f">()=></strong>를 사용해 함수를 만들어준다.
 ```js
 function App() {
   return (
