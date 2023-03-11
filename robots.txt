@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://taewok.github.io/sitemap.xml
