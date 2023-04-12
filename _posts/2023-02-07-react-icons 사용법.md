@@ -1,7 +1,7 @@
 ---
 title: "[React] react-icons 사용하기"
 date: 2023-02-07T17:4:000
-categories: [react]
+categories: [React]
 tags: [react] #소문자만 가능
 ---
 

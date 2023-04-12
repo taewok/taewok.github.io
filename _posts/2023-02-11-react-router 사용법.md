@@ -1,7 +1,7 @@
 ---
 title: "[React] react-router 사용하기"
 date: 2023-02-11T16:33:000
-categories: [react,react-router]
+categories: [React]
 tags: [react,react-router] #소문자만 가능
 ---
 

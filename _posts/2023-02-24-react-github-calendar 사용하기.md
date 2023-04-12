@@ -1,7 +1,7 @@
 ---
 title: "[React] react-github-calendar 사용하기"
 date: 2023-02-24T18:34:000
-categories: [react]
+categories: [React]
 tags: [react, react-github-calendar] #소문자만 가능
 ---
 

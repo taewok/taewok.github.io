@@ -1,7 +1,7 @@
 ---
 title: "[React] onClick 사용하기"
 date: 2023-02-15T11:25:000
-categories: [react]
+categories: [React]
 tags: [react,onClick] #소문자만 가능
 ---
 
