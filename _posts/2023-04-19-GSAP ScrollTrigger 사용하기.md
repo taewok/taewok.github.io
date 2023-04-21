@@ -167,3 +167,29 @@ markers: {
 <script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
 
 ### <b style="font-size:22px">✅ scrub</b>
+
+<blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">
+<span>기본값은 false이며 duration이나 delay에 관계없이 target인 요소에 스크롤이 요소 이전으로 돌아가면 애니메이션 역시 되돌아가는 기능</span>
+ <li style="color:#ff526f">애니메이션이 start하는 지점부터 end하는 지점까지 자연스럽게 이어진다. </li>
+</blockquote>
+
+<p class="codepen" data-height="300" data-default-tab="js,result" data-slug-hash="KKGNdxQ" data-user="taewok" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/taewok/pen/KKGNdxQ">
+  scrollTrigger scrub</a> by taewok (<a href="https://codepen.io/taewok">@taewok</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+<br/>
+<p>수치를 숫자로 줬을떄</p>
+
+<p class="codepen" data-height="300" data-default-tab="js,result" data-slug-hash="rNqWybV" data-user="taewok" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+  <span>See the Pen <a href="https://codepen.io/taewok/pen/rNqWybV">
+  2.scrollTrigger scrub</a> by taewok (<a href="https://codepen.io/taewok">@taewok</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
+지적이나 피드백은 언제나 환영입니다.</p>
