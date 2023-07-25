@@ -6,13 +6,15 @@ tags: [react] #소문자만 가능
 ---
 
 <style type="text/css">
-    .center{
-        text-align:center;
-        font-size:1.5rem;
+    hr{
+        margin: 60px 0;
     }
     blockquote{
         font-size:1.2rem;
-        background: #F4F4F4;
+        background: #f9f9f9;
+        color:black; 
+        padding: 0.5rem 1rem; 
+        border-left: 5px solid #5cc55b;
     }
     blockquote>h3{
         margin:0;
@@ -23,12 +25,12 @@ tags: [react] #소문자만 가능
 
 ## <b style="border-bottom:2px solid gray" class="h2">패스 파라미터(path parameter)란?</b>
 
-<h3><blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">정의
+<h3><blockquote>정의
 </blockquote></h3>
 
 - 패스 파라미터(Path Parameter)는 URL 경로에 변수를 포함하여 주로 동적인 데이터를 전달하는 방법입니다.
 
-<h3><blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">특징
+<h3><blockquote>특징
 </blockquote></h3>
 
 - URL 경로에 데이터를 포함하기 때문에 직관적이고 읽기 쉬운 URL을 제공합니다.
@@ -36,7 +38,7 @@ tags: [react] #소문자만 가능
 - URL 구조가 깔끔하며, 검색 엔진에서 잘 색인됩니다.
 - 캐싱이나 보안에 유리합니다.
 
-<h3><blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">사용상황
+<h3><blockquote>사용상황
 </blockquote></h3>
 
 - 블로그 포스트, 상품 정보, 사용자 프로필 등의 개별 리소스를 조회하는 경우에 패스 파라미터를 활용합니다.
