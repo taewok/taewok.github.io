@@ -5,25 +5,9 @@ categories: [React]
 tags: [react] #소문자만 가능
 ---
 
-<style type="text/css">
-    hr{
-        margin: 60px 0;
-    }
-    blockquote{
-        font-size:1.2rem;
-        background: #f9f9f9;
-        color:black; 
-        padding: 0.5rem 1rem; 
-        border-left: 5px solid #5cc55b;
-    }
-    blockquote>h3{
-        margin:0;
-    }
-</style>
-
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">쿼리 스트링(Query String)이란?</b>
+## <b>쿼리 스트링(Query String)이란?</b>
 
 <h3><blockquote>정의
 </blockquote></h3>
@@ -44,7 +28,7 @@ tags: [react] #소문자만 가능
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">쿼리 스트링(Query String) 형태</b>
+## <b>쿼리 스트링(Query String) 형태</b>
 
 <img src="https://github.com/TWOGATH3R/twogather-web-frontend/assets/88264006/235e794f-72de-4bdb-8271-a314519f6648">
 
@@ -55,7 +39,7 @@ tags: [react] #소문자만 가능
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">사용 예시</b>
+## <b>사용 예시</b>
 
 <h3><blockquote>Routing 하기
 </blockquote></h3>
@@ -122,7 +106,7 @@ export default SearchResult;
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## <b>마치며</b>
 
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
 지적이나 피드백은 언제나 환영입니다.</p>

@@ -5,22 +5,6 @@ categories: [React]
 tags: [react] #소문자만 가능
 ---
 
-<style type="text/css">
-    hr{
-        margin: 60px 0;
-    }
-    blockquote{
-        font-size:1.2rem;
-        background: #f9f9f9;
-        color:black; 
-        padding: 0.5rem 1rem; 
-        border-left: 5px solid #5cc55b;
-    }
-    blockquote>h3{
-        margin:0;
-    }
-</style>
-
 ---
 
 ## <b style="border-bottom:2px solid gray" class="h2">패스 파라미터(path parameter)란?</b>

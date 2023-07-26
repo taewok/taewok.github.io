@@ -5,16 +5,6 @@ categories: [Error]
 tags: [error] #소문자만 가능
 ---
 
-<style type="text/css">
-    .center{
-        text-align:center;
-        font-size:1.5rem;
-    }
-    blockquote{
-        font-size:1.1rem;
-    }
-</style>
-
 ---
 
 ## <b style="border-bottom:2px solid gray" class="h2">Warning: You provided a value prop to a form field without an onChange handler. 발생</b>

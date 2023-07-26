@@ -5,16 +5,6 @@ categories: [Axios]
 tags: [axios] #소문자만 가능
 ---
 
-<style type="text/css">
-    .center{
-        text-align:center;
-        font-size:1.5rem;
-    }
-    blockquote{
-        font-size:1.2rem;
-    }
-</style>
-
 ---
 
 ## <b style="border-bottom:2px solid gray" class="h2">interceptors란?</b>
