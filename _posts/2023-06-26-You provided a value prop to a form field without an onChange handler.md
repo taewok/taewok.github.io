@@ -53,6 +53,8 @@ const Info = () => {
 export default Info;
 ```
 
+---
+
 ## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
 
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>

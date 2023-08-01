@@ -25,6 +25,8 @@ import { useQuery } from "react-query";
 
 react-query가 V4가 나오며 Tanstack Query로 이름이 바뀌어서 'npm i @tanstack/react-query' 설치를 했었는데 아직도 import를 'react-query'로 했기 때문에 발생한 오류였다. 그래서 여기저기 잘못된 import를 '@tanstack/react-query' 변경해주었더니 Error가 해결되었다.
 
+---
+
 ## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
 
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>

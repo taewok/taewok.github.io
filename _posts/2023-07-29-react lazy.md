@@ -55,6 +55,8 @@ function MyAppComponent() {
 
 - <b>fallback</b>: <strong>lazy()</strong>로 인해 코드 스플리팅된 컴포넌트가 로드되기를 기다리는 동안 보여줄 컨텐츠를 지정하는데 사용됩니다.
 
+---
+
 ## <b>마치며</b>
 
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>

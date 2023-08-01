@@ -70,6 +70,8 @@ export default App;
 
 위와 같이 router를 설정 해주고 button을 누르고 이동해<br/> useParams을 사용하여 미리 정해둔 변수명을 추출할 수 있다
 
+---
+
 ## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
 
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>

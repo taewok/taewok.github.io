@@ -66,6 +66,8 @@ export default App;
 ![image](https://user-images.githubusercontent.com/88264006/217201288-116989e4-84c7-4055-ae65-65bf5e922f44.png)
 <br/>
 
+---
+
 ## <b style="border-bottom:2px solid gray">마치며</b>
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
 지적이나 피드백은 언제나 환영입니다.</p>

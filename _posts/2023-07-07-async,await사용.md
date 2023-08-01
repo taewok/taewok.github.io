@@ -63,6 +63,8 @@ const Name = async () => {
 
 일반적으로 await의 대상이 되는 비동기 처리 코드는 Axios 등 프로미스를 반환하는 API 호출 함수이다.
 
+---
+
 ## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
 
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>

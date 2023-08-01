@@ -23,3 +23,10 @@ npx http-server
 <p>위 코드를 터미널에 입력하고 엔터를 치면 아래와 같은 결과가 뜬다.</p>
 <img src="https://user-images.githubusercontent.com/88264006/219854246-ee0eb20d-33aa-4c02-a298-45d94cc79aed.png" alt="npx http-server"/>
 <p>그럼 주소가 2개 뜨는데 하나 골라서 주소창에 입력하고 들어가면 에러 없이 index.html 파일을 로컬에 실행시킬 수 있다.</p>
+
+---
+
+## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+
+<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
+지적이나 피드백은 언제나 환영입니다.</p>
