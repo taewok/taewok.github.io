@@ -2,7 +2,7 @@
 title: "[JavaScript] Gsap ScrollTrigger사용하기"
 date: 2023-04-19T14:12:000
 categories: [JavaScript]
-tags: [JavaScript] #소문자만 가능
+tags: [javascript] #소문자만 가능
 ---
 
 ---

@@ -2,7 +2,7 @@
 title: "[JavaScript] 호이스팅(Hoisting)이란?"
 date: 2023-07-07T18:35:000
 categories: [JavaScript]
-tags: [javaScript] #소문자만 가능
+tags: [javascript] #소문자만 가능
 ---
 
 ---

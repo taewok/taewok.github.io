@@ -1,8 +1,8 @@
 ---
-title: "[Axios] axios interceptors 사용하기"
+title: "[JavaScript] axios interceptors 사용하기"
 date: 2023-06-19T19:49:000
-categories: [Axios]
-tags: [axios] #소문자만 가능
+categories: [JavaScript]
+tags: [javascript] #소문자만 가능
 ---
 
 ---

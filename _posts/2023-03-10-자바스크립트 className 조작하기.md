@@ -2,7 +2,7 @@
 title: "[JavaScript] className 읽기/추가/변경/삭제"
 date: 2023-03-10T17:01:000
 categories: [JavaScript]
-tags: [JavaScript] #소문자만 가능
+tags: [javascript] #소문자만 가능
 ---
 
 ---

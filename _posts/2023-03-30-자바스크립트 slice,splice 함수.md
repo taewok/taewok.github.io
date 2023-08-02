@@ -2,7 +2,7 @@
 title: "[JavaScript] slice/splice 함수?"
 date: 2023-03-30T11:10:000
 categories: [JavaScript]
-tags: [JavaScript] #소문자만 가능
+tags: [javascript] #소문자만 가능
 ---
 
 ---

@@ -2,7 +2,7 @@
 title: "[JavaScript] async,await 사용하기"
 date: 2023-07-07T16:18:000
 categories: [JavaScript]
-tags: [javaScript] #소문자만 가능
+tags: [javascript] #소문자만 가능
 ---
 
 ---
