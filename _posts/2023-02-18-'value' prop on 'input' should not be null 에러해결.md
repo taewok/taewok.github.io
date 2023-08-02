@@ -1,7 +1,7 @@
 ---
 title: "[React] 'value' prop on 'input' should not be null 에러발생"
 date: 2023-02-18T14:31:000
-categories: [React,error]
+categories: [React,Error]
 tags: [react,error] #소문자만 가능
 ---
 

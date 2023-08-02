@@ -2,7 +2,7 @@
 title: "[JavaScript] setTimeout() setInterval() 사용하기"
 date: 2023-03-11T21:01:000
 categories: [JavaScript]
-tags: [JavaScript] #소문자만 가능
+tags: [javascript] #소문자만 가능
 ---
 
 ---

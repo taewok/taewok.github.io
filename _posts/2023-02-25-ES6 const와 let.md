@@ -2,7 +2,7 @@
 title: "[JavaScript] ES6 const와 let 이해하기"
 date: 2023-02-25T19:30:000
 categories: [JavaScript]
-tags: [JavaScript,let,const] #소문자만 가능
+tags: [javascript,let,const] #소문자만 가능
 ---
 
 ---

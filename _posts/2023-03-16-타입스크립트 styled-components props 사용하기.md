@@ -1,8 +1,8 @@
 ---
-title: "[TypeScropt] 타입스크립트 styled-components props 사용하기"
+title: "[TypeScript] 타입스크립트 styled-components props 사용하기"
 date: 2023-03-16T17:01:000
-categories: [TypeScropt]
-tags: [typeScropt] #소문자만 가능
+categories: [TypeScript]
+tags: [typescript] #소문자만 가능
 ---
 
 ---
