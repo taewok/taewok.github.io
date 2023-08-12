@@ -1,5 +1,5 @@
 ---
-title: "[Programmers] 프로그래머스 코딩테스트 연습 Lv.1 <추억 점수>"
+title: "[Programmers] 프로그래머스 코딩테스트 연습 Lv.1 추억 점수"
 date: 2023-08-03T16:58:000
 categories: [Programmers]
 tags: [programmers] #소문자만 가능
