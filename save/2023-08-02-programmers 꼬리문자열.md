@@ -1,6 +1,5 @@
 ---
-title: "[Programmers] 프로그래머스 코딩테스트 연습 Lv.0 \<꼬리 문자열
-\>"
+title: "[Programmers] 프로그래머스 코딩테스트 연습 Lv.0 꼬리 문자열"
 date: 2023-08-02T19:06:000
 categories: [Programmers]
 tags: [programmers] #소문자만 가능
