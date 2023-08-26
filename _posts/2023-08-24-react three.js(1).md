@@ -1,5 +1,5 @@
 ---
-title: "[three.js] React에서 three.js 사용(1)"
+title: "[three.js] React에서 three.js 사용(라이브러리 설치와 직육면체 생성)"
 date: 2023-08-24T17:04:000
 categories: [three.js, React]
 tags: [three.js, react] #소문자만 가능
