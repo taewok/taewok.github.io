@@ -8,96 +8,126 @@ layout: compress
 {% include assets-origin.html %}
 
 {% capture prefer_mode %}
-  {% if site.theme_mode %}
-    data-mode="{{ site.theme_mode }}"
-  {% endif %}
+{% if site.theme_mode %}
+data-mode="{{ site.theme_mode }}"
+{% endif %}
 {% endcapture %}
 
 <!-- `site.alt_lang` can specify a language different from the UI -->
-<html lang="{{ site.alt_lang | default: site.lang }}"{{ prefer_mode }}>
+<html lang="{{ site.alt_lang | default: site.lang }}" {{ prefer_mode }}>
 
-  {% include head.html %}
+{% include head.html %}
 
-  <body data-spy="scroll" data-target="#toc" data-topbar-visible="true">
+<body data-spy="scroll" data-target="#toc" data-topbar-visible="true">
 
-    {% include sidebar.html %}
+  {% include sidebar.html %}
 
-    {% include topbar.html %}
+  {% include topbar.html %}
 
-    <style type="text/css">
-      hr{
-          margin: 60px 0;
-      }
-      blockquote{
-          font-size:1.2rem;
-          background: #f9f9f9;
-          color:black; 
-          padding: 0.5rem 1rem; 
-          border-left: 5px solid #5cc55b;
-      }
-      blockquote>h3{
-          margin:0;
-      }
-      h2>span>b{
-        border-bottom:2px solid gray
-      }
-      strong{
-        margin: 0 2px;
-        color: #e96900;
-        padding: 3px 5px;
-        font-size: 0.8em;
-        border-radius: 2px;
-        font-family: "Source Code Pro", Consolas, Monaco, Menlo, Consolas, monospace;
-        background-color: #f8f8f8;
-      }
-      .center{
-        text-align:center;
-        font-size:1.5rem;
-      }
+  <style type="text/css">
+    @font-face {
+      font-family: 'Human';
+      src: url('URL_TO_YOUR_WOFF_FONT_FILE.woff') format('woff');
+      /* 다른 포맷(OTF, TTF)도 지원하는 경우, 여기에 추가할 수 있습니다. */
+    }
+
+    * {
+      font-family: 'Human', sans-serif;
+    }
+
+    .post-content>hr {
+      margin: 60px 0;
+    }
+
+    .post-content>h2,
+    h3,
+    h4 {
+      font-weight: 600;
+    }
+
+    .post-content>ol {
+      padding-inline-start: 5px;
+    }
+
+    blockquote {
+      font-size: 1.2rem;
+      background: #f9f9f9;
+      color: black;
+      padding: 0.5rem 1rem;
+      border-left: 5px solid #5cc55b;
+    }
+
+    .post-content>blockquote>h3 {
+      margin: 0;
+    }
+
+    .post-content {
+      font-weight: 600;
+    }
+
+    .post-content>h2>span>b {
+      border-bottom: 2px solid gray
+    }
+
+
+    .post-content>strong {
+      margin: 0 2px;
+      color: #e96900;
+      padding: 3px 5px;
+      font-size: 0.8em;
+      border-radius: 2px;
+      /* font-family: "Cafe24Ssurround"; */
+      background-color: #f8f8f8;
+    }
+
+    .post-content>.center {
+      text-align: center;
+      font-size: 1.5rem;
+    }
   </style>
 
-    <div id="main-wrapper" class="d-flex justify-content-center">
-      <div id="main" class="container pl-xl-4 pr-xl-4">
-        {{ content }}
-      </div>
+  <div id="main-wrapper" class="d-flex justify-content-center">
+    <div id="main" class="container pl-xl-4 pr-xl-4">
+      {{ content }}
+    </div>
 
-      {% include search-results.html %}
+    {% include search-results.html %}
 
-    </div> <!-- #main-wrapper -->
+  </div> <!-- #main-wrapper -->
 
-    {% include footer.html %}
+  {% include footer.html %}
 
-    {% if page.mermaid %}
-      {% include mermaid.html %}
-    {% endif %}
+  {% if page.mermaid %}
+  {% include mermaid.html %}
+  {% endif %}
 
-    <div id="mask"></div>
+  <div id="mask"></div>
 
-    <a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button">
-      <i class="fas fa-angle-up"></i>
-    </a>
+  <a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button">
+    <i class="fas fa-angle-up"></i>
+  </a>
 
-    {% if site.pwa.enabled %}
-      <div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true"
-        data-animation="true" data-autohide="false">
-        <div class="toast-header">
-          <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="toast-body text-center pt-0">
-          <p class="pl-2 pr-2 mb-3">{{ site.data.locales[site.lang].notification.update_found }}</p>
-          <button type="button" class="btn btn-primary" aria-label="Update">
-            {{ site.data.locales[site.lang].notification.update }}
-          </button>
-        </div>
-      </div>
-    {% endif %}
+  {% if site.pwa.enabled %}
+  <div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true"
+    data-autohide="false">
+    <div class="toast-header">
+      <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body text-center pt-0">
+      <p class="pl-2 pr-2 mb-3">{{ site.data.locales[site.lang].notification.update_found }}</p>
+      <button type="button" class="btn btn-primary" aria-label="Update">
+        {{ site.data.locales[site.lang].notification.update }}
+      </button>
+    </div>
+  </div>
+  {% endif %}
 
-    {% include search-loader.html %}
+  {% include search-loader.html %}
 
-    {% include js-selector.html %}
+  {% include js-selector.html %}
 
-  </body>
+</body>
 
 </html>
