@@ -111,7 +111,7 @@ const data = [
 
 ## 스타일링
 
-<p>React Native에서는 CSS와 비슷한 스타일 속성 및 값들을 사용하며(background-color==backgroundColor) 스타일을 최적화하기 위해 StyleSheet.create 함수를 제공하는데 이 함수를 사용하여 스타일 객체를 생성하고 컴포넌트의 style 속성에 적용할 수 있다..</p>
+<p>React Native에서는 CSS와 비슷한 스타일 속성 및 값들을 사용하며(background-color==backgroundColor) 스타일을 최적화하기 위해 StyleSheet.create 함수를 제공하는데 이 함수를 사용하여 스타일 객체를 생성하고 컴포넌트의 style 속성에 적용할 수 있다.</p>
 
 ```jsx
 import { StyleSheet, View, Text } from "react-native";
