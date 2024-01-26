@@ -26,13 +26,13 @@ data-mode="{{ site.theme_mode }}"
 
   <style type="text/css">
     @font-face {
-      font-family: 'Human';
-      src: url('URL_TO_YOUR_WOFF_FONT_FILE.woff') format('woff');
-      /* 다른 포맷(OTF, TTF)도 지원하는 경우, 여기에 추가할 수 있습니다. */
-    }
-
+    font-family: 'NPSfontBold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/NPSfontBold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
     * {
-      font-family: 'Human', sans-serif;
+      font-family: 'NPSfontBold';
     }
 
     .post-content>hr {
@@ -50,7 +50,7 @@ data-mode="{{ site.theme_mode }}"
     }
 
     blockquote {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       background: #f9f9f9;
       color: black;
       padding: 0.5rem 1rem;
@@ -62,15 +62,11 @@ data-mode="{{ site.theme_mode }}"
     }
 
     .post-content {
-      font-weight: 600;
+      font-size: 1rem;
     }
 
     .post-content>h2>span>b {
       border-bottom: 2px solid gray
-    }
-
-    p {
-      font-size: 1rem;
     }
 
     strong {
@@ -79,13 +75,7 @@ data-mode="{{ site.theme_mode }}"
       padding: 3px 5px;
       font-size: 0.8em;
       border-radius: 2px;
-      /* font-family: "Cafe24Ssurround"; */
       background-color: #f8f8f8;
-    }
-
-    .post-content>.center {
-      text-align: center;
-      font-size: 1.5rem;
     }
   </style>
 
