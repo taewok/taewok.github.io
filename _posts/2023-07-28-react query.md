@@ -1,7 +1,7 @@
 ---
 title: "[React] react-query 사용하기"
 date: 2023-07-28T16:19:000
-categories: [React]
+categories: [react]
 tags: [react] #소문자만 가능
 ---
 
@@ -155,7 +155,7 @@ const { mutate: getUserInfo, isLoading: userInfoLoading } = useMutation(
   {
     onSuccess: (res) => {},
     onError: (err) => {},
-  }
+  },
 );
 
 useEffect(() => {
@@ -163,7 +163,7 @@ useEffect(() => {
 }, []);
 ```
 
-- <b>mutate</b>:  mutate 메서드를 호출하여 비동기 작업을 원하는 때에 호출할 수 있다.
+- <b>mutate</b>: mutate 메서드를 호출하여 비동기 작업을 원하는 때에 호출할 수 있다.
 
 ---
 

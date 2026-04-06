@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] axios interceptors 사용하기"
 date: 2023-06-19T19:49:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 
@@ -47,7 +47,7 @@ axios.interceptors.request.use(
   function (error) {
     // 요청 오류가 있는 작업 수행
     return Promise.reject(error);
-  }
+  },
 );
 ```
 
@@ -67,7 +67,7 @@ axios.interceptors.response.use(
   function (error) {
     // 응답 오류가 있는 작업 수행
     return Promise.reject(error);
-  }
+  },
 );
 ```
 
@@ -85,7 +85,7 @@ const myInterceptors = axios.interceptors.response.use(
   function (error) {
     // 응답 오류가 있는 작업 수행
     return Promise.reject(error);
-  }
+  },
 );
 
 axios.interceptors.request.eject(myInterceptor);
@@ -109,7 +109,7 @@ api.interceptors.response.use(
   function (error) {
     // 응답 오류가 있는 작업 수행
     return Promise.reject(error);
-  }
+  },
 );
 ```
 

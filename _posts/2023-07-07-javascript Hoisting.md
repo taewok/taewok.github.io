@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 호이스팅(Hoisting)이란?"
 date: 2023-07-07T18:35:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 
@@ -16,12 +16,12 @@ tags: [javascript] #소문자만 가능
 ```js
 //눈에 보이는 실제 코드
 console.log(a); // undefined
-var a = "A"; // var 변수 
+var a = "A"; // var 변수
 ```
 
 ```js
 //호이스팅 된 코드
-var a; 
+var a;
 console.log(a);
 a = "A";
 ```
@@ -37,8 +37,8 @@ var a를 상단으로 호이스팅했기 때문에 변수 선언 전에 console.
 변수의 재선언/재할당 모두 가능, Hoisting이 되어 변수를 선언하기 전에 참조할 수 있다. 하지만 let,const를 더 권한다
 
 ```js
-console.log(b) // undefined
-var b = "something"
+console.log(b); // undefined
+var b = "something";
 ```
 
 - let
@@ -46,8 +46,8 @@ var b = "something"
 변수의 재선언은 불가능하나 재할당은 가능, 변수를 선언하기 전에 참조할 수 없으나, 변수를 선언할 시 할당을 반드시 할 필요는 없다.
 
 ```js
-console.log(b) // Error: Uncaught ReferenceError: b is not defined
-let b = "something"
+console.log(b); // Error: Uncaught ReferenceError: b is not defined
+let b = "something";
 ```
 
 - const
@@ -65,4 +65,3 @@ const c = 0;
 
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
 지적이나 피드백은 언제나 환영입니다.</p>
-

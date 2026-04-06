@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 자바스크립트 this의 동작 원리 정리 (일반 함수 vs 화살표 함수)"
 date: 2023-02-18T19:10:00
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript, this, es6, arrow-function]
 description: "JavaScript에서 this가 결정되는 원리(호출 방식)와 일반 함수 내부의 this, 그리고 화살표 함수에서의 this 차이점을 예제 코드를 통해 상세히 알아봅니다."
 custom_style: true

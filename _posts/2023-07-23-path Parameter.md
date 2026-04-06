@@ -1,7 +1,7 @@
 ---
 title: "[React] 패스 파라미터(path parameter)란?"
 date: 2023-07-23T16:00:000
-categories: [React]
+categories: [react]
 tags: [react] #소문자만 가능
 ---
 

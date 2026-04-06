@@ -1,7 +1,7 @@
 ---
 title: "[TypeScript] 리액트 라우터(react-router-dom) 설치 및 타입 활용 가이드"
 date: 2023-03-01T16:01:00
-categories: [TypeScript, React]
+categories: [typescript, react]
 tags: [typescript, react, react-router-dom, frontend]
 description: "TypeScript 프로젝트에서 react-router-dom을 설치하는 방법(@types)과 useParams 등의 Hook을 타입 안전하게 사용하는 방법을 정리합니다."
 custom_style: true

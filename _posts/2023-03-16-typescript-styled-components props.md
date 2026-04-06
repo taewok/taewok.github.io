@@ -1,7 +1,7 @@
 ---
 title: "[TypeScript] styled-components에서 Props 타입 지정하기"
 date: 2023-03-16T17:01:000
-categories: [TypeScript]
+categories: [typescript]
 tags: [typescript] #소문자만 가능
 ---
 

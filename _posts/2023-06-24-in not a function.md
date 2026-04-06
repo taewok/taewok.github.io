@@ -1,7 +1,7 @@
 ---
 title: "[Error] typeScript에서 ~~ is not a function"
 date: 2023-06-24T18:13:000
-categories: [Error]
+categories: [error]
 tags: [error] #소문자만 가능
 ---
 

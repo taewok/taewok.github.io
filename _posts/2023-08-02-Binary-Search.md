@@ -1,7 +1,7 @@
 ---
 title: "[Algorithm] 이진 탐색(Binary Search) 알고리즘 이해하기"
 date: 2023-08-02T17:30:00
-categories: [Algorithm, JavaScript]
+categories: [algorithm, javascript]
 tags: [algorithm, javascript, binary-search, search-algorithm]
 ---
 

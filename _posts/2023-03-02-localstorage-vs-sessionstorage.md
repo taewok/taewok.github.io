@@ -1,7 +1,7 @@
 ---
 title: "[HTML/JS] 브라우저 저장소 정리: localStorage vs sessionStorage 차이점"
 date: 2023-03-02T15:31:00
-categories: [HTML, JavaScript]
+categories: [hTML, javascript]
 tags: [html, javascript, web-storage, localstorage, sessionstorage]
 description: "브라우저에 데이터를 저장하는 Web Storage API인 localStorage와 sessionStorage의 개념, 사용법(CRUD), 그리고 두 저장소의 결정적인 차이점을 정리합니다."
 custom_style: true

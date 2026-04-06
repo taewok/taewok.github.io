@@ -1,7 +1,7 @@
 ---
 title: "[React] Styled-Components theme 객체 속성 prop을 통해 접근"
 date: 2024-01-28T16:40:000
-categories: [React, JavaScript]
+categories: [react, javascript]
 tags: [react, javascript] #소문자만 가능
 ---
 
@@ -13,8 +13,8 @@ tags: [react, javascript] #소문자만 가능
 </blockquote></h3>
 
 ```tsx
-import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import React, { ReactNode } from "react";
+import styled from "styled-components";
 
 interface ButtonProps {
   children?: ReactNode;
@@ -22,17 +22,9 @@ interface ButtonProps {
   color: string;
 }
 
-const Button: React.FC<ButtonProps> = ({
-  children,
-  color,
-  font,
-}) => {
+const Button: React.FC<ButtonProps> = ({ children, color, font }) => {
   return (
-    <ColoredBtn
-      style={style}
-      $font={font}
-      $color={color}
-    >
+    <ColoredBtn style={style} $font={font} $color={color}>
       {children}
     </ColoredBtn>
   );
@@ -57,17 +49,16 @@ const ColoredBtn = styled.button<{
   /* color 변경 부분 */
   // if문 사용으로 $color prop에 해당 문자열이 들어있는지 판단 각 theme 속성명 구분 대괄호 표기법으로 $color prop에 해당하는 속성명에 접근
   color: ${(props) => {
-    if (props.$color.includes('Grey'))
+    if (props.$color.includes("Grey"))
       return ({ theme }) => theme.grey[props.$color];
-    else if (props.$color.includes('Orange'))
+    else if (props.$color.includes("Orange"))
       return ({ theme }) => theme.mainColor[props.$color];
-    else if (props.$color === 'black') return 'black';
-    else return 'white';
+    else if (props.$color === "black") return "black";
+    else return "white";
   }};
 `;
 
 export default ColoredButton;
-
 ```
 
 ---

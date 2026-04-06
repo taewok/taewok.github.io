@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] lodash throttle로 이벤트 호출 횟수 제한하기"
 date: 2025-09-19 17:45:00 +0900
-categories: [JavaScript, Performance]
+categories: [javascript, performance]
 tags: [javascript, lodash, throttle, event]
 ---
 
@@ -64,6 +64,8 @@ const throttledLog = throttle(log, 2000, {
 
 React 컴포넌트에서 throttle을 쓸 때는 useCallback과 함께 쓰는 게 좋아요.
 
+{% raw %}
+
 ```jsx
 import { useEffect, useCallback } from "react";
 import { throttle } from "lodash";
@@ -73,7 +75,7 @@ export default function ScrollTracker() {
     throttle(() => {
       console.log("스크롤 위치:", window.scrollY);
     }, 1000),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -84,6 +86,8 @@ export default function ScrollTracker() {
   return <div style={{ height: "200vh" }}>스크롤 테스트 🚀</div>;
 }
 ```
+
+{% endraw %}
 
 이렇게 하면 스크롤할 때마다 로그가 찍히지 않고, 1초에 한 번만 실행되어 성능을 최적화할 수 있습니다 👍
 

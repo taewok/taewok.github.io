@@ -1,7 +1,7 @@
 ---
 title: "[Html] a태그의 다양한 기능들"
 date: 2023-05-17T16:01:000
-categories: [Html]
+categories: [html]
 tags: [html] #소문자만 가능
 ---
 

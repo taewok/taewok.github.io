@@ -1,7 +1,7 @@
 ---
 title: "[React] 리액트 아이콘 사용법(react-icons 설치부터 적용까지)"
 date: 2023-02-07T17:04:00
-categories: [React]
+categories: [react]
 tags: [react, react-icons, frontend, css, npm]
 description: "React 프로젝트에서 react-icons 라이브러리를 설치하고 사용하는 방법을 상세히 알아봅니다. 아이콘 검색부터 import 규칙, 스타일링까지 한 번에 정리해 드립니다."
 custom_style: true

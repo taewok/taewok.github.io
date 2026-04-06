@@ -1,7 +1,7 @@
 ---
 title: "[three.js] React에서 three.js 사용(3D공간, 재질&스타일링, 빛)"
 date: 2023-08-27T23:37:000
-categories: [three.js, React]
+categories: [three.js, react]
 tags: [three.js, react] #소문자만 가능
 ---
 

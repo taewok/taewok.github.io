@@ -1,7 +1,7 @@
 ---
 title: "[HTML/JS] CORS 에러 해결: Access to script from origin 'null' has been blocked..."
 date: 2023-02-18T18:31:00
-categories: [HTML, Error]
+categories: [hTML, error]
 tags: [html, javascript, error, cors, http-server]
 description: "로컬에서 HTML 파일을 열었을 때 발생하는 'from origin null has been blocked by CORS policy' 에러의 원인과 http-server를 이용한 해결 방법을 알아봅니다."
 custom_style: true

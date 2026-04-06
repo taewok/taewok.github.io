@@ -1,7 +1,7 @@
 ---
 title: "[React] 내 사이트에 깃허브 잔디 심기: react-github-calendar 사용법"
 date: 2023-02-24T18:34:00
-categories: [React]
+categories: [react]
 tags: [react, react-github-calendar, github, portfolio, frontend]
 description: "React 프로젝트에서 백엔드 도움 없이 프론트엔드 라이브러리(react-github-calendar)만으로 깃허브 커밋 기록(잔디)을 가져오는 방법과 다양한 커스텀 옵션을 알아봅니다."
 custom_style: true

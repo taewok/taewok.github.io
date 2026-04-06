@@ -1,7 +1,7 @@
 ---
 title: "[React] Zustand 전역 상태 새로고침 시 초기화 문제 해결하기"
 date: 2025-09-19 14:20:00 +0900
-categories: [React, State-Management]
+categories: [react, state-management]
 tags: [react, zustand, state-management, persist]
 ---
 

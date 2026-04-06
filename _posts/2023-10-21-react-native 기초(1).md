@@ -1,7 +1,7 @@
 ---
 title: "[React-Native] 기초 학습"
 date: 2023-10-21T22:30:000
-categories: [React-Native]
+categories: [react-native]
 tags: [react-native] #소문자만 가능
 ---
 

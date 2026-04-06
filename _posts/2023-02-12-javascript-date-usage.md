@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 자바스크립트 날짜(Date) 객체와 주요 메서드 정리"
 date: 2023-02-12T18:33:00
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript, date, time, frontend]
 description: "JavaScript에서 날짜와 시간을 다루는 Date 객체의 생성 방법부터 getFullYear, getMonth 등 자주 사용하는 필수 메서드들을 예제와 함께 정리합니다."
 custom_style: true

@@ -1,7 +1,7 @@
 ---
 title: "[TypeScript] DOM 조작 시 타입 에러 해결하기: NodeListOf와 Element 타입 지정"
 date: 2023-03-07T17:01:000
-categories: [TypeScript]
+categories: [typescript]
 tags: [typescript] #소문자만 가능
 ---
 

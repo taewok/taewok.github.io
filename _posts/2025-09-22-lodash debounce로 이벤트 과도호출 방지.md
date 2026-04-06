@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] lodash debounce로 이벤트 과도 호출 방지하기"
 date: 2025-09-22 18:10:00 +0900
-categories: [JavaScript, Performance]
+categories: [javascript, performance]
 tags: [javascript, lodash, debounce, event]
 ---
 
@@ -78,7 +78,7 @@ export default function SearchBox() {
     debounce((value) => {
       console.log("검색 API 호출:", value);
     }, 500),
-    []
+    [],
   );
 
   return (

@@ -1,7 +1,7 @@
 ---
 title: "[React-Native] 프로젝트 생성과 Android Studio 연결"
 date: 2023-10-17T19:20:000
-categories: [React-Native]
+categories: [react-native]
 tags: [react-native] #소문자만 가능
 ---
 
@@ -28,7 +28,6 @@ expo init 프로젝트이름
    <img src="https://github.com/taewok/taewok/assets/88264006/ab9def50-4cf1-48fa-9ddd-b636e6a48d54"/>
 
 - 각 템플릿 설명
-
   - <strong>blank</strong>: 미니멀한 앱 템플릿으로, 초기 앱은 비어있으며 개발자가 필요한 모든 구성 요소를 직접 추가해야 합니다.
 
   - <strong>blank (TypeScript)</strong>: 미니멀한 앱 템플릿이지만 TypeScript를 사용하여 프로젝트를 초기화합니다.

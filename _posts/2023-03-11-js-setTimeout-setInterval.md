@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 타이머 함수 완벽 정리: setTimeout() & setInterval() 활용법"
 date: 2023-03-11T21:01:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "[React] 리액트 클릭 이벤트 onClick 완벽 가이드 (기본 문법, 함수 분리)"
 date: 2023-02-15T11:25:00
-categories: [React]
+categories: [react]
 tags: [react, onclick, event, frontend]
 description: "React에서 요소를 클릭했을 때 이벤트를 처리하는 onClick의 기본 사용법과 핸들러 함수를 분리하여 매개변수(Event 객체)를 다루는 방법까지 알아봅니다."
 custom_style: true

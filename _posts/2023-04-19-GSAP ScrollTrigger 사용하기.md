@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] Gsap ScrollTrigger사용하기"
 date: 2023-04-19T14:12:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 
@@ -62,7 +62,7 @@ gsap.to(".box", {
 gsap.to(".box", {
   scrollTrigger: {
     trigger: ".box",
-    start: ""
+    start: "",
   },
 });
 ```
@@ -97,12 +97,12 @@ gsap.to(".box", {
 
 ```js
 gsap.to(".box", {
-      scrollTrigger: {
-      trigger: ".box",
-      start: "top",
-      end: "bottom",
-      markers: true,
-    }
+  scrollTrigger: {
+    trigger: ".box",
+    start: "top",
+    end: "bottom",
+    markers: true,
+  },
 });
 ```
 
@@ -116,11 +116,11 @@ markers: {
 }
 ```
 
-|속성명|설명|
-|:---:|:---|
-|`startColor`|시작선의 색깔변경|
-|`endColor`|끝맺음 선의 색깔변경|
-|`fontSize`|가이드 문자에 font-size 변경|
+|    속성명    | 설명                         |
+| :----------: | :--------------------------- |
+| `startColor` | 시작선의 색깔변경            |
+|  `endColor`  | 끝맺음 선의 색깔변경         |
+|  `fontSize`  | 가이드 문자에 font-size 변경 |
 
 ### <b style="font-size:22px">✅ toggleActions</b>
 
@@ -128,25 +128,25 @@ markers: {
 
 <span>왼쪽에서 순서대로</span><br/>
 
-|속성명|설명|
-|:---:|:---|
-|`onEnter`|scroller-start선이 start선을 지나갔을 떄|
-|`onLeave`|scroller-end 선이 end 선을 지날 떄|
-|`onEnterBack`|end 선을 지나쳤던 scroller-end 선이 다시 돌아올 때|
-|`onLeaveBack`|start 선을 지나쳤던 scroller-start 선이 다시 돌아올 때|
+|    속성명     | 설명                                                   |
+| :-----------: | :----------------------------------------------------- |
+|   `onEnter`   | scroller-start선이 start선을 지나갔을 떄               |
+|   `onLeave`   | scroller-end 선이 end 선을 지날 떄                     |
+| `onEnterBack` | end 선을 지나쳤던 scroller-end 선이 다시 돌아올 때     |
+| `onLeaveBack` | start 선을 지나쳤던 scroller-start 선이 다시 돌아올 때 |
 
 <span>총 4개의 action을 간편한 문자열로 정해줄 수 있다.</span><br/>
 
-|속성명|설명|
-|:---:|:---|
-|`play`|애니메이션이 실행중이라면 계속 실행|
-|`pause`|애니메이션이 진행중이라면 그대로 멈춘다.|
-|`resume`|pause에 의해 멈춘 애니메이션을 그자리에서 재개|
-|`reverse`|처음 위치로 되돌아간다. duration을 적용한 만큼 걸린다.|
-|`restart`|애니메이션을 처음 위치에서 다시 시작|
-|`reset`|처음 위치로|
-|`complete`|바로 애니메이션의 끝나는 지점으로|
-|`none`|아무것도 없다.|
+|   속성명   | 설명                                                   |
+| :--------: | :----------------------------------------------------- |
+|   `play`   | 애니메이션이 실행중이라면 계속 실행                    |
+|  `pause`   | 애니메이션이 진행중이라면 그대로 멈춘다.               |
+|  `resume`  | pause에 의해 멈춘 애니메이션을 그자리에서 재개         |
+| `reverse`  | 처음 위치로 되돌아간다. duration을 적용한 만큼 걸린다. |
+| `restart`  | 애니메이션을 처음 위치에서 다시 시작                   |
+|  `reset`   | 처음 위치로                                            |
+| `complete` | 바로 애니메이션의 끝나는 지점으로                      |
+|   `none`   | 아무것도 없다.                                         |
 
 <p class="codepen" data-height="300" data-default-tab="js,result" data-slug-hash="MWPjQyy" data-user="taewok" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
   <span>See the Pen <a href="https://codepen.io/taewok/pen/MWPjQyy">
@@ -193,5 +193,6 @@ markers: {
 ---
 
 ## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+
 <P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
 지적이나 피드백은 언제나 환영입니다.</p>

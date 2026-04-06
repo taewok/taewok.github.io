@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 자바스크립트 배열 filter 함수 완벽 정리 (사용법, 예제)"
 date: 2023-02-01
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript, filter, array, es6]
 description: "자바스크립트 배열 메서드인 filter의 기본 문법, 3가지 매개변수(value, index, array), 그리고 원본 배열 보존 특성까지 예제를 통해 쉽게 알아봅니다."
 custom_style: true

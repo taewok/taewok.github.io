@@ -1,7 +1,7 @@
 ---
 title: "[React] 쿼리 스트링(Query String)이란?"
 date: 2023-07-24T18:00:000
-categories: [React]
+categories: [react]
 tags: [react] #소문자만 가능
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "[React] 'value' prop on 'input' should not be null 에러발생"
 date: 2023-02-18T14:31:000
-categories: [React,Error]
-tags: [react,error] #소문자만 가능
+categories: [react, error]
+tags: [react, error] #소문자만 가능
 ---
 
 ---
@@ -12,10 +12,11 @@ tags: [react,error] #소문자만 가능
 <p>동작하는 데는 아무 문제가 없지만 에러 콘솔은 없을수록 좋으니...</p>
 
 ## <b style="border-bottom:2px solid gray">해결방법</b>
+
 <p>input에 value 부분에 null 혹은 undefined 값일 때의 대처를 작성해 준다.</p>
 
 ```js
-<input value={text || " "} onChange={(value)=>textOnChange(value)}/>
+<input value={text || " "} onChange={(value) => textOnChange(value)} />
 ```
 
 ---

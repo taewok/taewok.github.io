@@ -1,11 +1,11 @@
 ---
 title: "[CSS] normalize.css 사용법과 reset.css와의 차이"
 date: 2025-10-10 21:40:00 +0900
-categories: [CSS, Style]
+categories: [css, style]
 tags: [css, reset, normalize, frontend]
 ---
 
-프론트엔드 개발을 하다 보면 브라우저별 기본 스타일 차이 때문에 UI가 예상과 다르게 보이는 경우가 많습니다.  
+개발을 하다 보면 브라우저별 기본 스타일 차이 때문에 UI가 예상과 다르게 보이는 경우가 많습니다.  
 이를 해결하기 위해 흔히 **reset.css**를 적용하거나, 최근에는 **normalize.css**를 사용하는 경우도 많습니다.
 
 이번 글에서는 `normalize.css`가 무엇인지, `reset.css`와의 차이점, 그리고 어떤 상황에서 사용하는 것이 적절한지 정리해 보겠습니다.

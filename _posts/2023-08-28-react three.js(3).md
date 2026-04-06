@@ -1,7 +1,7 @@
 ---
 title: "[three.js] React에서 three.js 사용(useControls)"
 date: 2023-08-28T00:24:000
-categories: [three.js, React]
+categories: [three.js, react]
 tags: [three.js, react] #소문자만 가능
 ---
 

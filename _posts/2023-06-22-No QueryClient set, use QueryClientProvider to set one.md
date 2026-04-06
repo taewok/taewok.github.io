@@ -1,7 +1,7 @@
 ---
 title: "[Error] No QueryClient set, use QueryClientProvider to set one"
 date: 2023-06-22T12:40:000
-categories: [Error]
+categories: [error]
 tags: [error] #소문자만 가능
 ---
 

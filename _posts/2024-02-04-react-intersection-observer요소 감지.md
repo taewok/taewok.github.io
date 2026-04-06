@@ -1,8 +1,8 @@
 ---
 title: "[React] react-intersection-observer 라이브러리 사용"
 date: 2024-02-04T19:30:000
-categories: [React]
-tags: [React] #소문자만 가능
+categories: [react]
+tags: [react] #소문자만 가능
 ---
 
 ---
@@ -26,8 +26,8 @@ npm install react-intersection-observer
 </blockquote></h3>
 
 ```jsx
-import React from 'react';
-import { useInView } from 'react-intersection-observer';
+import React from "react";
+import { useInView } from "react-intersection-observer";
 
 const MyComponent = () => {
   // useInView 훅을 사용하여 뷰포트에 들어온지 여부를 감지합니다.
@@ -35,7 +35,9 @@ const MyComponent = () => {
 
   return (
     <div ref={ref}>
-      {inView ? '이 요소가 뷰포트에 들어왔습니다!' : '이 요소가 아직 뷰포트에 들어오지 않았습니다.'}
+      {inView
+        ? "이 요소가 뷰포트에 들어왔습니다!"
+        : "이 요소가 아직 뷰포트에 들어오지 않았습니다."}
     </div>
   );
 };
@@ -62,12 +64,12 @@ export default MyComponent;
 - <strong>skip (기본값: false)</strong>: true로 설정하면 Intersection Observer를 사용하지 않고 항상 inView 값이 true로 설정됨.
 
 ```js
-  const [ref, inView] = useInView({
-    threshold: 0.5,     // 50% 이상이 뷰포트에 들어왔을 때 트리거
-    root: document.getElementById('customRoot'),  // 특정한 루트 엘리먼트로 지정
-    rootMargin: '20px', // 루트 엘리먼트와 요소 간에 20px의 여백 사용
-    triggerOnce: true,   // 한 번만 트리거하고 더 이상 감지하지 않음
-  });
+const [ref, inView] = useInView({
+  threshold: 0.5, // 50% 이상이 뷰포트에 들어왔을 때 트리거
+  root: document.getElementById("customRoot"), // 특정한 루트 엘리먼트로 지정
+  rootMargin: "20px", // 루트 엘리먼트와 요소 간에 20px의 여백 사용
+  triggerOnce: true, // 한 번만 트리거하고 더 이상 감지하지 않음
+});
 ```
 
 <p>다음과 같은 내용을 토대로 요소가 뷰포트에 보일때마다 상품 리스트를 추가로 불러와 무한스크롤을 구현하는 코드를 짜보았다.</p>
@@ -82,13 +84,12 @@ const MyComponent = () => {
     getProductList();
   };
 
-
   useEffect(() => {
     // 요소가 뷰포트에 감지될 때만 실행 가능하도록 if문 사용
     if (inView) {
       callback();
     }
-  // 의존성 배열에 inView를 넣음으로써 요소가 뷰포트에 보일때 안보일때마다 실행
+    // 의존성 배열에 inView를 넣음으로써 요소가 뷰포트에 보일때 안보일때마다 실행
   }, [inView]);
 
   return <div ref={ref}></div>;

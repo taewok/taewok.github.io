@@ -1,7 +1,7 @@
 ---
 title: "[React] 리스트 클릭 시 삭제하기: filter 함수 활용 (ToDo List 예제)"
 date: 2023-02-02T18:14:00
-categories: [JavaScript, React]
+categories: [javascript, react]
 tags: [react, javascript, filter, state, list-manipulation]
 description: "React에서 배열의 filter 메서드를 활용하여 리스트의 특정 요소를 삭제하는 방법을 단계별로 알아봅니다. useState와 함께 ToDo List 삭제 기능을 구현해봅시다."
 custom_style: true

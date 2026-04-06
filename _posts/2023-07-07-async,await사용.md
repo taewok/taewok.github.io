@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] async,await 사용하기"
 date: 2023-07-07T16:18:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 
@@ -11,7 +11,6 @@ tags: [javascript] #소문자만 가능
 
 자바스크립트는 비동기 처리가 기반인 언어이다.<br/>
 async와 await는 JavaScript에서 비동기 프로그래밍을 할 때 사용되는 키워드이다. 이 키워드를 사용하면 비동기 작업을 동기적으로 처리할 수 있어 코드의 가독성과 유지보수성을 높일 수 있습니다.
-
 
 <h3><blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">async</blockquote></h3>
 

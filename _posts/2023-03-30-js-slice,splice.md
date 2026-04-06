@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 배열 자르기 완벽 비교: slice() vs splice() 차이점"
 date: 2023-03-30T11:10:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 

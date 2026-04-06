@@ -1,7 +1,7 @@
 ---
 title: "[javascript] alert, prompt, confirm"
 date: 2024-01-24T16:01:000
-categories: [React, JavaScript]
+categories: [react, javascript]
 tags: [react, javascript] #소문자만 가능
 ---
 

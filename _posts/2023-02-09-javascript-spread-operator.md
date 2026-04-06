@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 스프레드 연산자(...) 완벽 정리 (배열, 객체, 문자열 활용)"
 date: 2023-02-09T13:40:00
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript, es6, spread, syntax]
 description: "ES6의 핵심 문법인 스프레드 연산자(...)의 개념과 객체 병합, 배열 복사, 문자열 변환 등 다양한 실전 활용법을 예제와 함께 알아봅니다."
 custom_style: true

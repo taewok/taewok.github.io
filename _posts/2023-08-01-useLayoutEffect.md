@@ -1,7 +1,7 @@
 ---
 title: "[React] useLayoutEffect란?"
 date: 2023-08-01T15:19:000
-categories: [React]
+categories: [react]
 tags: [react] #소문자만 가능
 ---
 
@@ -30,14 +30,19 @@ useLayoutEffect는 React 컴포넌트에서 사이드 이펙트를 수행하는 
 
 ```js
 console.log(document.body.clientHeight); // 0
-useLayoutEffect(() => {
-  const bodyElement = document.body;
-  const height = bodyElement.clientHeight;
-  console.log(height); // 컴포넌트가 로드된 후의 body 요소의 높이
-}, [/* 의존성 배열 */]);
+useLayoutEffect(
+  () => {
+    const bodyElement = document.body;
+    const height = bodyElement.clientHeight;
+    console.log(height); // 컴포넌트가 로드된 후의 body 요소의 높이
+  },
+  [
+    /* 의존성 배열 */
+  ],
+);
 ```
 
---- 
+---
 
 ## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
 

@@ -1,7 +1,7 @@
 ---
 title: "[Error] console.log(Error) 객체 안나오는 현상"
 date: 2023-06-22T18:13:000
-categories: [Error]
+categories: [error]
 tags: [error] #소문자만 가능
 ---
 
@@ -40,7 +40,7 @@ api.interceptors.response.use(
       window.location.replace("/login");
       window.location.reload();
     }
-  }
+  },
 );
 ```
 
@@ -68,7 +68,7 @@ api.interceptors.response.use(
       window.location.reload();
     }
     return Promise.reject(error);
-  }
+  },
 );
 ```
 

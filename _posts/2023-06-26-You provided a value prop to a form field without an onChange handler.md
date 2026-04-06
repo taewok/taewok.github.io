@@ -1,7 +1,7 @@
 ---
 title: "[Error] You provided a value prop to a form field without an onChange handler"
 date: 2023-06-26T18:18:000
-categories: [Error]
+categories: [error]
 tags: [error] #소문자만 가능
 ---
 

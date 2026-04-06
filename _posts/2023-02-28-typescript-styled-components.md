@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 자바스크립트 반복문 완벽 정리: for...in vs for...of 차이점"
 date: 2023-02-26T15:30:00
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript, for-in, for-of, loop, es6]
 description: "자바스크립트의 향상된 반복문인 for...in과 for...of의 문법과 차이점, 그리고 각각 언제 사용해야 하는지 예제를 통해 알아봅니다."
 custom_style: true

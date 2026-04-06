@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 배열 조작: push, pop, unshift, shift 성능과 실전 팁"
 date: 2023-03-22T11:30:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 

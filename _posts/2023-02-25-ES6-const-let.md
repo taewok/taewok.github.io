@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] ES6 변수 선언 완벽 정리: const, let 그리고 var의 차이점"
 date: 2023-02-25T19:30:00
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript, es6, const, let, var]
 description: "자바스크립트 ES6에서 도입된 const와 let의 특징과 차이점, 그리고 기존 var 사용을 지양해야 하는 이유를 예제 코드와 비교표로 알기 쉽게 정리합니다."
 custom_style: true
@@ -24,7 +24,7 @@ custom_style: true
 
 ```javascript
 // 1. 선언과 동시에 할당 필수
-const age;      // SyntaxError: Missing initializer in const declaration (X)
+const age; // SyntaxError: Missing initializer in const declaration (X)
 const age = 21; // (O)
 
 // 2. 재할당 불가능

@@ -1,7 +1,7 @@
 ---
 title: "[TypeScript] 타입스크립트란? 자바스크립트와의 차이와 장점"
 date: 2023-03-03 10:01:00 +0900
-categories: [TypeScript]
+categories: [typescript]
 tags: [typescript, javascript, es5, esnext]
 description: "자바스크립트의 종류(ES5, ESNext)와 타입스크립트(TypeScript)의 정의, 타입 기능의 장점, 그리고 동작 원리(트랜스파일러)에 대해 알아봅니다."
 ---

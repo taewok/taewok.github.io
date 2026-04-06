@@ -1,7 +1,7 @@
 ---
 title: "[TypeScript] 타입스크립트 기본 타입 정리 (Primitive, Array, Enum, Any)"
 date: 2023-03-03T17:01:00
-categories: [TypeScript]
+categories: [typescript]
 tags: [typescript, type, interface, enum, frontend]
 description: "TypeScript에서 사용하는 핵심 타입(number, string, array, tuple, enum, void, any)의 정의와 올바른 선언 방법을 예제 코드와 함께 정리합니다."
 custom_style: true

@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 클래스 제어 완벽 가이드: classList (추가, 삭제, 토글)"
 date: 2023-03-10T17:01:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 

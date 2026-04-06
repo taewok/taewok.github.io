@@ -1,7 +1,7 @@
 ---
 title: "[React] 리액트 라우터(react-router-dom) 설치부터 기본 사용법까지"
 date: 2023-02-11T16:33:00
-categories: [React]
+categories: [react]
 tags: [react, react-router, react-router-dom, spa, frontend]
 description: "React에서 페이지 이동을 구현하는 react-router-dom의 설치 방법과 BrowserRouter, Routes, Route, Link 등 핵심 컴포넌트의 사용법을 예제와 함께 정리합니다."
 custom_style: true

@@ -1,7 +1,7 @@
 ---
 title: "[React] 프로젝트의 얼굴 만들기: 파비콘(Favicon)과 사이트 타이틀 변경하기"
 date: 2023-04-02T18:10:000
-categories: [React]
+categories: [react]
 tags: [react, frontend, html, seo]
 ---
 

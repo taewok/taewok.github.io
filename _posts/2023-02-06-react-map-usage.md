@@ -1,7 +1,7 @@
 ---
 title: "[React] map 함수 활용과 key prop의 중요성"
 date: 2023-02-06T22:10:00
-categories: [React, JavaScript]
+categories: [react, javascript]
 tags: [react, javascript, map, key, frontend]
 description: "React에서 map 함수를 사용하여 리스트를 렌더링하는 방법과 이때 반드시 발생하는 'unique key' 에러의 원인 및 해결 방법을 상세히 알아봅니다."
 custom_style: true

@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 자바스크립트 배열 map 함수 완벽 정리 (사용법, 예제, 객체 조작)"
 date: 2023-02-03T19:10:00
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript, map, array, es6]
 description: "JavaScript 배열 메서드인 map의 핵심 원리, 3가지 매개변수(value, index, array), 그리고 실무에서 자주 쓰이는 객체 배열 조작 예제까지 상세히 알아봅니다."
 custom_style: true

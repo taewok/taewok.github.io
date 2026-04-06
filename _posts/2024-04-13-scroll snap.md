@@ -1,7 +1,7 @@
 ---
 title: "[Css] css만으로 Scroll Snap 구현하기"
 date: 2024-04-13T00:35:000
-categories: [Css]
+categories: [css]
 tags: [css] #소문자만 가능
 ---
 

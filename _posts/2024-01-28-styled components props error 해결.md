@@ -1,7 +1,7 @@
 ---
 title: "[Error] styled-components props error 해결"
 date: 2024-01-28T18:00:000
-categories: [Error]
+categories: [error]
 tags: [error] #소문자만 가능
 ---
 
@@ -25,11 +25,11 @@ styled-components 컴포넌트에 전달하는 prop이 React의 DOM 요소까지
 
 ```js
 const MyComponent = styled.div`
-  color: ${({ $backgroundColor }) => $backgroundColor || 'black'};
+  color: ${({ $backgroundColor }) => $backgroundColor || "black"};
 `;
 
 // 사용 예시
-<MyComponent $backgroundColor="red">Hello World</MyComponent>
+<MyComponent $backgroundColor="red">Hello World</MyComponent>;
 ```
 
 ---

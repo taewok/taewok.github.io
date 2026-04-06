@@ -1,7 +1,7 @@
 ---
 title: "[React] lazy란?"
 date: 2023-07-29T18:39:000
-categories: [React]
+categories: [react]
 tags: [react] #소문자만 가능
 ---
 

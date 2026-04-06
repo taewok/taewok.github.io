@@ -1,7 +1,7 @@
 ---
 title: "[JavaScript] 안전한 코딩을 위한 필수 문법: ?. (Optional Chaining) & ?? (Nullish Coalescing)"
 date: 2023-07-14T17:50:000
-categories: [JavaScript]
+categories: [javascript]
 tags: [javascript] #소문자만 가능
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "[React-Native] 개발환경 구축"
 date: 2023-10-15T18:39:000
-categories: [React-Native]
+categories: [react-native]
 tags: [react-native] #소문자만 가능
 ---
 
@@ -29,7 +29,6 @@ tags: [react-native] #소문자만 가능
 <p>본인은 기존에 npm 패키지를 사용하고 있어 따로 설치는 안했지만 Expo cli를 설치하는 중에 버전 호환에 문제가 생겨 nvm을 통해 17버전에서 16버전으로 다운그레이드 해주었다.</p>
 
 - 다운그레이드 과정
-
   1. 아래 경로로 이동해서 Windows용 nvm설치 파일을 다운로드 한다. nvm-setup.zip 파일을 다운로드 한다.<br/><a href="https://github.com/coreybutler/nvm-windows/releases">https://github.com/coreybutler/nvm-windows/releases</a>
 
   2. 다음 명령어를 통해 node 16버전 다운 받기
