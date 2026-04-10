@@ -1,7 +1,7 @@
 ---
 title: "[React] Jest(2) Matcher"
 date: 2023-10-02T21:05:000
-categories: [React]
+categories: [react]
 tags: [react, jest] #소문자만 가능
 ---
 
