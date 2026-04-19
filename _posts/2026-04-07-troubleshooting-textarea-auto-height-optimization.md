@@ -82,7 +82,7 @@ export default function AutoResizableTextarea() {
 | 코드 응집도 | 스크립트가 분산될 우려가 큼            | 컴포넌트 내부에 로직이 캡슐화됨                 |
 | 성능        | 불필요한 DOM 탐색 발생 가능            | 참조값 유지로 불필요한 오버헤드 감소            |
 
-**결론:** 리액트 환경에서 직접적인 DOM API를 사용하는 `Vanilla JS` 방식은 렌더링 타이밍을 놓치거나 메모리 누수를 유발할 수 있다. `useRef`를 활용하면 리액트의 생명주기 안에서 안전하게 DOM을 조절할 수 있어 훨씬 견고한 코드가 된다.
+결론: 리액트 환경에서 직접적인 DOM API를 사용하는 `Vanilla JS` 방식은 렌더링 타이밍을 놓치거나 메모리 누수를 유발할 수 있다. `useRef`를 활용하면 리액트의 생명주기 안에서 안전하게 DOM을 조절할 수 있어 훨씬 견고한 코드가 된다.
 
 ---
 
@@ -93,10 +93,14 @@ export default function AutoResizableTextarea() {
     댓글창이나 모바일 메신저 UI처럼 한 줄로 시작해서 글이 길어지는 인터페이스에 필수적이다. 특히 Tailwind의 <code>resize-none</code> 클래스와 함께 사용해 사용자가 임의로 크기를 조절하지 못하게 막으면서 시스템이 자동으로 맞춰주는 것이 가장 깔끔하다.
 </div>
 
+<br/>
+
 <div class="warning-box">
     <strong>실수하기 쉬운 부분</strong><br/>
     Tailwind를 쓸 때 <code>h-10</code> 같이 고정 높이 클래스를 넣어버리면 JS가 부여하는 <code>style.height</code>와 충돌이 발생한다. 초기 높이는 <code>rows={1}</code> 속성이나 패딩으로 조절하고, 높이 관련 Tailwind 클래스는 피하는 것이 좋다.
 </div>
+
+<br/>
 
 <div class="highlight-box">
     <strong>개발 중 겪은 삽질 (Troubleshooting)</strong><br/>
