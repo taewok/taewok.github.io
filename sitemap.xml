@@ -4,22 +4,38 @@ layout: null
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- 모든 포스트 -->
+  <!-- 1. 메인 페이지 (가장 높은 우선순위) -->
+  <url>
+    <loc>{{ site.url }}/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 2. 모든 포스트 -->
   {% for post in site.posts %}
   <url>
     <loc>{{ site.url }}{{ post.url }}</loc>
     <lastmod>{{ post.lastmod | default: post.date | date_to_xmlschema }}</lastmod>
     <changefreq>{{ post.changefreq | default: "weekly" }}</changefreq>
-    <priority>{{ post.priority | default: 0.7 }}</priority>
+    <priority>{{ post.priority | default: 0.8 }}</priority>
   </url>
   {% endfor %}
 
-  <!-- 모든 페이지 (404 제외) -->
+  <!-- 3. 일반 페이지 필터링 (핵심 수정) -->
   {% for page in site.pages %}
-  {% unless page.url contains "404" %}
+  {% comment %}
+    제외할 대상: 404, 리소스 파일(css, js, xml, json), 페이징(page), 관리용 파일
+  {% endcomment %}
+  {% assign ignore = false %}
+  {% if page.url contains "404" or page.url contains ".css" or page.url contains ".js" or page.url contains ".json" or page.url contains ".xml" or page.url contains "page" %}
+    {% assign ignore = true %}
+  {% endif %}
+
+  {% unless ignore %}
   <url>
-    <loc>{{ site.url }}{{ page.url }}</loc>
-    <lastmod>{{ page.lastmod | default: page.date | date_to_xmlschema }}</lastmod>
+    <loc>{{ site.url }}{{ page.url | replace: 'index.html', '' }}</loc>
+    <lastmod>{{ page.lastmod | default: site.time | date_to_xmlschema }}</lastmod>
     <changefreq>{{ page.changefreq | default: "monthly" }}</changefreq>
     <priority>{{ page.priority | default: 0.5 }}</priority>
   </url>
