@@ -1,5 +1,5 @@
 ---
-title: "window.matchMedia로 반응형 사이드바 완벽 구현하기 (resize 이벤트 지옥 탈출)"
+title: "[React] window.matchMedia로 반응형 사이드바 완벽 구현하기 (resize 이벤트 지옥 탈출)"
 date: 2026-04-17T13:48:00Z
 categories: [frontend]
 tags: [javascript, matchmedia, responsive-design, sidebar-optimization]

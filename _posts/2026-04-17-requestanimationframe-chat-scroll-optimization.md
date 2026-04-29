@@ -1,5 +1,5 @@
 ---
-title: "requestAnimationFrame으로 채팅창 스크롤 최적화하기: 끊김 없는 UI 경험의 비밀"
+title: "[React] requestAnimationFrame으로 채팅창 스크롤 최적화하기: 끊김 없는 UI 경험의 비밀"
 date: 2026-04-16T18:03:00Z
 categories: [frontend]
 tags:
