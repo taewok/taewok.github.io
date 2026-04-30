@@ -22,17 +22,14 @@ title: Taewok # the main title
 
 tagline: A text-focused Jekyll theme # it will display as the sub-title
 
-description: >- # used by seo meta and the atom feed
-  A minimal, responsive, and powerful Jekyll theme for presenting professional writing.
+description: >-
+  프론트엔드 개발 및 금융 투자 기록을 담는 김태욱의 기술 블로그입니다. Next.js, React, TypeScript 관련 정보를 공유합니다.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: "https://taewok.github.io"
 
 github:
   username: taewok # change to your github username
-
-twitter:
-  username: twitter_username # change to your twitter username
 
 social:
   # Change to your full name.
@@ -47,8 +44,7 @@ social:
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
 
-google_site_verification: # fill in to your verification string
-
+google_site_verification: xM3y14g58K4Zakk543GEHEX1zRcas552iRe_C4oQxV0
 # ↑ --------------------------
 # The end of `jekyll-seo-tag` settings
 
