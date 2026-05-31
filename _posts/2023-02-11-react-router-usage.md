@@ -1,62 +1,68 @@
 ---
-title: "[React] 리액트 라우터(react-router-dom) 설치부터 기본 사용법까지"
+title: "[React] react-router-dom 설치부터 기본 사용법까지"
 date: 2023-02-11T16:33:00
 categories: [react]
 tags: [react, react-router, react-router-dom, spa, frontend]
-description: "React에서 페이지 이동을 구현하는 react-router-dom의 설치 방법과 BrowserRouter, Routes, Route, Link 등 핵심 컴포넌트의 사용법을 예제와 함께 정리합니다."
+description: "React에서 페이지 이동을 구현하는 react-router-dom의 설치 방법과 BrowserRouter, Routes, Route, Link의 기본 사용법을 정리했습니다."
 custom_style: true
 ---
 
-HTML의 `<a>` 태그를 사용하여 페이지를 이동하면 브라우저가 새로고침되면서 상태가 초기화되는 현상이 발생합니다.
+## 🧐 React에서 페이지 이동은 어떻게 할까요?
 
-하지만 **React Router**를 사용하면 페이지를 새로고침하지 않고(No Refresh), 주소(URL)에 따라 필요한 데이터만 갈아끼우며 렌더링하는 **SPA(Single Page Application)**를 쉽게 구현할 수 있습니다. 🚀
+일반 HTML에서는 `<a>` 태그를 사용해 다른 페이지로 이동합니다.
 
-이번 글에서는 `react-router-dom`의 설치부터 기본 사용법까지 알아보겠습니다.
+하지만 React 앱에서 `<a>` 태그로 페이지를 이동하면 브라우저가 새로고침되면서 앱의 상태가 초기화될 수 있습니다.
+
+React Router를 사용하면 페이지를 새로고침하지 않고 URL에 따라 필요한 컴포넌트만 바꿔 보여줄 수 있습니다. 이런 방식을 SPA, 즉 Single Page Application 방식이라고 부릅니다.
+
+이번 글에서는 `react-router-dom`을 설치하고 기본 라우팅을 설정하는 방법을 정리해보겠습니다.
 
 ---
 
-## 1. 사용 준비 (라이브러리 설치)
+## 📦 react-router-dom 설치하기
 
-리액트 라우터를 사용하기 위해 패키지를 설치해야 합니다. 웹 개발 환경에서는 `react-router-dom`을 설치합니다.
+React 웹 프로젝트에서는 `react-router-dom` 패키지를 설치합니다.
 
 ```bash
-# npm을 사용하는 경우
 npm install react-router-dom
+```
 
-# yarn을 사용하는 경우
+`yarn`을 사용한다면 다음 명령어를 사용하면 됩니다.
+
+```bash
 yarn add react-router-dom
 ```
 
 ---
 
-## 2. 기본 세팅 및 핵심 컴포넌트 (App.js)
+## 🧱 기본 라우팅 구조 만들기
 
-설치가 완료되었다면 `App.js`에서 라우팅 설정을 진행합니다.
+먼저 필요한 컴포넌트를 import합니다.
 
-### App.js 작성
-
-```javascript
+```js
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import About from "./About";
 import Contents from "./Contents";
 import Home from "./Home";
 import "./App.css";
+```
 
+전체 구조는 다음과 같습니다.
+
+```jsx
 function App() {
   return (
     <BrowserRouter>
       <header>
-        {/* 페이지 이동을 위한 네비게이션 */}
         <Link to="/">Home</Link>
-        <Link to="/About">About</Link>
-        <Link to="/Contents">Contents</Link>
+        <Link to="/about">About</Link>
+        <Link to="/contents">Contents</Link>
       </header>
 
-      {/* URL에 따라 렌더링될 컴포넌트 설정 */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Contents" element={<Contents />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contents" element={<Contents />} />
       </Routes>
     </BrowserRouter>
   );
@@ -65,63 +71,83 @@ function App() {
 export default App;
 ```
 
-### 핵심 컴포넌트 설명
-
-1.  **BrowserRouter**: 라우팅을 적용할 모든 컴포넌트(`Routes`, `Link` 등)의 최상위를 감싸주는 래퍼(Wrapper) 컴포넌트입니다. 브라우저의 History API를 사용하여 새로고침 없는 주소 변경을 가능하게 합니다.
-2.  **Routes**: 여러 개의 `Route`를 감싸는 컨테이너입니다. URL이 변경되면 하위의 `Route`들을 탐색하여 **규칙이 일치하는 단 하나의 컴포넌트**만 렌더링합니다.
-3.  **Route**: 실제 경로와 컴포넌트를 매핑하는 역할을 합니다.
-    - **path**: 연결하고 싶은 주소 경로 (예: `"/"`, `"/About"`)
-    - **element**: 해당 주소와 일치할 때 보여줄 컴포넌트
-4.  **Link**: HTML의 `<a>` 태그와 비슷하지만, 새로고침 없이 주소만 변경해주는 컴포넌트입니다.
-    - **to**: 이동할 경로
+위 코드에서 `Link`는 이동 버튼 역할을 하고, `Route`는 주소와 컴포넌트를 연결하는 역할을 합니다.
 
 ---
 
-## 3. 페이지 컴포넌트 및 스타일 만들기
+## 🧩 핵심 컴포넌트 이해하기
 
-라우팅 테스트를 위해 간단한 페이지 컴포넌트 3개와 CSS를 작성해 봅시다.
+### BrowserRouter
 
-### 컴포넌트 (Home, About, Contents)
+`BrowserRouter`는 라우팅 기능을 사용할 영역을 감싸는 컴포넌트입니다.
 
-**Home.js**
+보통 앱의 최상단에서 한 번 감싸줍니다.
 
-```javascript
-import React from "react";
+```jsx
+<BrowserRouter>
+  <App />
+</BrowserRouter>
+```
 
-const Home = () => {
+### Routes
+
+`Routes`는 여러 개의 `Route`를 감싸는 컨테이너입니다.
+
+현재 URL과 일치하는 `Route`를 찾아 해당 컴포넌트를 렌더링합니다.
+
+### Route
+
+`Route`는 특정 경로와 컴포넌트를 연결합니다.
+
+```jsx
+<Route path="/about" element={<About />} />
+```
+
+- `path`: 주소 경로입니다.
+- `element`: 해당 주소에서 보여줄 컴포넌트입니다.
+
+### Link
+
+`Link`는 페이지 이동에 사용합니다.
+
+```jsx
+<Link to="/about">About</Link>
+```
+
+HTML의 `<a>` 태그와 비슷하지만, 브라우저 새로고침 없이 주소만 바꿔줍니다.
+
+---
+
+## 📄 페이지 컴포넌트 만들기
+
+라우팅 테스트를 위해 간단한 페이지 컴포넌트를 만들어보겠습니다.
+
+```jsx
+// Home.js
+export default function Home() {
   return <div>Home</div>;
-};
-
-export default Home;
+}
 ```
 
-**About.js**
-
-```javascript
-import React from "react";
-
-const About = () => {
+```jsx
+// About.js
+export default function About() {
   return <div>About</div>;
-};
-
-export default About;
+}
 ```
 
-**Contents.js**
-
-```javascript
-import React from "react";
-
-const Contents = () => {
+```jsx
+// Contents.js
+export default function Contents() {
   return <div>Contents</div>;
-};
-
-export default Contents;
+}
 ```
 
-### 스타일링 (App.css)
+---
 
-네비게이션 버튼을 보기 좋게 꾸며줍니다.
+## 🎨 간단한 스타일 추가하기
+
+상단 네비게이션을 보기 좋게 만들기 위해 CSS를 추가해볼 수 있습니다.
 
 ```css
 header {
@@ -152,27 +178,26 @@ a:hover {
 
 ---
 
-## 4. 결과 확인 (SPA 동작 방식)
+## ✅ 동작 방식 정리
 
-코드를 모두 작성하고 실행하면 아래와 같은 화면이 나타납니다.
+예를 들어 사용자가 `About` 링크를 클릭하면 다음 일이 일어납니다.
 
-![react-router 초기 실행 화면](https://user-images.githubusercontent.com/88264006/218254906-29bf16c0-db1d-46d1-862a-b225959aa3cb.png)
+1. 주소가 `/about`으로 바뀝니다.
+2. 브라우저는 새로고침하지 않습니다.
+3. `Routes`가 현재 주소와 일치하는 `Route`를 찾습니다.
+4. `About` 컴포넌트가 화면에 렌더링됩니다.
 
-이제 상단의 **About** 버튼을 눌러보겠습니다.
-
-![페이지 이동 후 화면](https://user-images.githubusercontent.com/88264006/218255065-130c0c02-808d-43f5-96e2-99f95a39f95d.png)
-
-1.  주소창의 URL이 `/About`으로 변경되었습니다.
-2.  하지만 브라우저 **새로고침(깜빡임)은 발생하지 않았습니다.**
-3.  `Routes` 설정에 따라 하단 영역에 `About` 컴포넌트가 정상적으로 렌더링 되었습니다.
-
-이것이 바로 React Router를 사용하는 이유이자 SPA의 핵심 기능입니다! 🎉
+이것이 React Router를 사용하는 가장 기본적인 흐름입니다.
 
 ---
 
-## 마치며
+## ✅ 정리
 
-오늘은 리액트 프로젝트의 필수 라이브러리인 `react-router-dom`의 기초적인 사용법을 알아보았습니다.
+`react-router-dom`은 React 앱에서 페이지 이동을 구현할 때 사용하는 대표적인 라이브러리입니다.
 
-SPA 구조를 이해하는 첫걸음이니 꼭 직접 실습해 보시길 바랍니다.
-혹시 궁금한 점이나 잘못된 내용이 있다면 편하게 댓글 남겨주세요! 👋
+- `BrowserRouter`로 라우팅 영역을 감쌉니다.
+- `Routes` 안에 여러 `Route`를 작성합니다.
+- `Route`는 `path`와 `element`를 연결합니다.
+- `Link`를 사용하면 새로고침 없이 페이지를 이동할 수 있습니다.
+
+React에서 여러 페이지처럼 보이는 화면을 만들고 싶다면 React Router의 기본 구조부터 익혀두면 좋습니다.

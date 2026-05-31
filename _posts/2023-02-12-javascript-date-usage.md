@@ -1,151 +1,196 @@
 ---
-title: "[JavaScript] 자바스크립트 날짜(Date) 객체와 주요 메서드 정리"
+title: "[JavaScript] 날짜와 시간을 다루는 Date 객체 정리"
 date: 2023-02-12T18:33:00
 categories: [javascript]
 tags: [javascript, date, time, frontend]
-description: "JavaScript에서 날짜와 시간을 다루는 Date 객체의 생성 방법부터 getFullYear, getMonth 등 자주 사용하는 필수 메서드들을 예제와 함께 정리합니다."
+description: "JavaScript에서 날짜와 시간을 다루는 Date 객체의 생성 방법과 getFullYear, getMonth, getDate 같은 주요 메서드를 정리했습니다."
 custom_style: true
 ---
 
-웹 개발을 하다 보면 회원가입 일자, 게시글 작성 시간, 디데이 계산 등 **날짜와 시간**을 다뤄야 하는 경우가 정말 많습니다.  
-JavaScript에서는 **`Date` 객체**를 통해 이러한 년, 월, 일, 시, 분, 초, 밀리초 단위의 시간 정보를 쉽게 처리할 수 있습니다. 🕒
+## 🧐 JavaScript에서 날짜는 어떻게 다룰까요?
 
-이번 글에서는 `Date` 객체의 생성 방법과 실무에서 자주 쓰이는 주요 메서드들을 정리해 보겠습니다.
+웹 개발을 하다 보면 날짜와 시간을 다뤄야 하는 경우가 많습니다.
+
+예를 들어 회원가입 일자, 게시글 작성 시간, 디데이 계산, 예약 시간 표시 같은 기능이 모두 날짜와 관련되어 있습니다.
+
+JavaScript에서는 이런 날짜와 시간을 `Date` 객체로 다룰 수 있습니다.
+
+이번 글에서는 `Date` 객체를 만드는 방법과 자주 사용하는 메서드를 정리해보겠습니다.
 
 ---
 
-## 1. Date 객체 생성하기 (기본 사용법)
+## 🧱 Date 객체 생성하기
 
-### 1) 현재 시간 가져오기 (`new Date()`)
+### 현재 날짜와 시간 가져오기
 
-아무런 매개변수 없이 `new Date()`를 호출하면, 코드가 실행되는 시점의 **현재 날짜와 시간**을 반환합니다.
+아무 값 없이 `new Date()`를 호출하면 현재 날짜와 시간이 담긴 Date 객체가 만들어집니다.
 
-```javascript
+```js
 const date = new Date();
+
 console.log(date);
-
-// 실행 결과 (현재 시간에 따라 다름)
-// Sun Feb 12 2023 18:44:15 GMT+0900 (한국 표준시)
 ```
 
-### 2) 특정 날짜 지정하기
+실행 결과는 현재 시간에 따라 달라집니다.
 
-`new Date()`의 괄호 안에 문자열이나 숫자로 특정 날짜를 넣어주면 해당 날짜 객체가 생성됩니다.
+```txt
+Sun Feb 12 2023 18:44:15 GMT+0900 (한국 표준시)
+```
 
-- `"MM/DD/YYYY"`
-- `"YYYY-MM-DD"` (가장 권장하는 ISO 형식)
-- `"Month DD YYYY"`
+### 특정 날짜 지정하기
 
-```javascript
+`new Date()` 안에 문자열이나 숫자를 넣어 특정 날짜를 만들 수도 있습니다.
+
+```js
 const date1 = new Date("02/12/2023");
-const date2 = new Date("2023-02-12"); // 권장
+const date2 = new Date("2023-02-12");
 const date3 = new Date("February 12, 2023");
+```
 
-console.log(date1);
-// 실행 결과: Sun Feb 12 2023 00:00:00 GMT+0900 (한국 표준시)
+여러 형식이 가능하지만, 보통은 `YYYY-MM-DD` 형태의 ISO 형식을 사용하는 편이 안전합니다.
+
+```js
+const date = new Date("2023-02-12");
 ```
 
 ---
 
-## 2. 날짜 및 시간 정보 가져오기 (Get Methods)
+## 📅 날짜 정보 가져오기
 
-`Date` 객체에서 원하는 정보(년, 월, 일 등)만 쏙쏙 뽑아내는 메서드들입니다.  
-**주의해야 할 점(함정)이 몇 가지 있으니 꼭 확인하세요!**
+`Date` 객체에서는 연도, 월, 일, 요일 같은 값을 메서드로 꺼낼 수 있습니다.
 
-### 1) getFullYear() : 연도
+### getFullYear
 
-현재 연도를 **4자리 정수**로 반환합니다.
+`getFullYear()`는 연도를 4자리 숫자로 반환합니다.
 
-```javascript
-const date = new Date(); // 2023년 2월 12일 기준
+```js
+const date = new Date("2023-02-12");
+
+console.log(date.getFullYear());
+// 2023
+```
+
+### getMonth
+
+`getMonth()`는 월을 반환합니다.
+
+여기서 주의할 점이 있습니다. `getMonth()`는 1월을 `0`으로 반환하고, 12월을 `11`로 반환합니다.
+
+```js
+const date = new Date("2023-02-12");
+
+console.log(date.getMonth());
+// 1
+```
+
+2월인데 `1`이 나오는 이유는 월이 0부터 시작하기 때문입니다.
+
+그래서 실제 월을 표시하려면 `+1`을 해주어야 합니다.
+
+```js
+const month = date.getMonth() + 1;
+
+console.log(month);
+// 2
+```
+
+### getDate
+
+`getDate()`는 날짜, 즉 며칠인지를 반환합니다.
+
+```js
+const date = new Date("2023-02-12");
+
+console.log(date.getDate());
+// 12
+```
+
+### getDay
+
+`getDay()`는 요일을 숫자로 반환합니다.
+
+```js
+const date = new Date("2023-02-12");
+
+console.log(date.getDay());
+// 0
+```
+
+요일 숫자는 다음과 같이 매핑됩니다.
+
+```txt
+0: 일요일
+1: 월요일
+2: 화요일
+3: 수요일
+4: 목요일
+5: 금요일
+6: 토요일
+```
+
+---
+
+## ⏰ 시간 정보 가져오기
+
+시간, 분, 초도 비슷한 방식으로 가져올 수 있습니다.
+
+```js
+const date = new Date();
+
+console.log(date.getHours());
+console.log(date.getMinutes());
+console.log(date.getSeconds());
+```
+
+각 메서드는 다음 값을 반환합니다.
+
+- `getHours()`: 0부터 23까지의 시각입니다.
+- `getMinutes()`: 0부터 59까지의 분입니다.
+- `getSeconds()`: 0부터 59까지의 초입니다.
+
+---
+
+## 🧩 날짜 표시 포맷 만들기
+
+가져온 값을 조합하면 원하는 형태의 날짜 문자열을 만들 수 있습니다.
+
+```js
+const date = new Date("2023-02-12");
+
 const year = date.getFullYear();
-
-console.log(year);
-// 실행 결과: 2023
-```
-
-### 2) getMonth() : 월 (⭐ 주의)
-
-**가장 많이 실수하는 부분입니다.** `getMonth()`는 1월이 0부터 시작하여 12월이 11로 끝납니다. 따라서 **실제 월을 구하려면 반드시 `+1`을 해줘야 합니다.**
-
-- 0: 1월
-- 11: 12월
-
-```javascript
-const date = new Date();
-const month = date.getMonth();
-
-console.log(month); // 2월인 경우 1이 출력됨
-console.log(month + 1); // 실제 월을 쓰려면 +1 필수! (결과: 2)
-```
-
-### 3) getDate() : 일
-
-현재 날짜(일)를 정수로 반환합니다.
-
-```javascript
-const date = new Date();
+const month = date.getMonth() + 1;
 const day = date.getDate();
 
-console.log(day);
-// 실행 결과: 12
+const formattedDate = `${year}-${month}-${day}`;
+
+console.log(formattedDate);
+// 2023-2-12
 ```
 
-### 4) getDay() : 요일
+월과 일이 한 자리일 때 `0`을 붙이고 싶다면 `padStart`를 사용할 수 있습니다.
 
-요일을 **0부터 6까지의 정수**로 반환합니다. 일요일부터 시작합니다.
+```js
+const month = String(date.getMonth() + 1).padStart(2, "0");
+const day = String(date.getDate()).padStart(2, "0");
 
-- **0: 일요일**
-- 1: 월요일
-- ...
-- **6: 토요일**
+const formattedDate = `${year}-${month}-${day}`;
 
-```javascript
-const date = new Date();
-const dayOfWeek = date.getDay();
-
-console.log(dayOfWeek);
-// 실행 결과: 0 (일요일인 경우)
+console.log(formattedDate);
+// 2023-02-12
 ```
 
 ---
 
-## 3. 시간 정보 가져오기
+## ✅ 정리
 
-시간, 분, 초 단위도 손쉽게 가져올 수 있습니다.
+JavaScript에서는 `Date` 객체로 날짜와 시간을 다룰 수 있습니다.
 
-### 1) getHours() : 시
+- `new Date()`는 현재 날짜와 시간을 만듭니다.
+- `new Date("2023-02-12")`처럼 특정 날짜를 만들 수도 있습니다.
+- `getFullYear()`는 연도를 가져옵니다.
+- `getMonth()`는 월을 가져오지만 0부터 시작하므로 `+1`이 필요합니다.
+- `getDate()`는 날짜를 가져옵니다.
+- `getDay()`는 요일을 숫자로 가져옵니다.
+- `getHours()`, `getMinutes()`, `getSeconds()`로 시간 정보도 가져올 수 있습니다.
 
-0부터 23까지의 정수(24시간제)를 반환합니다.
-
-```javascript
-const hours = new Date().getHours();
-console.log(hours); // 예: 18
-```
-
-### 2) getMinutes() : 분
-
-0부터 59까지의 정수를 반환합니다.
-
-```javascript
-const minutes = new Date().getMinutes();
-console.log(minutes); // 예: 44
-```
-
-### 3) getSeconds() : 초
-
-0부터 59까지의 정수를 반환합니다.
-
-```javascript
-const seconds = new Date().getSeconds();
-console.log(seconds); // 예: 15
-```
-
----
-
-## 마치며
-
-오늘은 자바스크립트의 기본인 `Date` 객체와 주요 메서드에 대해 알아보았습니다.
-특히 **`getMonth()`는 0부터 시작한다**는 점, **`getDay()`는 요일을 숫자로 반환한다**는 점을 꼭 기억해 주세요!
-
-혹시 궁금한 점이나 피드백이 있다면 언제든 댓글 남겨주세요. 👋
+특히 `getMonth()`가 0부터 시작한다는 점은 자주 헷갈리니 꼭 기억해두면 좋습니다.

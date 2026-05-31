@@ -1,32 +1,33 @@
 ---
-title: "[React] 리액트 클릭 이벤트 onClick 완벽 가이드 (기본 문법, 함수 분리)"
+title: "[React] 클릭 이벤트 onClick 사용법 정리"
 date: 2023-02-15T11:25:00
 categories: [react]
 tags: [react, onclick, event, frontend]
-description: "React에서 요소를 클릭했을 때 이벤트를 처리하는 onClick의 기본 사용법과 핸들러 함수를 분리하여 매개변수(Event 객체)를 다루는 방법까지 알아봅니다."
+description: "React에서 요소를 클릭했을 때 이벤트를 처리하는 onClick의 기본 사용법과 핸들러 함수를 분리하는 방법을 정리했습니다."
 custom_style: true
 ---
 
-React에서 사용자와 상호작용하기 위해 가장 많이 사용하는 이벤트 중 하나가 바로 **`onClick`**입니다.  
-HTML의 `onclick` 속성과 비슷하지만, 리액트만의 문법(CamelCase, 함수 전달 방식)을 따르므로 정확한 사용법을 아는 것이 중요합니다. 🖱️
+## 🧐 React에서 클릭 이벤트는 어떻게 처리할까요?
 
-이번 글에서는 `onClick`의 기본 사용법부터 실무에서 사용하는 함수 분리 패턴까지 알아보겠습니다.
+React에서 사용자와 상호작용할 때 가장 자주 사용하는 이벤트 중 하나가 `onClick`입니다.
+
+버튼을 클릭했을 때 콘솔을 찍거나, state를 변경하거나, API 요청을 보내는 등 다양한 작업을 할 수 있습니다.
+
+이번 글에서는 `onClick`의 기본 사용법과 핸들러 함수를 분리하는 방법을 정리해보겠습니다.
 
 ---
 
-## 1. onClick 기본 사용법 (인라인 함수)
+## 🛠️ onClick 기본 사용법
 
-React에서 클릭 이벤트를 처리할 때는 카멜 케이스(CamelCase)인 `onClick`을 사용합니다.  
-중괄호 `{}` 안에 실행할 함수를 넣어주면 되는데, 간단한 로직은 아래처럼 **화살표 함수(Arrow Function)**를 이용해 바로 작성할 수 있습니다.
+React에서는 클릭 이벤트를 처리할 때 `onClick`을 사용합니다.
 
-**App.js**
+HTML의 `onclick`과 비슷해 보이지만, React에서는 카멜 케이스인 `onClick`으로 작성합니다.
 
-```javascript
+```jsx
 function App() {
   return (
     <div>
-      {/* 화살표 함수로 콘솔 출력 로직을 직접 작성 */}
-      <button onClick={() => console.log("click!")}>클릭!!!</button>
+      <button onClick={() => console.log("click!")}>클릭</button>
     </div>
   );
 }
@@ -34,81 +35,130 @@ function App() {
 export default App;
 ```
 
-### 실행 결과
-
-버튼을 클릭하기 전에는 콘솔이 비어있지만, 클릭하는 순간 "click!"이 출력됩니다.
-
-![onClick 실행 전](https://user-images.githubusercontent.com/88264006/218914559-c76a3e80-c6cc-4fd2-aa02-8467ecff54a7.png)
-
-![onClick 실행 후](https://user-images.githubusercontent.com/88264006/218915181-13ed377a-b73e-49a7-9c85-b971f14d366d.png)
-
-> **주의사항:** `onClick={console.log("click")}` 처럼 함수 호출문 자체를 넣으면 안 됩니다. 그렇게 하면 렌더링될 때 함수가 바로 실행되어 버립니다. 반드시 **함수 그 자체** 혹은 **화살표 함수** `() => ...` 형태로 전달해야 합니다.
+버튼을 클릭하면 콘솔에 `"click!"`이 출력됩니다.
 
 ---
 
-## 2. onClick 함수 분리해서 관리하기 (Best Practice)
+## ⚠️ 함수 호출문을 바로 넣으면 안 돼요
 
-코드가 짧을 때는 인라인으로 작성해도 되지만, 로직이 복잡해지거나 실무 프로젝트에서는 **핸들러 함수를 컴포넌트 내부로 분리**하여 관리하는 것이 훨씬 깔끔하고 유지보수에 좋습니다.
+주의할 점이 있습니다.
 
-### 1) 매개변수(Event 객체)가 필요할 때
+다음처럼 작성하면 클릭할 때 실행되는 것이 아니라, 컴포넌트가 렌더링될 때 바로 실행됩니다.
 
-클릭한 요소의 정보가 필요하다면 이벤트 객체 `e` (SynthenticEvent)를 받아올 수 있습니다.
-
-```javascript
-function App() {
-  // 이벤트 객체(e)를 매개변수로 받는 함수 정의
-  const handleClick = (e) => {
-    console.log(e);
-    console.log("이벤트 타겟:", e.target); // 클릭된 태그 확인 가능
-  };
-
-  return (
-    <div>
-      {/* 함수에 e를 전달 */}
-      <button onClick={(e) => handleClick(e)}>클릭!!!</button>
-    </div>
-  );
-}
-
-export default App;
+```jsx
+<button onClick={console.log("click!")}>클릭</button>
 ```
 
-위 코드를 실행하고 버튼을 누르면 콘솔에 엄청난 양의 이벤트 정보가 출력되는 것을 볼 수 있습니다. 이를 통해 클릭한 좌표, 태그 정보 등을 활용할 수 있습니다.
+`onClick`에는 실행 결과가 아니라 **실행할 함수 자체**를 넘겨야 합니다.
 
-![이벤트 객체 로그](https://user-images.githubusercontent.com/88264006/218948840-203b9607-a732-48a2-bcfa-2e6f9b8ccd3d.png)
+그래서 다음처럼 작성해야 합니다.
 
-### 2) 매개변수가 없을 때 (가장 깔끔한 방법)
+```jsx
+<button onClick={() => console.log("click!")}>클릭</button>
+```
 
-특별히 전달할 인자가 없다면 굳이 `() =>` 화살표 함수를 쓰지 않고, **함수 이름만** 넣어주는 것이 가장 간결합니다.
+또는 함수를 따로 분리해서 넘길 수도 있습니다.
 
-```javascript
+---
+
+## 🧩 핸들러 함수 분리하기
+
+로직이 짧을 때는 인라인으로 작성해도 괜찮습니다.
+
+하지만 코드가 길어지거나 여러 작업이 들어가면 핸들러 함수를 따로 분리하는 편이 읽기 좋습니다.
+
+```jsx
 function App() {
-  // 실행할 함수 정의
   const handleClick = () => {
     console.log("click");
   };
 
   return (
     <div>
-      {/* 함수 이름만 전달 (가장 권장되는 방식) */}
-      <button onClick={handleClick}>클릭!!!</button>
+      <button onClick={handleClick}>클릭</button>
     </div>
   );
 }
 
 export default App;
-
-// 실행 결과
-// click
 ```
 
-> **Tip:** `onClick={handleClick}`으로 작성해도 첫 번째 인자로 자동으로 이벤트 객체(`e`)가 넘어갑니다. 따라서 위 1번 예제도 `onClick={handleClick}`으로 줄여 쓸 수 있습니다.
+`onClick={handleClick}`처럼 함수 이름만 넘기면 클릭했을 때 React가 해당 함수를 실행합니다.
 
 ---
 
-## 마치며
+## 📦 이벤트 객체 받기
 
-오늘은 리액트 이벤트 처리의 기초인 `onClick`에 대해 알아보았습니다.
-단순히 콘솔만 찍는 것이 아니라 state를 변경하거나 API를 호출하는 등 무궁무진하게 활용되니 꼭 익숙해지시길 바랍니다!
+클릭한 요소의 정보가 필요하다면 이벤트 객체를 받을 수 있습니다.
 
-혹시 궁금한 점이나 피드백이 있다면 편하게 댓글 달아주세요. 👋
+```jsx
+function App() {
+  const handleClick = (event) => {
+    console.log(event);
+    console.log(event.target);
+  };
+
+  return (
+    <div>
+      <button onClick={handleClick}>클릭</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+React는 이벤트 핸들러의 첫 번째 인자로 이벤트 객체를 자동으로 넘겨줍니다.
+
+따라서 굳이 다음처럼 한 번 더 감싸지 않아도 됩니다.
+
+```jsx
+<button onClick={(event) => handleClick(event)}>클릭</button>
+```
+
+물론 추가 인자를 함께 넘겨야 할 때는 화살표 함수로 감싸야 합니다.
+
+```jsx
+<button onClick={(event) => handleClick(event, 1)}>클릭</button>
+```
+
+---
+
+## 🧠 state 변경에 활용하기
+
+`onClick`은 state를 변경할 때도 자주 사용합니다.
+
+```jsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  const increase = () => {
+    setCount((prev) => prev + 1);
+  };
+
+  return (
+    <div>
+      <p>{count}</p>
+      <button onClick={increase}>증가</button>
+    </div>
+  );
+}
+```
+
+버튼을 누를 때마다 `count`가 1씩 증가합니다.
+
+---
+
+## ✅ 정리
+
+React에서 클릭 이벤트를 처리할 때는 `onClick`을 사용합니다.
+
+- React에서는 `onclick`이 아니라 `onClick`으로 작성합니다.
+- `onClick`에는 함수 호출 결과가 아니라 함수 자체를 넘겨야 합니다.
+- 로직이 길어지면 핸들러 함수를 분리하는 편이 좋습니다.
+- 이벤트 객체는 핸들러의 첫 번째 인자로 받을 수 있습니다.
+- 추가 인자를 넘길 때는 화살표 함수로 감싸면 됩니다.
+
+클릭 이벤트는 React에서 가장 자주 쓰는 이벤트 중 하나라서 기본 패턴을 익혀두면 좋습니다.
