@@ -1,108 +1,152 @@
 ---
-title: "[Next.js] 스마트 뒤로가기 구현: window.history.length의 함정과 해결책"
+title: "[Next.js] 안전한 뒤로가기 구현하기: router.back()만으로 부족할 때"
 date: 2026-04-19T13:38:55Z
 categories: [frontend]
 tags: [nextjs, react, javascript, navigation, seo]
-description: "단순 router.back() 사용 시 발생하는 무한 루프와 빈 페이지 문제를 해결하는 스마트 뒤로가기 로직을 공유합니다."
+description: "외부 유입과 내부 이동을 구분해 router.back()과 fallback 이동을 안전하게 처리하는 방법을 정리했습니다."
 custom_style: true
 ---
 
-## 🧐 뒤로가기, 왜 그냥 `router.back()`만 쓰면 안 될까?
+## 🧐 들어가며: 뒤로가기는 생각보다 까다로워요
 
-개발을 하다 보면 **상세 페이지**나 **결제 페이지**에서 "이전으로" 버튼을 만들어야 할 때가 많습니다. 처음에는 단순하게 `router.back()` 혹은 `history.back()`을 사용했죠. 하지만 실전에서는 예상치 못한 상황들이 터져 나왔습니다.
+상세 페이지나 결제 페이지를 만들다 보면 `이전으로` 버튼이 필요할 때가 많습니다.
 
-1.  외부 유입 시 미동작: 광고나 검색을 통해 바로 우리 페이지로 들어온 유저가 버튼을 누르면? 돌아갈 곳이 없어 버튼이 먹통이 됩니다.
-2.  보안/사용성 이슈: 외부 사이트(구글, 네이버 등)로 사용자를 쫓아내버리는 불상사가 발생합니다.
-3.  사용자 이탈: `history.length`가 1인 상태에서 뒤로가기를 실행하면 사용자는 우리 서비스 밖으로 나가버리게 됩니다.
+처음에는 단순하게 `router.back()`을 사용하면 충분해 보입니다.
 
-이런 문제를 방지하기 위해 **"우리 서비스 안에서의 이동인지"**와 **"돌아갈 기록이 있는지"**를 체크하는 로직이 반드시 필요하다는 것을 깨달았습니다.
+```tsx
+router.back();
+```
+
+하지만 실제 서비스에서는 몇 가지 애매한 상황이 생깁니다.
+
+- 검색이나 광고를 통해 상세 페이지로 바로 들어온 사용자는 돌아갈 내부 페이지가 없습니다.
+- 외부 사이트에서 들어온 사용자를 다시 외부 사이트로 내보낼 수 있습니다.
+- 브라우저 히스토리만 보고 판단하면 서비스 내부 이동인지 알기 어렵습니다.
+
+그래서 뒤로가기 버튼을 만들 때는 **정말 뒤로 가도 되는 상황인지**를 먼저 확인하고, 그렇지 않으면 안전한 경로로 이동시키는 fallback 처리가 필요합니다.
 
 ---
 
-## 🛠️ 실무형 스마트 뒤로가기 로직
+## 💡 기본 아이디어
 
-제가 실무에서 다듬은 코드는 `document.referrer`와 `window.history.length`를 조합하여 유저의 유입 경로를 판단합니다.
+안전한 뒤로가기를 만들기 위해 두 가지를 함께 확인했습니다.
 
-### 💻 코드 구현
+1. 브라우저에 이전 히스토리가 있는지
+2. 이전 페이지가 현재 서비스 내부 페이지인지
 
-```jsx
-/**
- * @param {string} fallbackPath - 이전 기록이 없을 때 이동할 대체 경로
- */
-const handleSmartBack = (fallbackPath = "/") => {
-  // 1. 브라우저 세션 히스토리에 쌓인 페이지가 1개보다 많은지 확인
-  const hasHistory = window.history.length > 1;
+이때 사용할 수 있는 값이 `window.history.length`와 `document.referrer`입니다.
 
-  // 2. 이전 주소(referrer)가 현재 우리 서비스의 도메인을 포함하고 있는지 확인
-  // 즉, 서비스 내부에서 이동해 온 것인지 판단
-  const isInternalNavigation = document.referrer.includes(window.location.host);
+```tsx
+const hasHistory = window.history.length > 1;
+const isInternalNavigation = document.referrer.includes(window.location.host);
+```
 
-  if (isInternalNavigation && hasHistory) {
-    // 내부 이동 기록이 있다면 안전하게 뒤로가기 수행
-    router.back();
-  } else {
-    // 기록이 없거나 외부 유입이라면 지정된 안전한 경로(메인 등)로 이동
+`hasHistory`는 브라우저 세션 히스토리에 이전 기록이 있는지 확인하고, `isInternalNavigation`은 이전 페이지가 현재 서비스 도메인인지 확인합니다.
+
+둘 다 만족할 때만 `router.back()`을 실행하고, 그렇지 않으면 미리 정한 경로로 이동시키면 됩니다.
+
+---
+
+## 🛠️ 구현 코드
+
+Next.js에서 사용할 수 있는 형태로 정리하면 다음과 같습니다.
+
+```tsx
+import { useRouter } from "next/navigation";
+
+export const useSmartBack = (fallbackPath = "/") => {
+  const router = useRouter();
+
+  const goBack = () => {
+    const hasHistory = window.history.length > 1;
+    const isInternalNavigation = document.referrer.includes(
+      window.location.host,
+    );
+
+    if (hasHistory && isInternalNavigation) {
+      router.back();
+      return;
+    }
+
     router.push(fallbackPath);
-  }
+  };
+
+  return { goBack };
 };
 ```
 
----
+사용하는 쪽에서는 이렇게 호출할 수 있습니다.
 
-## 💡 핵심 객체 및 함수 파헤치기
+```tsx
+const { goBack } = useSmartBack("/characters");
 
-이 로직을 이해하기 위해 꼭 알아야 할 세 가지 핵심 요소입니다.
+return (
+  <button type="button" onClick={goBack}>
+    이전으로
+  </button>
+);
+```
 
-### 1. `window.history.length`
-
-- 현재 브라우저 탭의 **세션 히스토리에 쌓인 페이지 수**를 반환합니다.
-- **주의점:** 새 탭에서 우리 사이트를 처음 열면 `1`이 찍힙니다. 즉, `1`보다 커야 돌아갈 곳이 있다는 뜻입니다.
-
-### 2. `document.referrer`
-
-- **현재 페이지로 오기 전의 URL** 정보를 담고 있습니다.
-- 직접 URL을 입력해서 들어오거나 즐겨찾기로 접속하면 `빈 문자열("")`이 출력됩니다.
-- `window.location.host`와 비교하여 **"남의 집(외부 사이트)"**에서 왔는지 **"우리 집(내부)"**에서 이동했는지 가려내는 결정적 역할을 합니다.
-
-### 3. `router.back()` vs `router.push()`
-
-- `router.back()`은 단순히 히스토리를 한 칸 뒤로 돌립니다.
-- `router.push()`는 새로운 히스토리를 쌓으며 지정된 경로로 강제 이동시킵니다.
+이렇게 하면 내부 목록 페이지에서 상세 페이지로 들어온 사용자는 자연스럽게 이전 페이지로 돌아가고, 외부에서 바로 들어온 사용자는 `/characters` 같은 안전한 경로로 이동합니다.
 
 ---
 
-## 🚀 실전 포인트: 언제, 어떻게 써야 할까?
+## 📌 window.history.length
 
-### ✅ 언제 써야 하는가?
+`window.history.length`는 현재 브라우저 탭의 세션 히스토리 개수를 알려줍니다.
 
-- 이벤트 상세 페이지: 유입 경로가 광고(외부)일 수도 있고, 목록(내부)일 수도 있을 때.
-- 폼 작성 취소 버튼: 유저가 작업 중이던 맥락을 유지하며 이전으로 보내줘야 할 때.
-- 404 페이지: 길을 잃은 유저에게 "이전으로 돌아가기" 기능을 제공할 때.
+```tsx
+const hasHistory = window.history.length > 1;
+```
 
-### ⚠️ 실수하기 쉬운 부분
+새 탭에서 현재 페이지를 처음 열었다면 보통 `1`입니다. 그래서 `1`보다 크면 이전 기록이 있다고 볼 수 있습니다.
 
-- `document.referrer`는 **보안 정책(Referrer-Policy)**에 따라 값이 누락될 수 있습니다. 그래서 반드시 `isInternalNavigation` 체크와 `hasHistory` 체크를 병행해야 합니다.
-- 단순히 `window.history.length > 1`만 체크하면, 구글 검색을 통해 들어온 유저도 `history.length`가 2 이상일 수 있어 구글로 튕겨버릴 수 있습니다.
-
-### 🧐 실제 개발 경험 (Troubleshooting)
-
-처음에 `history.length`만 믿고 배포했다가, 카카오톡 인앱 브라우저에서 유입된 유저들이 "뒤로가기를 누르니까 카카오톡 채팅방으로 나가져요!"라는 CS를 보낸 적이 있었습니다.
-이를 해결하기 위해 `document.referrer`를 추가하여 **우리 서비스 도메인 내부에서의 흐름**인지를 검증하는 로직을 추가했고, 그 결과 이탈률을 유의미하게 줄일 수 있었습니다.
+다만 이것만으로는 부족합니다. 이전 기록이 있더라도 그 기록이 우리 서비스 내부 페이지인지, 검색 엔진이나 메신저 같은 외부 페이지인지는 알 수 없기 때문입니다.
 
 ---
 
-## 📊 로직 비교 정리
+## 📌 document.referrer
 
-| 방식                      | 외부 유입 시 동작                | 서비스 이탈 위험 | 권장 상황            |
-| :------------------------ | :------------------------------- | :--------------- | :------------------- |
-| Simple back()             | 이전 페이지(검색 엔진 등)로 이동 | 높음             | 없음 (비권장)        |
-| History Length 체크       | 히스토리 있으면 무조건 이동      | 보통             | 단순 웹 앱 내부 이동 |
-| 스마트 백 (Referrer 조합) | 지정된 안전 경로로 이동          | 매우 낮음        | 상업용 서비스 필수   |
+`document.referrer`는 현재 페이지로 오기 전 페이지의 URL을 담고 있습니다.
+
+```tsx
+const isInternalNavigation = document.referrer.includes(window.location.host);
+```
+
+이 값에 현재 서비스의 host가 포함되어 있다면 내부 페이지에서 이동해온 것으로 판단할 수 있습니다.
+
+다만 `document.referrer`도 항상 완벽한 값은 아닙니다. 직접 URL을 입력하거나, 브라우저 보안 정책에 따라 referrer가 비어 있을 수 있습니다.
+
+그래서 `history.length`와 `referrer`를 함께 확인하는 편이 더 안전합니다.
 
 ---
 
-## 🏷️ 마치며
+## 📊 방식 비교
 
-사용자 경험(UX)은 아주 사소한 "뒤로가기" 버튼 하나에서도 결정됩니다. `window.history`와 `referrer`를 적절히 섞어 쓰는 이 한 줄의 로직이 유저가 우리 서비스에 머무르는 시간을 조금 더 늘려줄 것입니다.
+| 방식 | 장점 | 아쉬운 점 |
+| --- | --- | --- |
+| `router.back()`만 사용 | 구현이 가장 간단함 | 외부 페이지로 돌아갈 수 있음 |
+| `history.length`만 확인 | 이전 기록 유무를 알 수 있음 | 내부 이동인지 알 수 없음 |
+| `referrer`까지 확인 | 내부 이동 여부를 함께 판단 가능 | referrer가 비어 있는 경우를 고려해야 함 |
 
-지금 바로 여러분의 프로젝트에 **안전한 후진 기어**를 장착해 보세요! 🏎️
+완벽한 정답이라기보다는, 사용자를 서비스 밖으로 갑자기 내보내지 않기 위한 안전장치에 가깝습니다.
+
+---
+
+## ⚠️ 주의할 점
+
+이 방식은 브라우저 환경에서만 동작합니다. `window`와 `document`를 사용하기 때문에 서버 컴포넌트나 서버 렌더링 중에는 직접 실행하면 안 됩니다.
+
+Next.js App Router에서는 클라이언트 컴포넌트 안에서 버튼 클릭 이벤트로 실행하는 방식이 가장 자연스럽습니다.
+
+또 `document.referrer`는 정책에 따라 비어 있을 수 있으므로, referrer가 없을 때 이동할 fallback 경로를 반드시 준비해두는 것이 좋습니다.
+
+---
+
+## ✅ 마무리
+
+뒤로가기 버튼은 작아 보이지만, 사용자의 이동 흐름을 크게 좌우합니다.
+
+`router.back()`만 사용하면 간단하지만, 외부 유입 사용자를 예상하지 못한 곳으로 보내버릴 수 있습니다.
+
+`window.history.length`로 이전 기록이 있는지 확인하고, `document.referrer`로 내부 이동인지 한 번 더 확인하면 조금 더 안전한 뒤로가기 경험을 만들 수 있습니다.

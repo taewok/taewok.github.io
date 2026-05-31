@@ -3,97 +3,136 @@ title: "[JavaScript] lodash throttle로 이벤트 호출 횟수 제한하기"
 date: 2025-09-19 17:45:00 +0900
 categories: [javascript, performance]
 tags: [javascript, lodash, throttle, event]
+description: "lodash throttle을 사용해 scroll, resize처럼 자주 발생하는 이벤트의 실행 횟수를 제한하는 방법을 정리했습니다."
+custom_style: true
 ---
 
-프론트엔드 개발을 하다 보면 스크롤 이벤트, 윈도우 리사이즈 이벤트처럼 `짧은 시간에 너무 많이 발생하는 이벤트`를 다뤄야 하는 경우가 많은데요.
-이때 이벤트 핸들러가 매번 실행되면 성능에 큰 문제가 생길 수 있습니다 😅
+## 들어가며
 
-이럴 때 유용한 도구가 바로 lodash의 **throttle** 함수예요.  
-이번 글에서는 **throttle**을 사용해서 이벤트 호출 횟수를 일정 시간 안에서 제한하는 방법을 정리해볼게요!
+프론트엔드 개발을 하다 보면 scroll, resize, mousemove처럼 짧은 시간 안에 아주 많이 발생하는 이벤트를 다룰 때가 있습니다.
+
+이때 이벤트가 발생할 때마다 무거운 로직을 실행하면 성능 문제가 생길 수 있습니다.
+
+이런 상황에서 사용할 수 있는 도구가 `throttle`입니다.
 
 ---
 
-### 📦 lodash 설치
+## throttle이란?
+
+throttle은 일정 시간 동안 함수가 너무 자주 실행되지 않도록 제한하는 기법입니다.
+
+예를 들어 1초에 한 번만 실행되도록 설정하면, 이벤트가 수십 번 발생해도 함수는 최대 1초에 한 번만 실행됩니다.
+
+스크롤 위치 추적이나 브라우저 크기 감지처럼 주기적으로 실행되면 충분한 작업에 잘 어울립니다.
+
+---
+
+## lodash 설치하기
 
 ```bash
 npm install lodash
-# 또는
+```
+
+또는 yarn을 사용한다면 다음 명령어로 설치할 수 있습니다.
+
+```bash
 yarn add lodash
 ```
 
-lodash는 JavaScript에서 자주 쓰이는 유틸리티 라이브러리로, debounce, cloneDeep, isEqual 등 다양한 기능이 들어있습니다.
+---
 
-<br/> 
-<h3><b>⚡ throttle 기본 사용법</b></h3>
+## 기본 사용법
 
-```jsx
+```js
 import { throttle } from "lodash";
 
-const log = () => {
-  console.log("scroll event!", new Date().toLocaleTimeString());
+const logScroll = () => {
+  console.log("scroll event", window.scrollY);
 };
 
-const throttledLog = throttle(log, 2000); // 2초에 한 번만 실행
+const throttledLogScroll = throttle(logScroll, 1000);
 
-window.addEventListener("scroll", throttledLog);
+window.addEventListener("scroll", throttledLogScroll);
 ```
 
-<ul> <li><code>throttle(func, wait)</code>: 지정한 <code>wait</code> 밀리초 동안 함수 실행을 제한</li> 
-<li><code>log</code>: 원래 실행하려던 함수</li> <li><code>throttledLog</code>: throttle로 감싼 새로운 함수</li> </ul>
+위 코드는 스크롤 이벤트가 계속 발생해도 `logScroll`이 1초에 한 번 정도만 실행되게 만듭니다.
 
-위 코드에서는 스크롤 이벤트가 수십 번 발생하더라도 2초에 한 번만 log 함수가 실행됩니다 🚀
+---
 
-<br/> 
-<h3><b>🛠️ 옵션 사용하기</b></h3>
+## 옵션 사용하기
 
 lodash throttle은 실행 시점을 제어할 수 있는 옵션을 제공합니다.
 
-```jsx
-const throttledLog = throttle(log, 2000, {
-  leading: true, // 처음 호출 시 실행 여부 (기본값 true)
-  trailing: false, // 마지막 호출 후 실행 여부 (기본값 true)
+```js
+const throttledLog = throttle(logScroll, 1000, {
+  leading: true,
+  trailing: true,
 });
 ```
 
-- leading: true → 이벤트가 시작되자마자 실행
-- trailing: true → 마지막 이벤트가 끝난 후 실행
-- 필요에 따라 true/false를 조합해서 원하는 타이밍으로 제어할 수 있습니다.
+`leading`은 첫 호출 시 바로 실행할지 정합니다.
 
-<br/> 
-<h3><b>🖼️ React에서 활용하기</b></h3>
+`trailing`은 마지막 호출 이후 한 번 더 실행할지 정합니다.
 
-React 컴포넌트에서 throttle을 쓸 때는 useCallback과 함께 쓰는 게 좋아요.
+기본값은 둘 다 `true`입니다.
 
-{% raw %}
+---
 
-```jsx
-import { useEffect, useCallback } from "react";
+## React에서 사용하기
+
+React에서는 이벤트 리스너 정리를 함께 해주는 것이 중요합니다.
+
+```tsx
+import { useEffect, useMemo } from "react";
 import { throttle } from "lodash";
 
-export default function ScrollTracker() {
-  const handleScroll = useCallback(
-    throttle(() => {
-      console.log("스크롤 위치:", window.scrollY);
-    }, 1000),
+const ScrollTracker = () => {
+  const handleScroll = useMemo(
+    () =>
+      throttle(() => {
+        console.log("스크롤 위치:", window.scrollY);
+      }, 1000),
     [],
   );
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      handleScroll.cancel();
+    };
   }, [handleScroll]);
 
-  return <div style={{ height: "200vh" }}>스크롤 테스트 🚀</div>;
-}
+  return <div style={{ height: "200vh" }}>스크롤 테스트</div>;
+};
+
+export default ScrollTracker;
 ```
 
-{% endraw %}
+cleanup에서 이벤트 리스너를 제거하고 `cancel()`도 호출하면 예약된 trailing 실행까지 정리할 수 있습니다.
 
-이렇게 하면 스크롤할 때마다 로그가 찍히지 않고, 1초에 한 번만 실행되어 성능을 최적화할 수 있습니다 👍
+---
 
-<br/> 
-<h3><b>📝 사용 후기</b></h3>
+## debounce와의 차이
 
-throttle을 쓰면서 가장 좋았던 점은, 필요 이상으로 이벤트 핸들러가 실행되는 걸 막아 성능 저하를 예방할 수 있다는 거였어요.
-특히 스크롤 기반 애니메이션, 무한 스크롤, 윈도우 리사이즈 감지 같은 곳에서 효과적입니다.
-debounce와 헷갈리기 쉬운데, throttle은 "주기적으로 실행", debounce는 "마지막에만 실행"이라는 차이를 잘 이해해 두면 유용하게 쓸 수 있습니다.
+throttle과 debounce는 자주 비교됩니다.
+
+| 구분 | throttle | debounce |
+| --- | --- | --- |
+| 실행 방식 | 일정 시간마다 실행 | 이벤트가 멈춘 뒤 실행 |
+| 어울리는 상황 | scroll, resize, mousemove | 검색 입력, 자동 저장, 유효성 검사 |
+
+스크롤 중 계속 위치를 확인해야 한다면 throttle이 어울립니다.
+
+입력이 끝난 뒤 한 번만 실행하고 싶다면 debounce가 어울립니다.
+
+---
+
+## 마무리
+
+throttle은 너무 자주 발생하는 이벤트의 실행 횟수를 일정 시간 단위로 제한해줍니다.
+
+스크롤, 리사이즈, 마우스 이동처럼 연속적으로 발생하는 이벤트에 사용하면 성능 부담을 줄일 수 있습니다.
+
+React에서 사용할 때는 이벤트 제거와 `cancel()` 호출까지 함께 정리해두면 더 안전합니다.

@@ -1,127 +1,127 @@
 ---
-title: "[React-Native] 개발환경 구축"
-date: 2023-10-15T18:39:000
+title: "[React Native] 개발 환경 구축하기"
+date: 2023-10-15T18:39:00
 categories: [react-native]
-tags: [react-native] #소문자만 가능
+tags: [react-native, expo, android-studio]
+description: "React Native를 시작하기 위해 Node.js, Expo, Android Studio를 준비하는 기본 개발 환경 구축 흐름을 정리했습니다."
+custom_style: true
 ---
 
+## 들어가며
+
+React Native는 JavaScript와 React를 기반으로 모바일 앱을 만들 수 있는 프레임워크입니다.
+
+React를 공부한 경험이 있다면 컴포넌트, props, state 같은 개념을 이어서 사용할 수 있다는 장점이 있습니다.
+
+이번 글에서는 React Native를 처음 시작할 때 필요한 개발 환경 구축 흐름을 정리해볼게요.
+
 ---
 
-## React-Native 시작하게된 계기
+## React Native란?
 
-<p>기존 react를 다뤘다면 크게 어렵지 않을 것이라는 지인의 추천으로 react-native에 흥미를 가지게 되어 도전하게 되었다. 그래서 제일 먼저 react-native가 무엇이며 개발 환경을 세팅하려면 어떻게 해야 하는지 알아보았다.
-</p>
+React Native는 iOS와 Android 앱을 만들 수 있는 모바일 앱 개발 프레임워크입니다.
 
-<br/>
+웹에서 사용하는 React 문법과 비슷한 방식으로 UI를 구성하지만, 실제 렌더링은 모바일 네이티브 컴포넌트를 기반으로 동작합니다.
 
-## React-Native란?
+처음 학습할 때는 Expo를 사용하면 환경 설정 부담을 줄이고 빠르게 시작할 수 있습니다.
 
-<p>
-리액트 네이티브(React Native)는 Facebook에서 개발한 오픈 소스 프레임워크로, 모바일 애플리케이션을 개발하기 위한 도구입니다. JavaScript와 리액트(React)를 기반으로 하여 iOS와 안드로이드 모바일 플랫폼용 네이티브 애플리케이션을 구축할 수 있습니다. 
-</p>
+---
 
-<br/>
+## Node.js 준비하기
 
-## React-Native 개발 환경
+React Native와 Expo를 사용하려면 Node.js가 필요합니다.
 
-### 1. Node.js 설치
+이미 Node.js가 설치되어 있다면 버전을 확인합니다.
 
-<p>본인은 기존에 npm 패키지를 사용하고 있어 따로 설치는 안했지만 Expo cli를 설치하는 중에 버전 호환에 문제가 생겨 nvm을 통해 17버전에서 16버전으로 다운그레이드 해주었다.</p>
-
-- 다운그레이드 과정
-  1. 아래 경로로 이동해서 Windows용 nvm설치 파일을 다운로드 한다. nvm-setup.zip 파일을 다운로드 한다.<br/><a href="https://github.com/coreybutler/nvm-windows/releases">https://github.com/coreybutler/nvm-windows/releases</a>
-
-  2. 다음 명령어를 통해 node 16버전 다운 받기
-
-  ```js
-  nvm install 16
-  ```
-
-  3. 사용할 버전으로 변경해준다.
-
-  ```js
-  nvm use {사용할 버전}
-  ```
-
-<br/>
-
-### 2. Expo CLI(Expo Command Line Interface) 설치
-
-<p>리액트 네이티브 기반의 모바일 앱을 쉽게 개발할 수 있도록 도와주는 도구로 Expo Cli의 가장 큰 장점은 초기 환경 세팅이 간단하다는 것 이다. 다른 선택지로 react-native-cli를 사용하는 방법도 있지만 초기 환경 세팅이 꽤 귀찮다는 단점으로 인해 Expo CLI를 사용하기로 하였다.</p>
-
-```js
-//expo-cli 설치
-npm install -g expo-cli
+```bash
+node -v
+npm -v
 ```
 
-<br/>
+여러 프로젝트에서 Node 버전을 바꿔야 한다면 nvm 같은 버전 관리 도구를 사용하는 것이 편합니다.
 
-### 3. Android Studio 설치
+Windows에서는 `nvm-windows`를 사용할 수 있습니다.
 
-<p>Android Studio를 사용하면 애뮬레이터를 화면에 띄어서 안드로이드 화면을 보며 개발을 할 수 있습니다.</p>
+```bash
+nvm install 18
+nvm use 18
+```
 
-<p>최신 버전에 Andriod 스튜디오를 설치한다</p>
-<a href="https://developer.android.com/studio">https://developer.android.com/studio</a>
-
-- 설치과정
-
-1. android-studio exe 파일 실행
-
-2. <p>Next 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Foy1SN%2FbtscxbCQVkt%2Fa0lTA25rLVqWVckKzukU80%2Fimg.png"><br/>
-
-3. <p>Next 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FTAx1k%2FbtscwEZxsI7%2FXWbJzqqXKAiq2yy0Poeoqk%2Fimg.png"/>
-   <br/>
-
-4. <p>Next 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FRiF1s%2FbtscwKL8yuG%2FdYEvDLfkHo8ruVgiF4aST1%2Fimg.png"/>
-   <br/>
-
-5. <p>install 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdim1AN%2FbtscxnpCIB7%2FgKPHkOqJmFynLhh3GLWK60%2Fimg.png"/>
-   <br/>
-
-6. <p>Finish 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FeJaqY3%2FbtscHd6SYsh%2FEgHxn6wd7D3K6B805LVKB0%2Fimg.png"/> 
-   <br/>
-
-7. <p>안드로이드 스튜디오 실행 후 ok 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbKsI1D%2FbtscFDrxjUj%2FkICWMWNm0cvwR4VDihVZZK%2Fimg.png"/>
-   <br/>
-
-8. <p>Don’t send 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdNxeDf%2FbtscGyczJ2t%2F8HhDNg1immi6TWRObKe8KK%2Fimg.png"/>
-   <br/>
-
-9. <p>Next 클릭</p>
-   <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FCbpob%2FbtsctK0lqy1%2FvoP4fmO68gO40d3CTP2xZ0%2Fimg.png"/>
-   <br/>
-
-10. <p>Custom은 할 줄 모르는 초보니 Standard 그대로 Next 클릭</p>
-    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FCbpob%2FbtsctK0lqy1%2FvoP4fmO68gO40d3CTP2xZ0%2Fimg.png"/>
-    <br/>
-
-11. <p>눈 건강을 위해 Darcula Mode Next 클릭</p>
-    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fsxk6u%2Fbtscwnqcse6%2FqQbwsiMmCFP7acYJXIkgd1%2Fimg.png"/>
-    <br/>
-
-12. <p>Next 클릭</p>
-    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdGkcjd%2FbtscyHnV2KJ%2F6ntFKfMtKKnSEVKfWDvjKk%2Fimg.png"/>
-    <br/>
-
-13. <p>왼쪽 Licenses들을 하나씩 클릭하여 모두 Accept하고 Finish 클릭</p>
-    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcALOic%2FbtscGMocQo9%2F2Nl38rhfoFNxOnWFMNvlzk%2Fimg.png"/>
-    <br/>
-
-14. <p>설치완료되면 Finish 클릭</p>
-    <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcaKfyP%2FbtscGITDUrl%2FCTGf5POrQmgcFSc0eAt3V0%2Fimg.png"/>
-
-<br/>
+프로젝트나 Expo 버전에 따라 권장 Node 버전이 다를 수 있으니, 사용 중인 도구의 문서를 함께 확인하는 것이 좋습니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## Expo로 시작하기
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+Expo는 React Native 앱을 쉽게 만들고 실행할 수 있게 도와주는 도구입니다.
+
+새 프로젝트는 아래 명령어로 만들 수 있습니다.
+
+```bash
+npx create-expo-app my-app
+```
+
+프로젝트 폴더로 이동한 뒤 실행합니다.
+
+```bash
+cd my-app
+npm start
+```
+
+개발 서버가 실행되면 QR 코드가 표시되고, Expo Go 앱으로 실제 기기에서 확인할 수 있습니다.
+
+---
+
+## Android Studio 설치하기
+
+Android 에뮬레이터에서 앱을 실행하려면 Android Studio가 필요합니다.
+
+Android Studio를 설치하면 Android SDK, 에뮬레이터, 가상 기기 관리 도구를 함께 사용할 수 있습니다.
+
+설치 후에는 보통 아래 항목을 확인합니다.
+
+- Android SDK 설치 여부
+- Android SDK Platform 설치 여부
+- Android Emulator 설치 여부
+- 가상 기기 생성 여부
+
+에뮬레이터를 사용할 계획이라면 Android Studio의 Device Manager에서 가상 기기를 하나 만들어두면 됩니다.
+
+---
+
+## 실제 기기로 확인하기
+
+Expo를 사용하면 처음에는 실제 기기에서 확인하는 방식이 가장 간단합니다.
+
+1. 휴대폰에 Expo Go 앱을 설치합니다.
+2. PC와 휴대폰을 같은 네트워크에 연결합니다.
+3. `npm start`로 개발 서버를 실행합니다.
+4. 터미널이나 브라우저에 표시된 QR 코드를 Expo Go로 스캔합니다.
+
+이렇게 하면 Android Studio 에뮬레이터 설정 없이도 빠르게 앱을 확인할 수 있습니다.
+
+---
+
+## 개발 환경에서 자주 만나는 문제
+
+React Native 환경 구축은 운영체제, Node 버전, Android SDK 설정에 따라 문제가 달라질 수 있습니다.
+
+문제가 생기면 아래 순서로 확인해보면 좋습니다.
+
+1. Node.js 버전이 프로젝트와 맞는지 확인합니다.
+2. 패키지를 다시 설치합니다.
+3. Expo 개발 서버를 재시작합니다.
+4. Android Studio SDK 설정을 확인합니다.
+5. PC와 모바일 기기가 같은 네트워크에 있는지 확인합니다.
+
+처음에는 Expo Go로 실제 기기에서 실행해보고, 이후 필요할 때 에뮬레이터 환경을 잡는 방식도 좋습니다.
+
+---
+
+## 마무리
+
+React Native를 처음 시작할 때는 Expo를 사용하면 훨씬 가볍게 출발할 수 있습니다.
+
+기본적으로 Node.js를 준비하고, `create-expo-app`으로 프로젝트를 만든 뒤, Expo Go나 Android Studio 에뮬레이터로 실행하면 됩니다.
+
+환경 구축은 한 번에 완벽하게 끝내기보다, 실제 실행이 되는 최소 흐름부터 잡고 필요한 설정을 하나씩 추가하는 방식이 가장 편합니다.

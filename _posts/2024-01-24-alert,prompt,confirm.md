@@ -1,76 +1,104 @@
 ---
-title: "[javascript] alert, prompt, confirm"
-date: 2024-01-24T16:01:000
-categories: [react, javascript]
-tags: [react, javascript] #소문자만 가능
+title: "[JavaScript] alert, prompt, confirm 정리"
+date: 2024-01-24T16:01:00
+categories: [javascript]
+tags: [javascript, browser, dialog]
+description: "브라우저 기본 대화상자인 alert, prompt, confirm의 역할과 반환값을 정리했습니다."
+custom_style: true
 ---
 
+## 들어가며
+
+JavaScript에는 브라우저에서 바로 사용할 수 있는 기본 대화상자 함수가 있습니다.
+
+`alert`, `prompt`, `confirm`입니다.
+
+요즘 서비스에서는 커스텀 모달을 더 많이 사용하지만, 간단한 테스트나 학습용으로는 여전히 유용합니다.
+
 ---
 
-<h3><blockquote>alert()
-</blockquote></h3>
+## alert()
 
-<p>사용자에게 간단한 메시지를 보여주는 기능을 수행하는 함수이며, 함수를 호출하면 브라우저는 경고 창을 띄워서 메시지를 표시하며, 사용자가 확인 버튼을 누르기 전까지는 다른 작업을 진행할 수 없습니다.</p>
-<br/>
-
-<p>간단한 alert() 함수의 사용 예제는 다음과 같습니다.</p>
-
-<p class="codepen" data-height="300" data-default-tab="html,result" data-slug-hash="QWoyqJw" data-user="taewok" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/taewok/pen/QWoyqJw">
-  Untitled</a> by taewok (<a href="https://codepen.io/taewok">@taewok</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
-
-<br/>
-
-<h3><blockquote>prompt()
-</blockquote></h3>
-
-<p>사용자에게 입력을 받기 위해 사용되는 간단한 대화상자(Dialog)입니다. 사용자에게 텍스트를 입력받는 데 주로 사용됩니다.</p>
-<br/>
-
-<p>간단한 prompt() 함수의 사용 예제는 다음과 같습니다.</p>
-
-<p class="codepen" data-height="300" data-default-tab="html,result" data-slug-hash="QWoyqob" data-user="taewok" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/taewok/pen/QWoyqob">
-  prompt</a> by taewok (<a href="https://codepen.io/taewok">@taewok</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
-
-<br/>
+`alert()`는 사용자에게 간단한 메시지를 보여줍니다.
 
 ```js
-const userInput = prompt(message, defaultText);
+alert("저장이 완료되었습니다.");
 ```
 
-- <b>message</b>: 사용자에게 보여질 메시지 또는 안내문입니다. 이는 일반적으로 입력이 어떤 목적으로 필요한지에 대한 안내를 담고 있습니다.
+사용자가 확인 버튼을 누르기 전까지 다음 작업이 진행되지 않습니다.
 
-- <b>defaultText</b> (선택적): 입력 상자에 미리 표시될 기본 텍스트입니다. 사용자는 이 텍스트를 그대로 사용하거나 변경할 수 있습니다.
-
-- <b>userInput</b>: 사용자가 입력한 텍스트를 반환하며 사용자가 '취소' 버튼을 누르면 null이 반환됩니다.
-
-<br/>
-
-<h3><blockquote>confirm()
-</blockquote></h3>
-
-<p>사용자에게 확인 대화 상자를 표시하여 "확인" 또는 "취소" 버튼을 클릭하게 하고, 사용자의 선택에 따라 true 또는 false 값을 반환하는 함수입니다.</p>
-<br/>
-
-<p>간단한 confirm() 함수의 사용 예제는 다음과 같습니다.</p>
-
-<p class="codepen" data-height="300" data-default-tab="html,result" data-slug-hash="Babdebe" data-user="taewok" style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-  <span>See the Pen <a href="https://codepen.io/taewok/pen/Babdebe">
-  Untitled</a> by taewok (<a href="https://codepen.io/taewok">@taewok</a>)
-  on <a href="https://codepen.io">CodePen</a>.</span>
-</p>
-<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+그래서 실제 서비스에서는 남용하면 사용자 경험이 답답해질 수 있습니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## prompt()
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+`prompt()`는 사용자에게 문자열 입력을 받을 수 있는 대화상자를 띄웁니다.
+
+```js
+const name = prompt("이름을 입력해주세요.");
+
+console.log(name);
+```
+
+기본값을 함께 전달할 수도 있습니다.
+
+```js
+const name = prompt("이름을 입력해주세요.", "홍길동");
+```
+
+사용자가 값을 입력하고 확인을 누르면 입력한 문자열이 반환됩니다.
+
+취소를 누르면 `null`이 반환됩니다.
+
+---
+
+## confirm()
+
+`confirm()`은 사용자에게 확인 또는 취소를 선택하게 합니다.
+
+```js
+const result = confirm("정말 삭제하시겠어요?");
+
+if (result) {
+  console.log("삭제를 진행합니다.");
+} else {
+  console.log("삭제를 취소했습니다.");
+}
+```
+
+확인을 누르면 `true`, 취소를 누르면 `false`를 반환합니다.
+
+삭제, 로그아웃처럼 사용자의 의사를 한 번 더 확인하고 싶을 때 사용할 수 있습니다.
+
+---
+
+## 세 함수 비교
+
+| 함수 | 역할 | 반환값 |
+| --- | --- | --- |
+| `alert()` | 메시지 표시 | 없음 |
+| `prompt()` | 텍스트 입력 받기 | 문자열 또는 `null` |
+| `confirm()` | 확인/취소 선택 | `true` 또는 `false` |
+
+---
+
+## 사용할 때 주의할 점
+
+브라우저 기본 대화상자는 디자인을 자유롭게 바꾸기 어렵습니다.
+
+또한 대화상자가 떠 있는 동안 사용자가 다른 작업을 하기 어렵습니다.
+
+그래서 실제 서비스 UI에서는 SweetAlert2 같은 라이브러리나 직접 만든 모달 컴포넌트를 사용하는 경우가 많습니다.
+
+다만 간단한 실습이나 동작 확인 용도로는 빠르게 사용하기 좋습니다.
+
+---
+
+## 마무리
+
+`alert`, `prompt`, `confirm`은 브라우저에서 제공하는 기본 대화상자 함수입니다.
+
+메시지만 보여줄 때는 `alert`, 입력을 받을 때는 `prompt`, 확인 여부를 받을 때는 `confirm`을 사용합니다.
+
+실제 서비스에서는 사용자 경험을 고려해 커스텀 모달로 대체하는 경우가 많다는 점도 함께 기억해두면 좋습니다.

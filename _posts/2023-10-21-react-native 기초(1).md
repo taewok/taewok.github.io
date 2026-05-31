@@ -1,178 +1,183 @@
 ---
-title: "[React-Native] 기초 학습"
-date: 2023-10-21T22:30:000
+title: "[React Native] 기본 컴포넌트와 스타일링 정리"
+date: 2023-10-21T22:30:00
 categories: [react-native]
-tags: [react-native] #소문자만 가능
+tags: [react-native, component, stylesheet]
+description: "React Native에서 자주 사용하는 View, Text, Button, TextInput, FlatList와 StyleSheet 사용법을 정리했습니다."
+custom_style: true
 ---
 
+## 들어가며
+
+React Native는 React 문법을 사용하지만, 웹의 HTML 태그를 그대로 사용하지는 않습니다.
+
+웹에서는 `div`, `p`, `button`, `input`을 사용하지만 React Native에서는 모바일 네이티브 UI에 맞는 컴포넌트를 사용합니다.
+
+이번 글에서는 React Native를 처음 시작할 때 자주 만나는 기본 컴포넌트를 정리해볼게요.
+
 ---
 
-<p>React-Native를 학습하기 위해 노마드 코더의 <a href="https://nomadcoders.co/react-native-for-beginners/lectures/3252">왕초보를 위한 React Native 101</a> 무료 강의를 들으며 새롭게 알게 된 React-Native의 지식을 써 내려가며 다시 한번 학습해야겠다.</p>
-<br/>
+## View
 
-## React-Native 컴포넌트란?
+`View`는 레이아웃을 구성하는 가장 기본적인 컨테이너입니다.
 
-<p>React와 비슷한 구문 및 컨셉을 사용하지만 React-Native는 HTML태그가 아닌 react-native에서 지원하는 자체 컴포넌트를 사용한다.
-<br/>
-<br/>
-예를 들어, 웹에서는 <strong>&lt;div&gt;,  &lt;p&gt;,  &lt;button&gt;,  &lt;input&gt;</strong>와 같은 HTML 태그를 사용하지만, React Native에서는 <strong>&lt;View&gt;,  &lt;Text&gt;,  &lt;Button&gt;,  &lt;TextInput&gt;</strong>과 같은 리액트 네이티브 컴포넌트를 사용하며 이러한 컴포넌트는 모바일 앱의 네이티브 UI 구성 요소와 일치하도록 변환된다.
-</p>
-<br/>
+웹의 `div`와 비슷한 역할을 합니다.
 
-### &lt;View&gt; (View == div)
-
-<p>View는 리액트 네이티브에서 컨테이너로 사용되는 컴포너트로 &lt;div&gt;와 마찬가지로 여러 컴포넌트나 요소를 감싸고, 레이아웃을 구성할 때 사용합니다.</p>
-
-```jsx
+```tsx
 import { View } from "react-native";
 
-<View style={styles.container}>
-  {/* 다른 컴포넌트들을 이 안에 배치할 수 있음 */}
-</View>;
+const App = () => {
+  return (
+    <View>
+      {/* 다른 컴포넌트를 이 안에 배치합니다. */}
+    </View>
+  );
+};
+
+export default App;
 ```
 
-<br/>
+여러 컴포넌트를 묶거나 화면 구조를 나눌 때 사용합니다.
 
-### &lt;Text&gt; (Text == p, span, h1)
+---
 
-<p>Text는 컴포넌트는 기존의 모든 텍스트를 표시하는 데 사용되며, 여러 형식의 텍스트 표시에 유용합니다. HTML의 <strong>&lt;p&gt;, &lt;span&gt;, &lt;h1&gt;</strong>과 유사한 역할을 하며 텍스트 관련 스타일링을 적용할 수 있습니다.</p>
+## Text
 
-```jsx
+React Native에서는 텍스트를 반드시 `Text` 컴포넌트 안에 넣어야 합니다.
+
+```tsx
 import { Text } from "react-native";
 
-<Text>{/* 이 텍스트는 리액트 네이티브 Text 컴포넌트로 표시됩니다. */}</Text>;
+const App = () => {
+  return <Text>Hello, React Native!</Text>;
+};
+
+export default App;
 ```
 
-<br/>
+웹처럼 아무 태그 안에나 문자열을 바로 넣는 방식과 다르기 때문에 처음에 자주 실수하는 부분입니다.
 
-### &lt;Button&gt; (Button == button)
+---
 
-<p>Button은 클릭 가능한 버튼을 생성하는 데 사용되며
-HTML의 <strong>&lt;button&gt;</strong>과 유사한 역할을 하며, 사용자 상호작용을 처리할 때 유용하다.</p>
+## Button
 
-```jsx
+`Button`은 기본 버튼 컴포넌트입니다.
+
+```tsx
 import { Button } from "react-native";
 
-<Button
-  title="클릭하세요"
-  onPress={() => {
-    // 클릭 이벤트 핸들러
-  }}
-/>;
+const App = () => {
+  return (
+    <Button
+      title="클릭"
+      onPress={() => {
+        console.log("button pressed");
+      }}
+    />
+  );
+};
+
+export default App;
 ```
 
-<br/>
+웹의 `onClick` 대신 React Native에서는 `onPress`를 사용합니다.
 
-### &lt;TextInput&gt; (Button == input, textarea)
+---
 
-<p>TextInput은 사용자의 입력을 받기 위해 사용되는 컴포넌트이며
-HTML의 <strong>&lt;input&gt;, &lt;textarea&gt;</strong>와 유사한 역할을 하며, 텍스트 입력 필드를 생성하는 데 사용된다.</p>
+## TextInput
 
-```jsx
+사용자 입력을 받을 때는 `TextInput`을 사용합니다.
+
+```tsx
+import { useState } from "react";
 import { TextInput } from "react-native";
 
-<TextInput
-  placeholder="여기에 입력하세요"
-  value=""
-  onChangeText={(text) => {
-    // 입력 값 변경 이벤트 핸들러
-  }}
-/>;
+const App = () => {
+  const [text, setText] = useState("");
+
+  return (
+    <TextInput
+      value={text}
+      onChangeText={setText}
+      placeholder="텍스트를 입력해주세요"
+    />
+  );
+};
+
+export default App;
 ```
 
-<br/>
+웹의 input과 달리 텍스트 변경 이벤트는 `onChangeText`를 자주 사용합니다.
 
-### &lt;FlatList&gt; (FlatList == ol, ul)
+---
 
-<p>FlatList 컴포넌트는 React-Native에서 목록 데이터를 효과적으로 렌더링하기 위한 도구이며 HTML의 <strong>&lt;ol&gt;, &lt;ul&gt;</strong>와 유사하다.</p>
+## FlatList
 
-```jsx
-import { FlatList } from "react-native";
+목록을 렌더링할 때는 `FlatList`를 사용할 수 있습니다.
+
+```tsx
+import { FlatList, Text } from "react-native";
 
 const data = [
-  { key: "item1", name: "Item 1" },
-  { key: "item2", name: "Item 2" },
-  { key: "item3", name: "Item 3" },
+  { id: "1", name: "Apple" },
+  { id: "2", name: "Banana" },
+  { id: "3", name: "Grape" },
 ];
 
-<FlatList
-  data={data}
-  keyExtractor={(item) => item.key} // key를 추출하는 함수
-  renderItem={({ item }) => <Text>{item.name}</Text>}
-/>;
+const App = () => {
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => <Text>{item.name}</Text>}
+    />
+  );
+};
+
+export default App;
 ```
 
-- FlatList속성
-  - data: 표시할 배열 데이터를 지정하는 속성
-  - renderItem: data속성에서 지정한 데이터를 매개변수로 받고 해당 항목을 렌더링하는 JSX를 반환
-  - keyExtractor: data속성에서 지정한 데이터를 매개변수로 받고 해당 데이터에서 키를 지정하거나 추출
+`data`에는 목록 배열을 넣고, `renderItem`에서는 각 항목을 어떻게 보여줄지 작성합니다.
 
-<br/>
+---
 
-## 스타일링
+## StyleSheet 사용하기
 
-<p>React Native에서는 CSS와 비슷한 스타일 속성 및 값들을 사용하며(background-color==backgroundColor) 스타일을 최적화하기 위해 StyleSheet.create 함수를 제공하는데 이 함수를 사용하여 스타일 객체를 생성하고 컴포넌트의 style 속성에 적용할 수 있다.</p>
+React Native에서는 CSS 파일 대신 JavaScript 객체 형태로 스타일을 작성합니다.
 
-```jsx
-import { StyleSheet, View, Text } from "react-native";
+```tsx
+import { StyleSheet, Text, View } from "react-native";
+
+const App = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Hello, React Native!</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
+    padding: 20,
     backgroundColor: "lightblue",
-    padding: 10,
   },
   text: {
-    fontSize: 16,
+    fontSize: 18,
     color: "darkblue",
   },
 });
 
-const MyComponent = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Hello, React Native!</Text>
-    </View>
-  );
-};
+export default App;
 ```
 
-<p>더 복잡한 앱에서는 외부 스타일 파일을 만들고 불러와 사용할 수도 있다.</p>
-<br/>
-
-```jsx
-// MyComponentStyles.js
-import { StyleSheet } from "react-native";
-
-export default StyleSheet.create({
-  container: {
-    backgroundColor: "lightblue",
-    padding: 10,
-  },
-  text: {
-    fontSize: 16,
-    color: "darkblue",
-  },
-});
-```
-
-```jsx
-// MyComponent.js
-import React from "react";
-import { View, Text } from "react-native";
-import styles from "./MyComponentStyles";
-
-const MyComponent = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Hello, React Native!</Text>
-    </View>
-  );
-};
-```
+CSS의 `background-color`처럼 kebab-case를 쓰지 않고, `backgroundColor`처럼 camelCase를 사용합니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## 마무리
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+React Native는 React와 문법은 비슷하지만 사용하는 기본 컴포넌트가 다릅니다.
+
+레이아웃은 `View`, 텍스트는 `Text`, 입력은 `TextInput`, 목록은 `FlatList`를 사용합니다.
+
+처음에는 웹 태그와 비교하면서 역할을 익히면 훨씬 쉽게 적응할 수 있습니다.

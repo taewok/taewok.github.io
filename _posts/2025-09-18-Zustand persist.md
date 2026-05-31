@@ -1,35 +1,35 @@
 ---
-title: "[React] Zustand 전역 상태 새로고침 시 초기화 문제 해결하기"
-date: 2025-09-19 14:20:00 +0900
+title: "[React] Zustand persist로 새로고침 후에도 상태 유지하기"
+date: 2025-09-18 14:20:00 +0900
 categories: [react, state-management]
 tags: [react, zustand, state-management, persist]
+description: "Zustand persist middleware를 사용해 전역 상태를 localStorage나 sessionStorage에 저장하는 방법을 정리했습니다."
+custom_style: true
 ---
 
-리액트에서 Zustand로 전역 상태 관리를 하다 보면, 브라우저를 새로고침할 때 상태가 전부 초기화되는 문제가 있어요 😅  
-예를 들어 로그인 토큰, 다크 모드 여부 같은 값은 새로고침해도 유지돼야 하잖아요?  
-저도 프로젝트를 하면서 이 이슈를 마주했고, **persist** 미들웨어를 사용해서 해결했습니다.
+## 들어가며
 
-이번 글에서는 `Zustand 전역 상태를 로컬스토리지(LocalStorage)에 저장해서 새로고침 후에도 유지하는 방법`을 정리해볼게요!
+Zustand로 전역 상태를 관리하다 보면 브라우저를 새로고침했을 때 상태가 초기화되는 문제를 만날 수 있습니다.
+
+예를 들어 로그인 토큰, 다크 모드 설정, 언어 설정처럼 새로고침 후에도 유지되어야 하는 값이 있습니다.
+
+이럴 때는 Zustand의 `persist` middleware를 사용할 수 있습니다.
 
 ---
 
-### 💾 persist 미들웨어 설치
+## persist란?
 
-Zustand 자체에는 상태 영속화 기능이 없어요. 대신 공식적으로 제공되는 **persist** 미들웨어를 사용하면 됩니다.
+`persist`는 Zustand store의 상태를 브라우저 저장소에 저장해주는 middleware입니다.
 
-- 영속화란? 브라우저 저장소 같은 지속적인 공간에 보관해서 새로고침이나 앱 재실행에도 유지되는 것
+기본적으로 localStorage를 사용하며, 필요하면 sessionStorage로 바꿀 수도 있습니다.
 
-```bash
-npm install zustand
-# 이미 zustand가 있다면 따로 설치 필요 없음
-```
+Zustand 패키지 안에 포함되어 있으므로 별도 라이브러리를 설치할 필요는 없습니다.
 
-zustand 패키지 안에 **persist**가 포함돼 있어요. 따로 다른 라이브러리를 설치할 필요는 없습니다.
+---
 
-<br/> 
-<h3><b>🗂️ persist 적용한 스토어 만들기</b></h3>
+## 기본 사용법
 
-```jsx
+```tsx
 // store/useAuthStore.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -48,70 +48,98 @@ export const useAuthStore = create<AuthState>()(
       clearToken: () => set({ token: null }),
     }),
     {
-      name: "auth-storage", // 로컬스토리지 key
-    }
-  )
+      name: "auth-storage",
+    },
+  ),
 );
 ```
 
-<ul> 
-<li><code>persist</code>: 상태를 브라우저 저장소(LocalStorage/SessionStorage)에 저장해주는 미들웨어</li>
- <li><code>name</code>: 스토리지가 저장될 key 이름</li> 
- <li><code>token</code>: 로그인 토큰 같은 전역 상태</li> 
- </ul>
+`name`은 localStorage에 저장될 key입니다.
 
-<br/> 
-<h3><b>⚡ 컴포넌트에서 사용하기</b></h3>
+이제 `token` 값은 새로고침 후에도 복원됩니다.
 
-```jsx
-// components/LoginButton.tsx
+---
+
+## 컴포넌트에서 사용하기
+
+```tsx
 import { useAuthStore } from "@/store/useAuthStore";
 
-export default function LoginButton() {
-  const { token, setToken, clearToken } = useAuthStore();
+const LoginButton = () => {
+  const token = useAuthStore((state) => state.token);
+  const setToken = useAuthStore((state) => state.setToken);
+  const clearToken = useAuthStore((state) => state.clearToken);
 
   return (
-    <div className="flex flex-col gap-3 p-4">
-      <h2 className="text-lg font-bold">현재 토큰: {token ?? "없음"}</h2>
-      <button
-        onClick={() => setToken("my-secret-token")}
-        className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-      >
-        로그인
-      </button>
-      <button
-        onClick={clearToken}
-        className="rounded-lg bg-red-500 px-4 py-2 text-white"
-      >
-        로그아웃
-      </button>
+    <div>
+      <p>현재 토큰: {token ?? "없음"}</p>
+      <button onClick={() => setToken("my-secret-token")}>로그인</button>
+      <button onClick={clearToken}>로그아웃</button>
     </div>
   );
-}
+};
+
+export default LoginButton;
 ```
 
-이제 로그인 버튼을 눌러 토큰을 저장하고, 브라우저를 새로고침해도 상태가 유지되는 걸 확인할 수 있습니다 🙌
+로그인 버튼을 눌러 token을 저장한 뒤 새로고침해도 값이 유지됩니다.
 
-<br/> 
-<h3><b>🔑 세션 스토리지 사용하기</b></h3>
+---
 
-**persist**는 기본적으로 LocalStorage를 쓰지만, SessionStorage로도 바꿀 수 있어요.
+## sessionStorage 사용하기
 
-```jsx
+기본 저장소는 localStorage입니다.
+
+브라우저 탭이나 세션이 끝나면 사라지는 상태로 관리하고 싶다면 sessionStorage를 사용할 수 있습니다.
+
+```tsx
+import { createJSONStorage, persist } from "zustand/middleware";
+
 persist(
-  (set) => ({ ... }),
+  (set) => ({
+    token: null,
+    setToken: (token) => set({ token }),
+  }),
   {
     name: "auth-storage",
-    storage: () => sessionStorage,
-  }
+    storage: createJSONStorage(() => sessionStorage),
+  },
 );
 ```
 
-이렇게 하면 브라우저를 완전히 닫았다가 다시 열면 상태가 사라지고, 새로고침까지만 유지됩니다.
+localStorage는 브라우저를 닫았다 열어도 남고, sessionStorage는 탭을 닫으면 사라집니다.
 
-<br/> 
-<h3><b>📝 사용 후기</b></h3>
+---
 
-- Zustand의 **persist** 미들웨어 덕분에 로그인 상태나 사용자 설정 같은 데이터를 새로고침해도 잃어버리지 않을 수 있었어요.<br/>
-- Redux-persist 같은 무거운 라이브러리를 쓰지 않아도 되고, 코드도 간단해서 프론트엔드 개발 생산성이 훨씬 좋아졌습니다<br/>
-- 특히 다크 모드, 언어 설정, 토큰 관리 같은 경우에 강력하게 추천합니다.
+## 저장할 상태를 제한하기
+
+store의 모든 값을 저장하고 싶지 않을 때는 `partialize`를 사용할 수 있습니다.
+
+```tsx
+persist(
+  (set) => ({
+    token: null,
+    user: null,
+    temporaryText: "",
+  }),
+  {
+    name: "auth-storage",
+    partialize: (state) => ({
+      token: state.token,
+      user: state.user,
+    }),
+  },
+);
+```
+
+이렇게 하면 `temporaryText`는 저장하지 않고, `token`과 `user`만 저장합니다.
+
+---
+
+## 마무리
+
+Zustand의 `persist`를 사용하면 전역 상태를 새로고침 후에도 유지할 수 있습니다.
+
+로그인 토큰, 테마 설정, 언어 설정처럼 사용자가 다시 방문해도 유지되어야 하는 값에 잘 어울립니다.
+
+다만 모든 상태를 저장하기보다, 정말 유지가 필요한 값만 선택해서 저장하는 것이 좋습니다.

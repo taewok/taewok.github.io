@@ -1,98 +1,109 @@
 ---
-title: "[Next.js] 페이지 이동을 막는 방법: next-navigation-guard 도입기 및 적용"
+title: "[Next.js] next-navigation-guard로 페이지 이탈 방지하기"
 date: 2026-04-29T23:42:00Z
 categories: [nextjs, frontend]
 tags: [nextjs, navigation-guard, react, web-publishing]
-description: "Next.js App Router 환경에서 뒤로가기나 페이지 이탈을 막아야 할 때, next-navigation-guard 라이브러리를 활용하여 사용자 경험을 개선한 실무 해결 과정을 공유합니다."
+description: "Next.js App Router 환경에서 작성 중인 폼의 페이지 이탈을 막기 위해 next-navigation-guard를 적용한 과정을 정리했습니다."
 custom_style: true
 ---
 
-## 🚦 페이지 이탈 방지, 왜 이렇게 힘들까?
+## 🧐 들어가며: 작성 중인 폼을 그냥 떠나면 안 될 때
 
-Next.js App Router를 사용하면서 가장 당혹스러웠던 순간은 **'작성 중인 폼이 있는데 사용자가 실수로 뒤로가기를 누를 때'**였습니다. 이전 Pages Router에서는 `router.events.on('routeChangeStart', ...)`라는 이벤트 리스너를 통해 비교적 쉽게 제어할 수 있었지만, App Router는 브라우저의 네이티브 히스토리를 깊게 관여하면서 이 기능을 기본적으로 제공하지 않게 되었죠.
+게시글 작성, 캐릭터 생성, 결제 정보 입력처럼 시간이 오래 걸리는 화면에서는 사용자가 실수로 페이지를 떠나는 상황을 막아야 합니다.
 
-단순히 `window.onbeforeunload`를 쓰면 되지 않냐고 생각할 수 있지만, 이는 **브라우저 새로고침이나 탭 닫기**만 막아줄 뿐, Next.js 내부의 `Link` 컴포넌트나 `router.back()`을 통한 **'소프트 내비게이션'**은 전혀 막지 못한다는 문제가 있었습니다.
+특히 작성 중인 내용이 저장되지 않았는데 뒤로가기를 누르거나 다른 링크를 클릭하면, 사용자는 입력한 내용을 잃어버릴 수 있습니다.
 
-### 16버전(최신)'으로 오면서 더 힘들어진 이유
+예전 Next.js Pages Router에서는 `router.events`를 활용해 페이지 이동을 감지하는 방식이 자주 쓰였습니다. 하지만 App Router에서는 이 흐름이 달라졌고, 내부 페이지 이동을 직접 가로채는 일이 생각보다 까다로워졌습니다.
 
-🔒 브라우저 보안 및 표준 정책 강화
+브라우저의 `beforeunload` 이벤트도 사용할 수 있지만, 이 방식은 새로고침이나 탭 닫기에는 대응할 수 있어도 Next.js의 `Link`나 `router.push` 같은 소프트 내비게이션을 다루기에는 부족합니다.
 
-Next.js 16은 최신 브라우저 환경에 최적화되어 있습니다. 최근 Chrome 등 주요 브라우저는 사용자 경험을 해치는 **'페이지 이탈 차단'**을 엄격하게 제한하고 있습니다.
-
-Next.js가 점점 웹 표준을 따르다 보니 개발자가 커스텀하게 내비게이션을 막는 기능을 넣기 점점 꺼려지는 구조가 되었습니다.
-
-⚡️ "이미 출발한 기차를 멈출 순 없습니다" : Prefetching의 역설
-
-Next.js 16의 App Router는 사용자보다 한발 앞서 움직입니다. 사용자가 링크에 마우스만 올려도(Hover), 혹은 링크가 화면에 보이기만 해도 다음 페이지의 데이터를 미리 가져오는 **'Link Prefetching'**이 정교하게 작동하기 때문이죠.
-
-클릭하는 순간 화면이 즉시 바뀌도록 모든 준비를 마친 상태인데, 여기서 개발자가 "잠깐, 정말 나갈 거야?"라고 묻는 자바스크립트 가드(Guard)를 끼워 넣는 것은 이미 최고 속도로 달리는 기차의 급브레이크를 밟는 것과 같습니다.
-Next.js가 추구하는 사용자 경험을 프레임워크 스스로 보호하려다 보니, 내비게이션 가드 같은 인위적인 차단 로직은 최적화 엔진과 계속해서 충돌할 수밖에 없는 것 같습니다.
+그래서 이번 프로젝트에서는 `next-navigation-guard`를 사용해 페이지 이탈 방지 로직을 구성했습니다.
 
 ---
 
-## 💡 라이브러리 설명: App Router와 Navigation Guard
+## 💡 next-navigation-guard를 사용한 이유
 
-Next.js App Router 환경에서 페이지 전환을 가로채기 위해서는 프레임워크의 내부 상태를 감시하거나, 히스토리 스택을 강제로 제어하는 로직이 필요합니다.
+`next-navigation-guard`는 Next.js App Router에서 페이지 이동을 감지하고, 특정 조건일 때 이동을 막을 수 있게 도와주는 라이브러리입니다.
 
-`next-navigation-guard`는 이러한 복잡한 내부 로직을 추상화하여, 특정 조건(`shouldBlock`)이 `true`일 때 사용자에게 확인 창을 띄우거나 이동을 취소할 수 있게 도와주는 라이브러리입니다.
+예를 들어 폼이 수정된 상태라면 이동을 막고, 사용자에게 확인 모달을 보여줄 수 있습니다.
+
+핵심 흐름은 다음과 같습니다.
+
+1. 폼이 수정되었는지 확인합니다.
+2. 사용자가 다른 페이지로 이동하려고 합니다.
+3. `useNavigationGuard`가 이동을 가로챕니다.
+4. 이동하려던 경로를 저장하고 모달을 엽니다.
+5. 사용자가 확인하면 저장해둔 경로로 이동합니다.
+
+이 구조를 사용하면 브라우저 기본 confirm 창이 아니라, 서비스 디자인에 맞춘 커스텀 모달을 보여줄 수 있습니다.
 
 ---
 
-## 🛠️ 실무 적용 코드: 폼 작성 이탈 방지
+## 🛠️ 기본 구현 코드
 
-실제 프로젝트에서 사용자가 게시글을 작성하다가 이탈하는 것을 막기 위해 구현한 코드입니다.
+아래 예시는 작성 중인 내용이 있을 때 페이지 이동을 막고, 확인 모달을 보여주는 코드입니다.
 
-```jsx
+```tsx
 "use client";
 
 import { useState } from "react";
-import { useNavigationGuard } from "next-navigation-guard";
 import { useRouter } from "next/navigation";
+import { useNavigationGuard } from "next-navigation-guard";
 
 export default function PostEditor() {
   const router = useRouter();
+
   const [content, setContent] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
+  const [isLeaving, setIsLeaving] = useState(false);
 
-  // 가드가 가로챈 '목적지 주소' 저장
-  const [pendingPath, setPendingPath] = (useState < string) | (null > null);
-
-  // 차단 조건: 내용이 있고, 제출 중이 아닐 때
-  const isDirty = content.length > 0 && !isSubmitting;
+  const isDirty = content.trim().length > 0;
 
   useNavigationGuard({
-    enabled: isDirty,
+    enabled: isDirty && !isLeaving,
     confirm: (info) => {
-      setPendingPath(info.to); // 가고자 했던 주소 기억
-      return false; // 일단 이동 차단! (모달은 이 상태에서 띄움)
+      setPendingPath(info.to);
+      return false;
     },
   });
 
-  const handleLeave = () => {
-    if (pendingPath) {
-      setIsSubmitting(true); // 가드 해제
-      router.push(pendingPath); // 중단됐던 이동 재개
-    }
+  const handleCancelLeave = () => {
+    setPendingPath(null);
+  };
+
+  const handleConfirmLeave = () => {
+    if (!pendingPath) return;
+
+    setIsLeaving(true);
+    router.push(pendingPath);
   };
 
   return (
     <div className="p-6">
       <textarea
         value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="내용을 입력하면 가드가 활성화됩니다."
-        className="w-full border p-2"
+        onChange={(event) => setContent(event.target.value)}
+        placeholder="내용을 입력하면 페이지 이동 가드가 활성화됩니다."
+        className="w-full rounded border p-3"
       />
 
-      {/* pendingPath가 있다는 것은 이동이 차단되었다는 뜻 (모달 역할) */}
       {pendingPath && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <p>저장되지 않은 변경사항이 있습니다. 나갈까요?</p>
-            <button onClick={() => setPendingPath(null)}>취소</button>
-            <button onClick={handleLeave} className="text-red-500 ml-4">
-              나가기
-            </button>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+          <div className="rounded bg-white p-6 shadow-lg">
+            <p>저장되지 않은 변경사항이 있습니다. 나가시겠어요?</p>
+
+            <div className="mt-4 flex justify-end gap-2">
+              <button type="button" onClick={handleCancelLeave}>
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmLeave}
+                className="text-red-500"
+              >
+                나가기
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -101,91 +112,85 @@ export default function PostEditor() {
 }
 ```
 
-### 실행 결과
+이 예제에서 가장 중요한 값은 `pendingPath`입니다.
 
-- 이탈 시도 감지: 텍스트 입력 후 다른 페이지로 이동하거나 뒤로 가기를 클릭하면, 브라우저 기본 창 대신 커스텀 경고 모달이 즉시 노출됩니다.
-- 이동 제어: 모달에서 취소를 누르면 현재 페이지에 머물고, 나가기를 누르면 `pendingPath`에 저장해둔 목적지로 강제 이동합니다.
-- 예외 처리: 저장하기 버튼 클릭 시에는 `isSubmitting` 상태가 `true`가 되어, 가드 조건(`isDirty`)을 통과하므로 경고 없이 부드럽게 다음 단계로 넘어갑니다.
+사용자가 이동하려던 경로를 저장해두었다가, 모달에서 `나가기`를 누르면 그 경로로 다시 이동합니다.
 
 ---
 
-## 🚀 실전 포인트
+## 📌 enabled는 언제 true가 되어야 할까요?
 
-### 📦 useNavigationGuard의 주요 반환 값 (Return Values)
+`enabled`는 페이지 이동을 막을지 결정하는 조건입니다.
 
-`reject` (함수)
+```tsx
+enabled: isDirty && !isLeaving;
+```
 
-- 역할: 현재 진행 중인 네비게이션(페이지 이동)을 명시적으로 거부할 때 사용합니다.
-- 활용: confirm 함수 내부에서 특정 로직을 수행한 후 이동을 취소하고 싶을 때 직접 호출할 수 있습니다.
+폼이 수정된 상태라면 `isDirty`가 `true`가 됩니다. 하지만 사용자가 모달에서 나가기를 확정한 뒤에는 더 이상 이동을 막으면 안 됩니다.
 
-`accept` (함수)
+그래서 `isLeaving` 같은 예외 상태를 함께 둡니다.
 
-- 역할: 차단된 네비게이션을 강제로 허용하고 이동을 진행시킵니다.
-- 활용: 커스텀 모달에서 사용자가 '나가기'를 눌렀을 때, 가드를 무시하고 목적지로 보내기 위해 호출합니다.
+```tsx
+setIsLeaving(true);
+router.push(pendingPath);
+```
 
-`isBlocked` (상태값/boolean)
-
-- 역할: 현재 페이지 이동이 가드에 의해 차단된 상태인지를 나타냅니다.
-- 활용: 이 값을 기반으로 커스텀 모달의 노출 여부를 제어하거나 UI 상에서 경고 메시지를 보여줄 때 유용합니다.
-
-`activeNavigation` (객체)
-
-- 역할: 현재 차단되어 대기 중인 이동 정보(Destination)를 담고 있습니다.
-- 활용: 사용자가 이동하려던 경로(to), 쿼리 파라미터 등을 참조하여 모달 확인 후 정확한 위치로 보낼 때 사용합니다.
-
-### 🛠️ 실제 개발 중 겪은 에로사항: "침묵하는 document.referrer"
-
-이번 프로젝트를 진행하며 가장 당혹스러웠던 순간은, 당연히 될 줄 알았던 `document.referrer`가 콘솔에서 계속 빈 값("")만 뱉어낼 때였습니다. 내비게이션 가드를 세우려면 유저가 **'어디서 왔는지'**를 아는 것이 핵심인데, 이 데이터가 침묵하니 모든 로직이 꼬이기 시작했습니다.
-
-### 🕵️‍♂️ 왜 리퍼러(Referrer)는 비어 있었을까?
-
-조사 끝에 알아낸 이유는 `Next.js App Router`의 구조와 브라우저 보안 정책의 '합작품'이었습니다.
-
-`Soft Navigation`의 함정: `Next.js`의 `Link`나 `router.push`는 페이지 전체를 새로고침하지 않고 자바스크립트가 주소만 갈아 끼우는 '부드러운 이동'입니다. 브라우저 입장에서는 새로운 HTTP 요청을 보낸 게 아니므로, 리퍼러를 굳이 업데이트하지 않는 경우가 많았습니다.
-
-강화된 개인정보 보호: 최신 브라우저들은 보안을 위해 리퍼러 전송 정책(`Referrer-Policy`)을 매우 까다롭게 관리합니다. 특히 보안이 강화된 HTTPS 환경에서는 상세 주소를 아예 삭제해버리는 일이 흔합니다.
-
-### 🛡️ 구원투수의 등장: "역시 라이브러리(next-navigation-guard)!!!"
-
-원래 브라우저의 기본 기능인 window.history.state만 봐서는 우리 사이트 내에서 이전 기록이 얼마나 쌓였는지, 즉 '우리가 통제할 수 있는 히스토리'인지 알 방법이 없었습니다.
-
-하지만 next-navigation-guard 라이브러리를 도입하자 놀라운 변화가 생겼습니다. 바로 `__next_navigation_guard_stack_index`라는 고마운 값이 추가된 것이죠!
-
-이 값의 정체는? 우리 Next.js 프로젝트 내에서 페이지 히스토리가 얼마나 쌓였는지 알려주는 '내부 번호표'입니다.
-
-왜 중요한가? 이 인덱스 값이 0보다 크다면, 유저가 외부(구글, 네이버 등)에서 뚝 떨어진 게 아니라 우리 서비스 안에서 이동 중이라는 확실한 증거가 됩니다.
-
-결국, 브라우저가 알려주지 않는 유저의 이동 맥락을 이 라이브러리가 '인덱스'라는 명확한 숫자로 시각화해 준 셈입니다. 덕분에 우리는 "뒤로 갈 내부 페이지가 있을 때만 가드를 작동시킨다"는 정교한 로직을 짤 수 있게 되었습니다.
-
-### 언제 써야 하는가?
-
-- 결제 및 예약: 결제 정보 입력 중 실수로 이탈하여 데이터가 날아가는 것을 방지할 때.
-- 긴 글 작성: 블로그 에디터나 설문조사 등 입력값이 많은 폼에서 유저의 노력을 보호할 때.
-- 관리자 설정: 시스템 설정을 변경한 후 저장 버튼을 누르지 않고 메뉴를 이동할 때.
-
-### 실수하기 쉬운 부분
-
-- **브라우저 기본 팝업**: `confirm()` 대신 커스텀 모달을 쓰려면 `NavigationGuard`의 비동기 처리를 지원하는 옵션을 잘 살펴야 합니다.
+이 처리가 없으면 사용자가 나가기를 눌렀는데도 guard가 다시 이동을 막아버릴 수 있습니다.
 
 ---
 
-## 📊 방식 비교: 내비게이션 제어 전략
+## 📌 confirm에서 false를 반환하는 이유
 
-| 항목        | `onbeforeunload`       | `next-navigation-guard`           |
-| :---------- | :--------------------- | :-------------------------------- |
-| 타겟        | 브라우저 종료/새로고침 | SPA 내부 페이지 이동 (Link, back) |
-| UX/UI       | 브라우저 기본 UI 강제  | 커스텀 확인 로직 가능             |
-| 구현 난이도 | 매우 쉬움              | 중간 (Hook 설정 필요)             |
-| 적용 범위   | 외부 사이트 이동 포함  | Next.js 앱 내부 경로만 해당       |
+`confirm` 함수에서 `false`를 반환하면 현재 이동이 취소됩니다.
+
+```tsx
+confirm: (info) => {
+  setPendingPath(info.to);
+  return false;
+};
+```
+
+여기서는 이동을 즉시 허용하지 않고, 사용자가 확인 모달에서 선택할 시간을 줍니다.
+
+`info.to`에는 사용자가 이동하려던 경로가 들어 있으므로, 나중에 다시 이동을 이어갈 수 있습니다.
 
 ---
 
-## ✅ 마무리하며
+## 🧭 beforeunload와의 차이
 
-Next.js App Router는 강력하지만, 페이지 이동 제어 같은 세밀한 UX 구현에서는 아직 개발자의 손길이 많이 필요합니다. `next-navigation-guard`는 이런 간극을 메워주는 훌륭한 도구입니다!
+`beforeunload`는 브라우저 탭을 닫거나 새로고침할 때 유용합니다.
 
-**핵심 요약:**
+하지만 Next.js 내부 링크 이동은 페이지 전체를 새로고침하지 않는 경우가 많습니다. 이때는 `beforeunload`가 기대처럼 동작하지 않을 수 있습니다.
 
-1. App Router에서 `Link` 이동을 막으려면 전용 라이브러리 활용이 정신 건강에 이롭다.
-2. `when` 조건문에 `isSubmitting` 같은 예외 처리를 반드시 포함하자.
-3. 완벽한 방어를 위해서는 브라우저 네이티브 이벤트(`beforeunload`)와 병행.
+비교하면 다음과 같습니다.
+
+| 항목 | beforeunload | next-navigation-guard |
+| --- | --- | --- |
+| 새로고침/탭 닫기 | 대응 가능 | 주 목적은 아님 |
+| App Router 내부 이동 | 부족할 수 있음 | 대응 가능 |
+| UI 커스터마이징 | 브라우저 기본 UI | 커스텀 모달 가능 |
+| 사용 목적 | 페이지 자체를 떠날 때 | 앱 내부 경로 이동을 막을 때 |
+
+실무에서는 두 가지를 함께 사용할 수도 있습니다. 내부 이동은 `next-navigation-guard`, 새로고침이나 탭 닫기는 `beforeunload`로 보완하는 방식입니다.
+
+---
+
+## ⚠️ 실제 적용할 때 주의할 점
+
+페이지 이동을 막는 기능은 사용자에게 꼭 필요한 상황에서만 사용하는 것이 좋습니다.
+
+예를 들어 단순 필터 선택이나 탭 전환까지 전부 막으면 오히려 답답한 경험이 됩니다. 반대로 긴 폼 작성이나 결제 정보 입력처럼 사용자의 노력이 날아갈 수 있는 화면에서는 매우 유용합니다.
+
+또 저장이 완료된 뒤에는 `reset`이나 `isDirty` 초기화를 통해 guard가 꺼지도록 만들어야 합니다. 저장했는데도 계속 이탈 경고가 뜨면 사용자는 혼란스러울 수 있어요.
+
+---
+
+## ✅ 마무리
+
+Next.js App Router에서 페이지 이탈 방지는 생각보다 단순하지 않습니다.
+
+`beforeunload`만으로는 내부 라우팅을 충분히 다루기 어렵고, 직접 히스토리를 제어하려고 하면 예외 케이스가 많아집니다.
+
+`next-navigation-guard`를 사용하면 작성 중인 폼의 이탈 방지처럼 명확한 UX 요구사항을 비교적 안정적으로 구현할 수 있습니다.
+
+핵심은 이동을 무조건 막는 것이 아니라, 사용자의 입력이 사라질 수 있는 순간에만 부드럽게 확인 과정을 넣는 것입니다.

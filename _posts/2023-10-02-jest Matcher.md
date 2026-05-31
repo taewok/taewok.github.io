@@ -1,125 +1,165 @@
 ---
-title: "[React] Jest(2) Matcher"
-date: 2023-10-02T21:05:000
+title: "[React] Jest Matcher 기본 정리"
+date: 2023-10-02T21:05:00
 categories: [react]
-tags: [react, jest] #소문자만 가능
+tags: [react, jest, test, matcher]
+description: "Jest 테스트에서 자주 사용하는 matcher의 의미와 예시를 정리했습니다."
+custom_style: true
 ---
 
+## Matcher란?
+
+Jest에서 matcher는 테스트 결과가 기대한 값과 맞는지 검증할 때 사용하는 함수입니다.
+
+보통 `expect()`와 함께 사용합니다.
+
+```js
+expect(result).toBe(3);
+```
+
+여기서 `toBe`가 matcher입니다.
+
 ---
 
-## Matcher(매처)란?
+## toBe
 
-<p>
- 테스트 케이스에서 예상 결과와 실제 결과를 비교하고 검증하는 데 사용되는 함수들을 뜻하며 <br/>
- Matchers는 expect() 함수와 함께 사용되며, expect() 함수로 값에 대한 예상 결과와 실제 결과를 검사하는 역할을 합니다. <br/>
- Jest는 다양한 Matcher를 제공하여 다양한 유형의 검증을 수행할 수 있도록 합니다.
-</p>
-
-## 다양한 Matcher
-
-<h3><blockquote>toBe()
-</blockquote></h3>
-
-- 값을 엄격하게(정확히) 비교합니다. 값과 데이터 유형이 정확히 일치해야 합니다.
+`toBe`는 원시값을 정확히 비교할 때 사용합니다.
 
 ```js
-expect(result).toBe(3); // result의 값이 3과 정확히 일치해야 함
+test("1 + 2는 3입니다", () => {
+  expect(1 + 2).toBe(3);
+});
 ```
 
-<br/>
+숫자, 문자열, boolean처럼 단순한 값을 비교할 때 잘 어울립니다.
 
-<h3><blockquote>toEqual()
-</blockquote></h3>
+---
 
-- 객체나 배열과 같은 복합 데이터 유형을 깊게 비교합니다.
+## toEqual
+
+객체나 배열을 비교할 때는 `toEqual`을 사용합니다.
 
 ```js
-expect(result).toEqual(objectB); // result의 객체 내용이 깊게 일치해야 함
+test("객체 값 비교", () => {
+  const user = {
+    name: "taewok",
+    age: 20,
+  };
+
+  expect(user).toEqual({
+    name: "taewok",
+    age: 20,
+  });
+});
 ```
 
-<br/>
+`toBe`는 같은 참조인지 비교하기 때문에 객체 비교에는 적합하지 않습니다.
 
-<h3><blockquote>toMatch()
-</blockquote></h3>
+객체의 내용이 같은지 보고 싶다면 `toEqual`을 사용하면 됩니다.
 
-- 정규 표현식을 사용하여 문자열을 비교합니다.
+---
+
+## toContain
+
+배열이나 문자열에 특정 값이 포함되어 있는지 확인할 때 사용합니다.
 
 ```js
-expect(result).toMatch(/pattern/); // result의 문자열이 정규 표현식과 일치해야 함
+test("배열에 값이 포함되어 있습니다", () => {
+  const fruits = ["apple", "banana", "grape"];
+
+  expect(fruits).toContain("banana");
+});
 ```
 
-<br/>
-
-<h3><blockquote>toContain()
-</blockquote></h3>
-
-- 배열 또는 문자열 내에 특정 요소가 존재하는지 확인합니다.
+문자열에도 사용할 수 있습니다.
 
 ```js
-expect(result).toContain(item); // result 배열에 특정 항목이 포함되어야 함
-```
-
-<br/>
-
-<h3><blockquote>toBeNull()
-</blockquote></h3>
-
-- 값이 null인지 확인합니다.
-
-```js
-expect(result).toBeNull(); // 값이 null이어야 함
-```
-
-<br/>
-
-<h3><blockquote>toBeDefined()
-</blockquote></h3>
-
-- 값이 undefined가 아닌지 확인합니다.
-
-```js
-expect(result).toBeDefined(); // 값이 undefined가 아니어야 함
-```
-
-<br/>
-
-<h3><blockquote>toBeTruthy() / toBeFalsy()
-</blockquote></h3>
-
-- 값이 true 또는 false인지 확인합니다.
-
-```js
-expect(result).toBeTruthy(); // 값이 true이어야 함
-expect(result).toBeFalsy(); // 값이 false이어야 함
-```
-
-<br/>
-
-<h3><blockquote>toBeGreaterThan() / toBeLessThan()
-</blockquote></h3>
-
-- 값이 특정 값보다 큰지 또는 작은지 확인합니다.
-
-```js
-expect(result).toBeGreaterThan(5); // 값이 5보다 커야 함
-expect(result).toBeLessThan(10); // 값이 10보다 작아야 함
-```
-
-<br/>
-
-<h3><blockquote>toHaveLength()
-</blockquote></h3>
-
-- 배열 또는 문자열의 길이를 확인합니다.
-
-```js
-expect(result).toHaveLength(3); // 배열의 길이가 3이어야 함
-expect(result).toHaveLength(10); // 문자열의 길이가 10이어야 함
+expect("hello world").toContain("world");
 ```
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## toMatch
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+`toMatch`는 문자열이 특정 정규식과 일치하는지 확인합니다.
+
+```js
+test("이메일 형식 확인", () => {
+  const email = "test@example.com";
+
+  expect(email).toMatch(/@/);
+});
+```
+
+문자열 패턴을 검증할 때 유용합니다.
+
+---
+
+## null과 undefined 확인하기
+
+값이 `null`인지 확인할 때는 `toBeNull`을 사용할 수 있습니다.
+
+```js
+expect(value).toBeNull();
+```
+
+값이 `undefined`가 아닌지 확인하려면 `toBeDefined`를 사용할 수 있습니다.
+
+```js
+expect(value).toBeDefined();
+```
+
+반대로 `undefined`인지 확인하려면 `toBeUndefined`를 사용합니다.
+
+```js
+expect(value).toBeUndefined();
+```
+
+---
+
+## truthy와 falsy 확인하기
+
+JavaScript의 truthy, falsy 값을 확인할 때는 아래 matcher를 사용할 수 있습니다.
+
+```js
+expect("hello").toBeTruthy();
+expect("").toBeFalsy();
+```
+
+정확히 `true`인지 확인하고 싶다면 `toBe(true)`를 사용하고, truthy인지 정도만 확인하면 `toBeTruthy()`를 사용하면 됩니다.
+
+---
+
+## 숫자 비교하기
+
+숫자의 크기를 비교할 때는 아래 matcher를 사용할 수 있습니다.
+
+```js
+expect(10).toBeGreaterThan(5);
+expect(10).toBeLessThan(20);
+expect(10).toBeGreaterThanOrEqual(10);
+expect(10).toBeLessThanOrEqual(10);
+```
+
+범위를 검증할 때 자주 사용합니다.
+
+---
+
+## 길이 확인하기
+
+배열이나 문자열의 길이를 확인할 때는 `toHaveLength`를 사용할 수 있습니다.
+
+```js
+expect(["a", "b", "c"]).toHaveLength(3);
+expect("hello").toHaveLength(5);
+```
+
+---
+
+## 마무리
+
+Jest matcher는 테스트에서 기대값을 표현하는 도구입니다.
+
+원시값은 `toBe`, 객체나 배열은 `toEqual`, 포함 여부는 `toContain`, 문자열 패턴은 `toMatch`를 자주 사용합니다.
+
+matcher를 상황에 맞게 고르면 테스트 의도가 훨씬 명확해집니다.

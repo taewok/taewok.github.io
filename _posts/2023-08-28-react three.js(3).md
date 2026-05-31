@@ -1,62 +1,139 @@
 ---
-title: "[three.js] React에서 three.js 사용(useControls)"
-date: 2023-08-28T00:24:000
+title: "[three.js] Leva useControls로 3D 값 조절하기"
+date: 2023-08-28T00:24:00
 categories: [three.js, react]
-tags: [three.js, react] #소문자만 가능
+tags: [three.js, react, leva, usecontrols]
+description: "React Three Fiber에서 Leva의 useControls를 사용해 3D 객체의 위치나 색상을 실시간으로 조절하는 방법을 정리했습니다."
+custom_style: true
 ---
 
+## useControls란?
+
+`useControls`는 Leva 라이브러리에서 제공하는 훅입니다.
+
+화면에 조작 패널을 만들고, 그 패널에서 값을 변경하면 React 컴포넌트에 실시간으로 반영할 수 있습니다.
+
+React Three Fiber로 3D 장면을 만들 때는 위치, 회전, 크기, 색상 같은 값을 테스트하기에 매우 편합니다.
+
 ---
 
-## <b>useControls란?</b>
+## 설치하기
 
-<strong>useControls</strong>는 leva 라이브러리에서 제공하는 함수로, UI 컴포넌트를 생성하고 웹화면에서 실시간으로 상호작용적으로 값을 변경할 수 있게 해줍니다. 3D 객체의 속성을 조작하기 위해 사용할 수 있으며, 이를 R3F에서 사용하면 편리한 UI를 제공할 수 있습니다.
-
-## <b>설치</b>
-
-```js
+```bash
 npm install leva
 ```
 
-## <b>useControls 사용</b>
+설치 후 `useControls`를 import해서 사용할 수 있습니다.
 
-여러가지 속성을 사용할 수 있지만 기본적인 position으로 사용해보겠습니다.
-
-```jsx
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+```tsx
 import { useControls } from "leva";
-import React from "react";
-
-function MyScene() {
-  // useControls로 UI 컴포넌트 생성 및 초기값 설정
-  const { positionX, positionY, positionZ } = useControls({
-    positionX: { value: 0, min: -10, max: 10 },
-    positionY: { value: 0, min: -10, max: 10 },
-    positionZ: { value: 0, min: -10, max: 10 },
-  });
-
-  return (
-    <Canvas>
-      <OrbitControls />
-      <mesh position={[positionX, positionY, positionZ]}>
-        <boxGeometry />
-        <meshBasicMaterial color="red" />
-      </mesh>
-    </Canvas>
-  );
-}
-
-export default MyScene;
 ```
-
-그러면 아래와 같이 물체 옆에 못 보던 조작패드가 생긴걸 볼 수 있다.<br/>
-아까 지정해줬던 속성에 이름과 value 값으로 구성되어 있으며 수치를 마우스를 통해서 드래그하면 실시간으로 mesh에 position에 값이 적용되는 걸 볼 수 있다.
-
-<img src="https://github.com/TWOGATH3R/twogather-web-frontend/assets/88264006/645eb109-38b2-40ea-8a86-2e83b904c9b3" alt="useControls 적용"/>
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## 위치 조절하기
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+아래 예시는 Leva 패널에서 mesh의 위치를 조절하는 코드입니다.
+
+```tsx
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import { useControls } from "leva";
+
+const Box = () => {
+  const { positionX, positionY, positionZ } = useControls({
+    positionX: { value: 0, min: -5, max: 5, step: 0.1 },
+    positionY: { value: 0, min: -5, max: 5, step: 0.1 },
+    positionZ: { value: 0, min: -5, max: 5, step: 0.1 },
+  });
+
+  return (
+    <mesh position={[positionX, positionY, positionZ]}>
+      <boxGeometry />
+      <meshStandardMaterial color="orange" />
+    </mesh>
+  );
+};
+
+const App = () => {
+  return (
+    <Canvas>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[2, 2, 2]} />
+      <OrbitControls />
+      <Box />
+    </Canvas>
+  );
+};
+
+export default App;
+```
+
+패널에서 값을 움직이면 박스 위치가 바로 바뀝니다.
+
+---
+
+## 색상도 조절할 수 있어요
+
+Leva는 숫자뿐 아니라 색상 값도 다룰 수 있습니다.
+
+```tsx
+const { color } = useControls({
+  color: "#ff8a00",
+});
+
+return (
+  <mesh>
+    <boxGeometry />
+    <meshStandardMaterial color={color} />
+  </mesh>
+);
+```
+
+색상 선택 UI가 자동으로 생기기 때문에 material 색상을 실험하기 좋습니다.
+
+---
+
+## 여러 값을 묶어서 관리하기
+
+회전이나 크기까지 함께 조절할 수 있습니다.
+
+```tsx
+const { scale, rotationY } = useControls({
+  scale: { value: 1, min: 0.1, max: 3, step: 0.1 },
+  rotationY: { value: 0, min: 0, max: Math.PI * 2, step: 0.01 },
+});
+
+return (
+  <mesh scale={scale} rotation={[0, rotationY, 0]}>
+    <boxGeometry />
+    <meshStandardMaterial color="orange" />
+  </mesh>
+);
+```
+
+값을 코드에서 계속 수정하고 새로고침하지 않아도 되기 때문에 작업 속도가 빨라집니다.
+
+---
+
+## 언제 사용하면 좋을까요?
+
+`useControls`는 최종 사용자용 UI라기보다 개발 중 값을 조정하는 도구에 가깝습니다.
+
+예를 들면 이런 상황에서 유용합니다.
+
+- 조명 위치 찾기
+- 카메라 위치 조정
+- 물체의 색상과 크기 실험
+- 애니메이션 파라미터 조절
+- 3D 장면의 초기값 탐색
+
+---
+
+## 마무리
+
+Leva의 `useControls`를 사용하면 3D 객체의 값을 실시간으로 조절할 수 있습니다.
+
+React Three Fiber에서 위치, 회전, 크기, 색상 같은 값을 찾을 때 매우 편리합니다.
+
+특히 감으로 숫자를 바꿔가며 조정해야 하는 3D 작업에서는 개발 시간을 많이 줄여줍니다.
