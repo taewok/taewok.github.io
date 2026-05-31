@@ -1,123 +1,163 @@
 ---
-title: "[React] SweetAlert2 완벽 활용하기"
+title: "[React] SweetAlert2로 알림 모달 사용하기"
 date: 2023-05-21T21:28:00
 categories: [react]
 tags: [react, sweetalert2, library, modal, alert]
-description: "기본 브라우저 alert은 이제 그만! React 프로젝트의 사용자 경험을 높여주는 SweetAlert2 설치부터 커스텀 활용법까지 실제 개발 경험을 담아 정리했습니다."
+description: "React 프로젝트에서 SweetAlert2를 설치하고 alert, confirm, prompt 형태로 사용하는 방법을 정리했습니다."
 custom_style: true
 ---
 
-## 🚀 도입: 브라우저 기본 Alert, 그대로 쓰실 건가요?
+## 들어가며
 
-사용자에게 중요한 알림을 띄울 때 브라우저 기본 `alert()`이나 `confirm()`을 쓰면 디자인이 일관되지 않고 제어도 까다롭습니다. 저 역시 프로젝트를 진행하며 "서비스 브랜딩에 맞는 깔끔한 모달이 필요하다"는 고민 끝에 **SweetAlert2**를 도입하게 되었습니다. 단순한 메시지 전달을 넘어, 실전에서 마주한 다양한 처리 방식과 팁을 공유합니다.
+브라우저 기본 `alert()`와 `confirm()`은 간단하지만 디자인을 바꾸기 어렵고, 서비스 분위기와도 잘 맞지 않을 때가 많습니다.
+
+이럴 때 SweetAlert2를 사용하면 조금 더 보기 좋은 알림 모달을 빠르게 만들 수 있습니다.
+
+이번 글에서는 React 프로젝트에서 SweetAlert2를 설치하고 기본 알림, 확인 모달, 입력 모달을 사용하는 방법을 정리해볼게요.
 
 ---
 
-## 📦 SweetAlert2 설치
+## 설치하기
 
-먼저 라이브러리를 설치해야 합니다. React 환경에서 터미널을 열고 아래 명령어를 입력하세요.
+먼저 라이브러리를 설치합니다.
 
-```jsx
+```bash
 npm install sweetalert2
+```
+
+설치한 뒤 사용할 파일에서 import합니다.
+
+```tsx
+import Swal from "sweetalert2";
 ```
 
 ---
 
-## 💡 주요 사용법 및 해결 과정
+## 기본 알림 띄우기
 
-### 1. 기본 Alert (Simple Notification)
+가장 기본적인 사용법은 `Swal.fire()`를 호출하는 것입니다.
 
-가장 간단한 형태로, 작업 성공이나 경고를 알릴 때 사용합니다.
-
-```jsx
-import Swal from "sweetalert2";
-
-const handleBasicAlert = () => {
+```tsx
+const handleAlert = () => {
   Swal.fire({
-    title: "성공!",
-    text: "데이터가 안전하게 저장되었습니다.",
+    title: "저장 완료",
+    text: "데이터가 정상적으로 저장되었습니다.",
     icon: "success",
   });
 };
 ```
 
-### 2. Confirm(확인) 모달: 사용자 의사 묻기
+`icon`에는 `success`, `error`, `warning`, `info`, `question` 등을 사용할 수 있습니다.
 
-로그아웃이나 삭제처럼 '실행 전 확인'이 필요한 경우에 사용합니다. `then` 메서드를 통해 비동기 처리가 가능하다는 점이 큰 장점입니다.
+---
 
-```jsx
-const handleConfirm = () => {
-  Swal.fire({
-    title: "정말 삭제하시겠습니까?",
-    text: "삭제 후에는 복구가 불가능합니다!",
+## 확인 모달 만들기
+
+삭제나 로그아웃처럼 사용자의 확인이 필요한 작업에는 확인 모달을 사용할 수 있습니다.
+
+```tsx
+const handleDelete = async () => {
+  const result = await Swal.fire({
+    title: "정말 삭제하시겠어요?",
+    text: "삭제한 데이터는 복구할 수 없습니다.",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
     confirmButtonText: "삭제",
     cancelButtonText: "취소",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // 삭제 API 호출 로직 등을 여기에 작성
-      Swal.fire("삭제 완료!", "파일이 삭제되었습니다.", "success");
-    }
   });
+
+  if (result.isConfirmed) {
+    await deleteItem();
+
+    Swal.fire({
+      title: "삭제 완료",
+      icon: "success",
+    });
+  }
 };
 ```
 
-### 3. Prompt Alert: 데이터 입력받기
+`showCancelButton: true`를 주면 취소 버튼이 함께 표시됩니다.
 
-별도의 폼 페이지를 만들기 부담스러울 때, 간단한 텍스트 입력을 받는 용도로 활용했습니다.
+사용자가 확인 버튼을 누르면 `result.isConfirmed`가 `true`가 됩니다.
 
-```jsx
-const handlePrompt = () => {
-  Swal.fire({
-    title: "닉네임 수정",
+---
+
+## 입력 모달 만들기
+
+간단한 값을 입력받아야 할 때는 `input` 옵션을 사용할 수 있습니다.
+
+```tsx
+const handleNicknameChange = async () => {
+  const result = await Swal.fire({
+    title: "닉네임 변경",
     input: "text",
-    inputLabel: "새로운 닉네임을 입력하세요",
-    inputPlaceholder: "닉네임 입력...",
-  }).then((res) => {
-    if (res.value) {
-      console.log("입력된 값:", res.value);
-    }
+    inputLabel: "새 닉네임을 입력해주세요",
+    inputPlaceholder: "닉네임",
+    showCancelButton: true,
+    confirmButtonText: "변경",
+    cancelButtonText: "취소",
   });
+
+  if (result.value) {
+    console.log("입력한 닉네임:", result.value);
+  }
 };
 ```
 
----
-
-## 🛠️ 실무 포인트: 이것만은 꼭!
-
-<div style="background-color: #f8f9fa; border-left: 5px solid #2196F3; padding: 15px; margin-bottom: 20px; color: #91512c;">
-    <strong>✅ 언제 써야 할까?</strong><br/>
-    단순 알림뿐만 아니라, 로딩 상태 표시(swal.showLoading)나 복잡한 입력 폼이 없는 간단한 데이터 수정 창이 필요할 때 생산성을 극대화할 수 있습니다.
-</div>
-
-<div style="background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin-bottom: 20px; color: #91512c;">
-    <strong>⚠️ 실수하기 쉬운 부분</strong><br/>
-    React 환경에서 <code>Swal.fire</code>는 컴포넌트 생명주기와 상관없이 DOM에 직접 접근하여 렌더링됩니다. 따라서 <strong>상태값(State)이 즉시 반영되지 않을 수 있으므로</strong>, <code>then</code> 구문 안에서 후처리 로직을 정확히 작성해야 합니다.
-</div>
-
-<div style="background-color: #fce4ec; border-left: 5px solid #e91e63; padding: 15px; color: #91512c;">
-    <strong>🔥 실제 개발 경험</strong><br/>
-    전역 스타일링이 꼬여서 모달이 뒤로 숨는 현상을 겪었습니다. 이럴 땐 <code>customClass</code> 속성을 사용하여 <code>z-index</code>를 명시적으로 조절하거나 테마 파일을 별도로 임포트하여 해결했습니다.
-</div>
+입력값은 `result.value`에서 확인할 수 있습니다.
 
 ---
 
-## 📊 버튼 응답 값 정리
+## 버튼 문구와 색상 변경하기
 
-|   속성명    | 설명                                                      |
-| :---------: | :-------------------------------------------------------- |
-| isConfirmed | 사용자가 '확인' 또는 'OK' 버튼을 클릭함                   |
-|  isDenied   | 사용자가 '거부' 버튼을 클릭함                             |
-| isDismissed | 사용자가 '취소'를 누르거나, 배경을 클릭하거나, ESC를 누름 |
-|    value    | Prompt 모달에서 사용자가 입력한 값                        |
+SweetAlert2는 버튼 문구와 색상도 쉽게 바꿀 수 있습니다.
+
+```tsx
+Swal.fire({
+  title: "로그아웃하시겠어요?",
+  icon: "question",
+  showCancelButton: true,
+  confirmButtonText: "로그아웃",
+  cancelButtonText: "머무르기",
+  confirmButtonColor: "#2563eb",
+  cancelButtonColor: "#6b7280",
+});
+```
+
+서비스의 디자인 톤에 맞춰 색상을 조정하면 기본 브라우저 알림보다 훨씬 자연스럽게 보입니다.
 
 ---
 
-## 🏁 마무리하며
+## 자주 확인하는 응답 값
 
-SweetAlert2는 단순한 라이브러리를 넘어, 유저와 시스템 사이의 상호작용을 풍성하게 만들어주는 도구입니다. 특히 수많은 커스텀 옵션(timer, toast 모드 등)을 지원하니, 공식 문서를 참고하여 프로젝트에 최적화된 모달을 구현해 보세요!
+| 값 | 의미 |
+| --- | --- |
+| `isConfirmed` | 확인 버튼을 눌렀는지 |
+| `isDenied` | 거절 버튼을 눌렀는지 |
+| `isDismissed` | 취소, 바깥 클릭, ESC 등으로 닫혔는지 |
+| `value` | 입력 모달에서 사용자가 입력한 값 |
 
-<p>혹시 사용 중 잘 안되는 부분이나 궁금한 점이 있다면 댓글로 남겨주세요. 피드백은 언제나 환영입니다! 😊</p>
+confirm 모달에서는 `isConfirmed`를 가장 자주 확인합니다.
+
+prompt 형태에서는 `value`를 확인하면 됩니다.
+
+---
+
+## React에서 사용할 때 주의할 점
+
+SweetAlert2는 React 컴포넌트처럼 JSX로 렌더링되는 방식이 아니라, 라이브러리가 직접 모달을 띄우는 방식입니다.
+
+그래서 React state와 완전히 같은 흐름으로 움직인다고 생각하면 헷갈릴 수 있습니다.
+
+API 호출이나 상태 변경은 `await Swal.fire()` 이후 결과값을 확인한 다음 처리하는 편이 좋습니다.
+
+---
+
+## 마무리
+
+SweetAlert2를 사용하면 기본 브라우저 알림보다 보기 좋고 유연한 알림 모달을 빠르게 만들 수 있습니다.
+
+단순 알림은 `Swal.fire()`, 확인이 필요한 작업은 `showCancelButton`, 입력이 필요한 작업은 `input` 옵션을 사용하면 됩니다.
+
+작은 프로젝트에서는 간단한 모달 대체제로도 충분히 유용하게 사용할 수 있습니다.

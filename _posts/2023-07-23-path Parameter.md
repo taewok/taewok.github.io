@@ -1,78 +1,141 @@
 ---
-title: "[React] 패스 파라미터(path parameter)란?"
-date: 2023-07-23T16:00:000
+title: "[React] Path Parameter 이해하기"
+date: 2023-07-23T16:00:00
 categories: [react]
-tags: [react] #소문자만 가능
+tags: [react, react-router-dom, path-parameter, useparams]
+description: "React Router에서 path parameter를 정의하고 useParams로 값을 읽는 방법을 정리했습니다."
+custom_style: true
 ---
 
----
+## Path Parameter란?
 
-## <b style="border-bottom:2px solid gray" class="h2">패스 파라미터(path parameter)란?</b>
+Path Parameter는 URL 경로 안에 들어가는 동적인 값입니다.
 
-<h3><blockquote>정의
-</blockquote></h3>
+예를 들어 게시글 상세 페이지 URL이 아래처럼 생겼다고 해볼게요.
 
-- 패스 파라미터(Path Parameter)는 URL 경로에 변수를 포함하여 주로 동적인 데이터를 전달하는 방법입니다.
+```txt
+/posts/15
+```
 
-<h3><blockquote>특징
-</blockquote></h3>
+여기서 `15`는 게시글 id입니다.
 
-- URL 경로에 데이터를 포함하기 때문에 직관적이고 읽기 쉬운 URL을 제공합니다.
-- URL이 더 의미 있고 SEO(Search Engine Optimization)에 유리합니다.
-- URL 구조가 깔끔하며, 검색 엔진에서 잘 색인됩니다.
-- 캐싱이나 보안에 유리합니다.
-
-<h3><blockquote>사용상황
-</blockquote></h3>
-
-- 블로그 포스트, 상품 정보, 사용자 프로필 등의 개별 리소스를 조회하는 경우에 패스 파라미터를 활용합니다.
+이처럼 URL 경로 일부를 변수처럼 사용하는 값을 path parameter라고 부릅니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">패스 파라미터(path parameter) 사용하기</b>
+## 언제 사용할까요?
 
-```jsx
-import React from "react";
-import { BrowserRouter as Router, Route, useNavigate } from "react-router-dom";
-import PostDetail from "./components/PostDetail";
+Path Parameter는 특정 리소스 하나를 조회할 때 자주 사용합니다.
+
+예를 들면 이런 페이지입니다.
+
+- 게시글 상세: `/posts/15`
+- 상품 상세: `/products/3`
+- 사용자 프로필: `/users/taewok`
+
+URL만 봐도 어떤 리소스를 보고 있는지 알 수 있어 직관적입니다.
+
+---
+
+## 라우트 정의하기
+
+React Router에서는 콜론 `:`을 사용해 path parameter를 정의합니다.
+
+```tsx
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PostDetail from "./PostDetail";
 
 const App = () => {
-    const navigate = useNavigate();
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/posts/:postId" element={<PostDetail />} />
       </Routes>
     </BrowserRouter>
-    <button onClick={()=>navigate("/posts/15")}></button>
   );
 };
 
 export default App;
 ```
 
-- URL 형식: 일반적으로 콜론(:)을 이용하여 URL 경로에 변수를 포함합니다.
-  <br/>
+`/posts/:postId`에서 `:postId`가 동적인 값입니다.
 
-```jsx
-import { useParams } from "react-router-dom";
-
-const PostDetail = () => {
-  const Param = useParams();
-  console.log(Param.postId); // "15"
-
-  return <h3>{Param.postId}</h3>;
-};
-
-export default App;
-```
-
-위와 같이 router를 설정 해주고 button을 누르고 이동해<br/> useParams을 사용하여 미리 정해둔 변수명을 추출할 수 있다
+`/posts/15`로 접근하면 `postId` 값은 `"15"`가 됩니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## useParams로 값 읽기
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+자식 컴포넌트에서는 `useParams`를 사용해 path parameter 값을 읽을 수 있습니다.
+
+```tsx
+import { useParams } from "react-router-dom";
+
+const PostDetail = () => {
+  const { postId } = useParams();
+
+  return <h1>게시글 ID: {postId}</h1>;
+};
+
+export default PostDetail;
+```
+
+`useParams`가 반환하는 값은 문자열이거나 `undefined`일 수 있습니다.
+
+숫자로 사용해야 한다면 직접 변환해야 합니다.
+
+```tsx
+const id = Number(postId);
+```
+
+---
+
+## navigate로 이동하기
+
+버튼 클릭으로 특정 게시글 상세 페이지로 이동할 수도 있습니다.
+
+```tsx
+import { useNavigate } from "react-router-dom";
+
+const PostCard = ({ postId }: { postId: number }) => {
+  const navigate = useNavigate();
+
+  return (
+    <button onClick={() => navigate(`/posts/${postId}`)}>
+      상세 보기
+    </button>
+  );
+};
+
+export default PostCard;
+```
+
+템플릿 문자열을 사용하면 동적인 id를 URL에 쉽게 넣을 수 있습니다.
+
+---
+
+## Query String과의 차이
+
+Path Parameter는 특정 리소스를 나타낼 때 잘 어울립니다.
+
+```txt
+/posts/15
+```
+
+Query String은 검색어, 필터, 정렬처럼 옵션을 나타낼 때 잘 어울립니다.
+
+```txt
+/posts?keyword=react&sort=latest
+```
+
+리소스 자체를 구분하는 값이라면 path parameter를, 조회 조건이라면 query string을 사용하는 식으로 구분하면 이해하기 쉽습니다.
+
+---
+
+## 마무리
+
+Path Parameter는 URL 경로 안에 동적인 값을 넣는 방식입니다.
+
+React Router에서는 `:postId`처럼 콜론을 붙여 정의하고, 컴포넌트에서는 `useParams`로 값을 읽습니다.
+
+상세 페이지처럼 특정 데이터 하나를 조회하는 화면에서 자주 사용되는 패턴입니다.

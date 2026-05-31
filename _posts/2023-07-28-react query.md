@@ -1,173 +1,168 @@
 ---
-title: "[React] react-query 사용하기"
-date: 2023-07-28T16:19:000
+title: "[React] React Query 기본 사용법 정리"
+date: 2023-07-28T16:19:00
 categories: [react]
-tags: [react] #소문자만 가능
+tags: [react, react-query, tanstack-query, server-state]
+description: "React Query의 QueryClientProvider, useQuery, useMutation 기본 사용법과 서버 상태 관리의 장점을 정리했습니다."
+custom_style: true
 ---
 
+## React Query란?
+
+React Query는 서버에서 가져온 데이터를 관리하기 위한 라이브러리입니다.
+
+React의 `useState`와 `useEffect`만으로도 API 데이터를 가져올 수 있지만, 로딩 상태, 에러 상태, 캐싱, 재요청, 동기화까지 직접 처리하려면 코드가 금방 복잡해집니다.
+
+React Query를 사용하면 이런 서버 상태 관리 로직을 훨씬 편하게 다룰 수 있습니다.
+
 ---
 
-## <b>react-query 사용하기</b>
+## 설치하기
 
-react-query는 React 애플리케이션에서 데이터 관리를 간편하게 해주는 라이브러리이며, 주로 서버로부터 데이터를 가져오거나 데이터를 업데이트하는 작업을 처리하는데 사용되고, 비동기 데이터 요청과 캐싱을 처리하며, 서버와의 상호작용을 간소화하여 데이터 관리를 용이하게 합니다.
+최신 TanStack Query 기준으로 설치하면 다음과 같습니다.
 
-<h3><blockquote>특징, 기능
-</blockquote></h3>
-
-- 데이터 캐싱: React Query는 데이터를 캐싱하여 여러 번의 요청에서 동일한 데이터를 다시 불러올 필요가 없도록 합니다. 이를 통해 애플리케이션의 성능을 향상시킵니다.
-
-- 자동 재요청: 데이터가 변경되면 React Query는 자동으로 새로운 데이터를 요청하고 업데이트합니다. 이를 통해 데이터의 실시간 업데이트를 지원합니다.
-
-- 비동기 데이터 요청: React Query는 비동기 API 호출을 처리하고 Promise, Axios, fetch 등과 같은 다양한 방법을 사용하여 데이터를 가져올 수 있습니다.
-
-- 쿼리 키 기반 관리: 각 쿼리는 고유한 키로 관리되며, 이를 통해 쿼리에 대한 인터랙션과 갱신을 조작할 수 있습니다.
-
-- 인터벌 리플레쉬: 일정 시간마다 데이터를 자동으로 새로고침하여 데이터를 최신 상태로 유지할 수 있습니다.
-
-- 오류 핸들링: 데이터 요청 중 발생하는 오류를 쉽게 처리하고 관리합니다.
-
-<h3><blockquote>설치
-</blockquote></h3>
-
-```js
-//npm
-npm install react-query
-
-//yarn
-yarn add react-query
+```bash
+npm install @tanstack/react-query
 ```
 
-<h3><blockquote>QueryClientProvider
-</blockquote></h3>
+예전 버전의 `react-query`와 패키지 이름이 다르기 때문에 import 경로를 함께 확인해야 합니다.
 
-React Query에서 제공되는 컴포넌트로 애플리케이션 내에서 QueryClient를 전역적으로 제공하고 관리하는 역할을 합니다.
+---
 
-- <b>QueryClient</b>: React Query에서 핵심적인 역할을 하는 클래스이며, 애플리케이션 전체의 쿼리 인스턴스와 캐시를 관리하고, 비동기 데이터 요청 및 쿼리 상태를 추적합니다.
+## QueryClientProvider 설정하기
 
-```js
-//index.js
-import React from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+React Query를 사용하려면 앱 최상단에 `QueryClientProvider`를 설정해야 합니다.
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./App";
 
 const queryClient = new QueryClient();
 
-function App() {
+const Root = () => {
   return (
-    // QueryClientProvider로 둘러싼 모든 하위 컴포넌트에서 QueryClient를 사용할 수 있게 됨
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
   );
-}
+};
 
-export default App;
+export default Root;
 ```
 
-<h3><blockquote>react-query Hook
-</blockquote></h3>
-
-#### 💡 useQuery
-
-비동기 데이터 요청을 처리하고 쿼리의 상태를 추적하는데 사용됩니다.
-
-사용예시
-
-```js
-import { useQuery } from "react-query";
-
-const { data: imgList, isLoading: imgLoading } = useQuery(["key이름"], 비동기통신 함수, {
-  onSuccess: (res) => {},
-  onError: (err) => {},
-});
-```
-
-- <b>data</b>: 비동기 데이터 요청이 성공적으로 완료되었을 때 해당 데이터를 담고 있다
-- <b>isLoading</b>: 비동기 데이터 요청이 진행 중인지를 나타내는 불리언(Boolean) 값
-- <b>onSuccess</b>: 쿼리의 성공적인 데이터 가져오기가 완료되었을 때 실행할 함수를 정의
-- <b>onError</b>: 쿼리 실행 중에 오류가 발생했을 때 실행되는 콜백 함수를 정의
-
-다양한 객체와 옵션 객체들
-
-```js
-const {
-  data, // 비동기 데이터를 담는 객체
-  dataUpdatedAt, // 비동기 데이터가 최근에 업데이트된 시간 정보
-  error, // 발생한 오류 객체
-  errorUpdatedAt, // 오류가 최근에 업데이트된 시간 정보
-  failureCount, // 데이터 요청에 실패한 횟수
-  isError, // 데이터 요청이 오류 상태인지 여부
-  isFetched, // 데이터 요청이 실행되었고 결과를 가져온 상태인지 여부
-  isFetchedAfterMount, // 컴포넌트가 마운트된 후에 최초로 데이터를 가져온 상태인지 여부
-  isFetching, // 데이터를 가져오는 중인지 여부
-  isIdle, // 아직 데이터 요청이 실행되지 않았거나 에러가 없는 상태인지 여부
-  isLoading, // 데이터를 로딩 중인지 여부
-  isLoadingError, // 로딩 중에 오류가 발생한 상태인지 여부
-  isPlaceholderData, // placeholderData가 사용되고 있는지 여부
-  isPreviousData, // 이전 데이터를 사용하는지 여부
-  isRefetchError, // refetch 중에 오류가 발생한 상태인지 여부
-  isRefetching, // 데이터를 refetch 중인지 여부
-  isStale, // 데이터가 캐시된 시간을 초과해서 Stale한 상태인지 여부
-  isSuccess, // 데이터 요청이 성공적인 상태인지 여부
-  refetch, // 데이터를 재요청하는 함수
-  remove, // 쿼리의 데이터를 삭제하는 함수
-  status, // 쿼리의 현재 상태를 나타내는 문자열 (예: 'loading', 'error', 'success' 등)
-} = useQuery(queryKey, queryFn, {
-  cacheTime, // 데이터의 캐시 유지 시간 (기본값: 5분)
-  enabled, // 쿼리를 활성화 또는 비활성화하는 데 사용 (기본값: true)
-  initialData, // 초기 데이터를 설정하는데 사용 (기본값: undefined)
-  initialDataUpdatedAt, // 초기 데이터가 업데이트된 시간 정보
-  isDataEqual, // 데이터가 이전과 동일한지를 비교하는 함수
-  keepPreviousData, // 이전 데이터를 유지하는데 사용 (기본값: false)
-  meta, // 쿼리의 추가 메타데이터를 저장하는 객체
-  notifyOnChangeProps, // 쿼리 결과의 특정 속성 변경 시 재호출하도록 지정하는 속성 배열
-  notifyOnChangePropsExclusions, // notifyOnChangeProps에서 제외할 속성 배열
-  onError, // 쿼리 실행 중 오류 발생 시 실행되는 콜백 함수
-  onSettled, // 쿼리 실행 종료 후 항상 실행되는 콜백 함수
-  onSuccess, // 쿼리 실행 성공 시 실행되는 콜백 함수
-  placeholderData, // 쿼리 데이터 로딩 중에 표시할 임시 데이터
-  queryKeyHashFn, // 쿼리 키를 해싱하는 함수
-  refetchInterval, // 자동으로 refetch를 실행하는 간격 (밀리초 단위)
-  refetchIntervalInBackground, // 백그라운드에서 실행될 때의 refetch 간격 (밀리초 단위)
-  refetchOnMount, // 컴포넌트가 마운트될 때 자동으로 refetch 실행 (기본값: true)
-  refetchOnReconnect, // 네트워크 재연결 시 자동으로 refetch 실행 (기본값: true)
-  refetchOnWindowFocus, // 윈도우 포커스 시 자동으로 refetch 실행 (기본값: true)
-  retry, // 쿼리 실행 중 오류 발생 시 자동으로 재시도할 횟수 (기본값: 3)
-  retryOnMount, // 컴포넌트가 마운트될 때 자동으로 retry 실행 (기본값: false)
-  retryDelay, // 오류 발생 후 재시도할 때의 딜레이 시간 (밀리초 단위, 기본값: 0)
-  select, // 쿼리 결과에서 특정 데이터를 선택하는 함수
-  staleTime, // 쿼리 결과가 Stale 상태로 표시되는 시간 (밀리초 단위)
-  structuralSharing, // 구조 공유(Structural Sharing) 옵션 (기본값: false)
-  suspense, // Suspense를 사용할지 여부 (기본값: false)
-  useErrorBoundary, // 오류 발생 시 ErrorBoundary를 사용할지 여부 (기본값: false)
-});
-```
-
-#### 💡 useMutation
-
-서버에 데이터를 변경하는데 사용됩니다. 주로 POST, PUT, DELETE 등의 HTTP 메서드를 사용하여 데이터를 생성, 수정, 삭제하는 작업을 처리할 때 유용하게 사용됩니다.
-
-사용예시
-
-```js
-const { mutate: getUserInfo, isLoading: userInfoLoading } = useMutation(
-  () => postUserId(id),
-  {
-    onSuccess: (res) => {},
-    onError: (err) => {},
-  },
-);
-
-useEffect(() => {
-  getUserInfo();
-}, []);
-```
-
-- <b>mutate</b>: mutate 메서드를 호출하여 비동기 작업을 원하는 때에 호출할 수 있다.
+이 Provider 아래에서 `useQuery`, `useMutation` 같은 훅을 사용할 수 있습니다.
 
 ---
 
-## <b>마치며</b>
+## useQuery로 데이터 가져오기
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+`useQuery`는 서버 데이터를 조회할 때 사용합니다.
+
+```tsx
+import { useQuery } from "@tanstack/react-query";
+
+const fetchUser = async () => {
+  const response = await fetch("/api/user");
+  return response.json();
+};
+
+const UserProfile = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["user"],
+    queryFn: fetchUser,
+  });
+
+  if (isLoading) return <p>불러오는 중...</p>;
+  if (isError) return <p>사용자 정보를 불러오지 못했습니다.</p>;
+
+  return <p>{data.name}</p>;
+};
+
+export default UserProfile;
+```
+
+`queryKey`는 이 요청을 구분하는 키입니다.
+
+`queryFn`은 실제로 데이터를 가져오는 함수입니다.
+
+---
+
+## queryKey가 중요한 이유
+
+React Query는 `queryKey`를 기준으로 캐시를 관리합니다.
+
+```tsx
+useQuery({
+  queryKey: ["post", postId],
+  queryFn: () => fetchPost(postId),
+});
+```
+
+`postId`가 바뀌면 queryKey도 바뀌고, React Query는 새로운 데이터가 필요하다고 판단합니다.
+
+그래서 상세 페이지나 필터링된 목록처럼 조건이 있는 요청에서는 queryKey에 조건 값을 함께 넣는 것이 중요합니다.
+
+---
+
+## useMutation으로 데이터 변경하기
+
+`useMutation`은 생성, 수정, 삭제처럼 서버 데이터를 변경하는 작업에 사용합니다.
+
+```tsx
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+const createPost = async (title: string) => {
+  const response = await fetch("/api/posts", {
+    method: "POST",
+    body: JSON.stringify({ title }),
+  });
+
+  return response.json();
+};
+
+const CreatePostButton = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
+  return (
+    <button onClick={() => mutation.mutate("새 게시글")}>
+      게시글 생성
+    </button>
+  );
+};
+
+export default CreatePostButton;
+```
+
+데이터 변경이 성공한 뒤 `invalidateQueries`를 호출하면 관련 목록을 다시 가져올 수 있습니다.
+
+---
+
+## 자주 사용하는 상태값
+
+| 값 | 의미 |
+| --- | --- |
+| `data` | 요청 성공 후 받은 데이터 |
+| `isLoading` | 첫 요청이 진행 중인지 |
+| `isFetching` | 백그라운드 재요청 중인지 |
+| `isError` | 에러가 발생했는지 |
+| `error` | 발생한 에러 객체 |
+| `refetch` | 수동으로 다시 요청하는 함수 |
+
+처음 로딩과 백그라운드 refetch를 구분하고 싶다면 `isLoading`과 `isFetching` 차이를 보면 됩니다.
+
+---
+
+## 마무리
+
+React Query는 서버 상태를 관리할 때 반복되는 코드를 크게 줄여줍니다.
+
+조회는 `useQuery`, 변경은 `useMutation`을 사용하고, `queryKey`를 기준으로 캐시를 관리합니다.
+
+API 데이터가 많은 프로젝트라면 로딩, 에러, 캐싱, 재요청 흐름을 직접 만들기보다 React Query를 사용하는 편이 훨씬 안정적입니다.

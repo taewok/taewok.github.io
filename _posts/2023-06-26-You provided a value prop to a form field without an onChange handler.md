@@ -1,61 +1,117 @@
 ---
-title: "[Error] You provided a value prop to a form field without an onChange handler"
-date: 2023-06-26T18:18:000
+title: "[Error] value prop without onChange handler 경고 해결하기"
+date: 2023-06-26T18:18:00
 categories: [error]
-tags: [error] #소문자만 가능
+tags: [error, react, input, controlled-component]
+description: "React input에서 value만 전달하고 onChange를 작성하지 않았을 때 발생하는 경고의 원인과 해결 방법을 정리했습니다."
+custom_style: true
 ---
 
+## 발생한 경고
+
+React에서 input을 만들다가 다음 경고를 만날 때가 있습니다.
+
+```txt
+You provided a `value` prop to a form field without an `onChange` handler.
+```
+
+이 경고는 input에 `value`는 넣었는데, 값을 변경할 수 있는 `onChange`가 없을 때 발생합니다.
+
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">Warning: You provided a value prop to a form field without an onChange handler. 발생</b>
-
-<img src="https://github.com/TWOGATH3R/twogather-web-frontend/assets/88264006/0559ffa5-d06a-450b-ad2b-485cf6452dc2"/>
-
-## <b style="border-bottom:2px solid gray" class="h2">해결</b>
-
-<blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">
-기존 코드
-</blockquote>
+## 문제가 된 코드
 
 ```tsx
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Info = () => {
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState("");
 
   return (
-    <div>
-      <input value={id} placeholder="아이디를 입력해주세요" />
-    </div>
+    <input
+      value={id}
+      placeholder="아이디를 입력해주세요"
+    />
   );
 };
 
 export default Info;
 ```
 
-<blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">
-수정 코드
-</blockquote>
+`value={id}`를 넣는 순간 이 input은 React state가 값을 제어하는 controlled component가 됩니다.
+
+그런데 `onChange`가 없기 때문에 사용자가 입력해도 state를 바꿀 방법이 없습니다.
+
+그래서 React는 읽기 전용 input처럼 동작할 수 있다고 경고를 보여줍니다.
+
+---
+
+## 해결 방법 1. onChange 추가하기
+
+사용자가 입력한 값을 state에 저장해야 한다면 `onChange`를 추가하면 됩니다.
 
 ```tsx
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Info = () => {
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState("");
 
   return (
-    <div>
-      <input defaultValue={id} placeholder="아이디를 입력해주세요" />
-    </div>
+    <input
+      value={id}
+      onChange={(event) => setId(event.target.value)}
+      placeholder="아이디를 입력해주세요"
+    />
   );
 };
 
 export default Info;
 ```
 
+이제 input 값이 바뀔 때마다 `setId`가 호출되고, state와 input 값이 함께 업데이트됩니다.
+
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## 해결 방법 2. defaultValue 사용하기
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+값을 React state로 계속 관리할 필요가 없다면 `defaultValue`를 사용할 수 있습니다.
+
+```tsx
+const Info = () => {
+  return (
+    <input
+      defaultValue=""
+      placeholder="아이디를 입력해주세요"
+    />
+  );
+};
+
+export default Info;
+```
+
+`defaultValue`는 초기값만 지정합니다.
+
+그 이후 입력값은 브라우저 DOM이 직접 관리합니다.
+
+---
+
+## value와 defaultValue 차이
+
+| 속성 | 의미 |
+| --- | --- |
+| `value` | React state가 값을 제어함 |
+| `defaultValue` | 처음 값만 지정하고 이후에는 DOM이 관리함 |
+
+입력값을 검증하거나, 버튼 활성화 조건에 사용하거나, 서버로 보낼 데이터로 관리해야 한다면 `value`와 `onChange`를 함께 사용하는 것이 좋습니다.
+
+단순 초기값만 필요하다면 `defaultValue`가 더 간단합니다.
+
+---
+
+## 마무리
+
+이 경고는 React가 input의 제어 방식을 명확히 하라고 알려주는 신호입니다.
+
+`value`를 사용한다면 `onChange`도 함께 작성해야 합니다.
+
+반대로 입력값을 React state로 관리하지 않을 거라면 `defaultValue`를 사용하면 됩니다.

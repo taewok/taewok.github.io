@@ -1,112 +1,171 @@
 ---
-title: "[React] 쿼리 스트링(Query String)이란?"
-date: 2023-07-24T18:00:000
+title: "[React] Query String 이해하기"
+date: 2023-07-24T18:00:00
 categories: [react]
-tags: [react] #소문자만 가능
+tags: [react, react-router-dom, query-string, use-search-params]
+description: "Query String의 의미와 React Router에서 useSearchParams로 값을 읽고 변경하는 방법을 정리했습니다."
+custom_style: true
 ---
 
----
+## Query String이란?
 
-## <b>쿼리 스트링(Query String)이란?</b>
+Query String은 URL 뒤에 `?`를 붙이고 key-value 형태의 값을 전달하는 방식입니다.
 
-<h3><blockquote>정의
-</blockquote></h3>
-
-- 쿼리 스트링은 URL의 끝에 물음표(?)를 사용하여 URL에 매개변수를 추가하는 방법입니다.
-
-<h3><blockquote>특징
-</blockquote></h3>
-
-- URL에 매개변수를 쉽게 추가하거나 변경할 수 있어 유연하게 데이터를 전달할 수 있습니다.
-- URL이 더 길어지고 읽기에 어려워질 수 있으며, SEO에는 적합하지 않을 수 있습니다.
-- 쿼리 파라미터는 URL에서 일반적으로 캐싱되지 않습니다. 동일한 URL이라도 쿼리 파라미터의 값이 다르면 서버로 요청이 새로 발생합니다.
-
-<h3><blockquote>사용상황
-</blockquote></h3>
-
-- 검색 및 필터링과 같은 다양한 매개변수를 전달할 때 유용합니다.
-
----
-
-## <b>쿼리 스트링(Query String) 형태</b>
-
-<img src="https://github.com/TWOGATH3R/twogather-web-frontend/assets/88264006/235e794f-72de-4bdb-8271-a314519f6648">
-
-- ? : 이후의 작성된 내용은 쿼리 스트링입니다
-  - ex) https://example.com/search?search=react
-- & : Key와 value가 한쌍이라고 하고 두쌍이상 사용하려면 &로 연결해줘야 한다
-  - ex) https://example.com/search?search=react&location=서울
-
----
-
-## <b>사용 예시</b>
-
-<h3><blockquote>Routing 하기
-</blockquote></h3>
-
-패스 파라미터와 달리 router 설정은 따로 필요 없으며 이동할 url만 신경 써주면 된다.<br/>
-react-router-dom에 useNavigate 혹은 Link 훅을 사용하여 이동할 수 있다
-
-```jsx
-<Link to="/search?search=react" />;
-
-navigate("/search?search=react");
+```txt
+/search?keyword=react
 ```
 
-<h3><blockquote>값 가져오기
-</blockquote></h3>
+여기서 `keyword=react`가 query string입니다.
 
-쿼리 스트링에 값을 가져오려면 useLocation, useSearchParams와 같은 hook을 사용해야 한다.
+검색어, 필터, 정렬 조건처럼 페이지 조회 조건을 URL에 담을 때 자주 사용합니다.
 
-### useLocation 사용
+---
 
-- useLocation의 search를 통해 쿼리 스트링 값을 가져올 수 있지만 자바스크립을 통해 parsing하는 과정이 필요하다 그렇기에 useSearchParams를 추천한다
+## 기본 형태
 
-// url 주소가 http://localhost:3000/SearchResult?search=react 일 경우의 예시
+Query String은 `?` 뒤에 작성합니다.
 
-```jsx
-import React from "react";
+```txt
+/search?keyword=react
+```
+
+여러 값을 함께 전달할 때는 `&`로 연결합니다.
+
+```txt
+/search?keyword=react&page=2&sort=latest
+```
+
+이 URL에는 다음 값들이 들어 있습니다.
+
+| key | value |
+| --- | --- |
+| `keyword` | `react` |
+| `page` | `2` |
+| `sort` | `latest` |
+
+---
+
+## 언제 사용할까요?
+
+Query String은 화면의 조회 조건을 URL에 남기고 싶을 때 유용합니다.
+
+예를 들면 이런 상황입니다.
+
+- 검색어
+- 페이지 번호
+- 정렬 방식
+- 필터 조건
+- 탭 상태
+
+URL에 조건이 남아 있으면 새로고침해도 같은 화면을 유지하기 쉽고, 다른 사람에게 링크를 공유하기도 좋습니다.
+
+---
+
+## useSearchParams로 값 읽기
+
+React Router에서는 `useSearchParams`를 사용해 query string을 읽을 수 있습니다.
+
+```tsx
+import { useSearchParams } from "react-router-dom";
+
+const SearchResult = () => {
+  const [searchParams] = useSearchParams();
+
+  const keyword = searchParams.get("keyword");
+  const page = searchParams.get("page");
+
+  return (
+    <div>
+      <p>검색어: {keyword}</p>
+      <p>페이지: {page}</p>
+    </div>
+  );
+};
+
+export default SearchResult;
+```
+
+`searchParams.get("keyword")`는 `keyword` 값 하나를 가져옵니다.
+
+값이 없으면 `null`이 반환됩니다.
+
+---
+
+## Query String 변경하기
+
+`setSearchParams`를 사용하면 query string을 변경할 수 있습니다.
+
+```tsx
+import { useSearchParams } from "react-router-dom";
+
+const SearchPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleSearch = () => {
+    setSearchParams({
+      keyword: "react",
+      page: "1",
+    });
+  };
+
+  return <button onClick={handleSearch}>검색</button>;
+};
+
+export default SearchPage;
+```
+
+버튼을 누르면 URL이 아래처럼 바뀝니다.
+
+```txt
+/search?keyword=react&page=1
+```
+
+---
+
+## useLocation으로도 읽을 수 있어요
+
+`useLocation`을 사용하면 query string 문자열 자체를 확인할 수 있습니다.
+
+```tsx
 import { useLocation } from "react-router-dom";
 
 const SearchResult = () => {
   const location = useLocation();
-  console.log(location.search); //?search=react
 
-  return <h1>This is SearchResult</h1>;
+  console.log(location.search); // "?keyword=react"
+
+  return <h1>검색 결과</h1>;
 };
 
 export default SearchResult;
 ```
 
-### useSearchParams 사용
-
-- 사용 형태는 useState와 흡사하며 get메소드를 통해 쿼리 스트링에 Key값으로 value를 가져 올 수 있다
-
-// url 주소가 http://localhost:3000/SearchResult?search=react 일 경우의 예시
-
-```jsx
-import React from "react";
-import { useSearchParams } from "react-router-dom";
-
-const SearchResult = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const search = searchParams.get("search");
-
-  console.log(search); //react
-
-  return <h1>This is SearchResult</h1>;
-};
-
-export default SearchResult;
-```
-
-- searchParams 메소드
-  - searchParams.get(key) : 특정 key의 value 가져오기
-  - searchParams.getAll(key) : 특정 key의 모든 value 가져오기
+다만 이 경우 직접 파싱해야 하므로, 일반적으로는 `useSearchParams`가 더 편합니다.
 
 ---
 
-## <b>마치며</b>
+## Path Parameter와의 차이
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+Path Parameter는 특정 리소스를 나타낼 때 사용합니다.
+
+```txt
+/posts/15
+```
+
+Query String은 조회 조건이나 옵션을 나타낼 때 사용합니다.
+
+```txt
+/posts?keyword=react&sort=latest
+```
+
+상세 페이지 id처럼 리소스 자체를 구분하는 값은 path parameter가 잘 맞고, 검색 조건처럼 바뀔 수 있는 값은 query string이 잘 맞습니다.
+
+---
+
+## 마무리
+
+Query String은 URL에 검색 조건이나 필터 상태를 담을 때 유용합니다.
+
+React Router에서는 `useSearchParams`를 사용하면 query string을 쉽게 읽고 변경할 수 있습니다.
+
+검색, 필터, 페이지네이션처럼 URL에 상태를 남겨야 하는 화면이라면 query string을 활용해보면 좋습니다.

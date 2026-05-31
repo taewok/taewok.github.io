@@ -1,89 +1,143 @@
 ---
-title: "[JavaScript] 안전한 코딩을 위한 필수 문법: ?. (Optional Chaining) & ?? (Nullish Coalescing)"
-date: 2023-07-14T17:50:000
+title: "[JavaScript] Optional Chaining과 Nullish Coalescing"
+date: 2023-07-14T17:50:00
 categories: [javascript]
-tags: [javascript] #소문자만 가능
+tags: [javascript, optional-chaining, nullish-coalescing]
+description: "Optional Chaining과 Nullish Coalescing을 사용해 null, undefined 값을 안전하게 다루는 방법을 정리했습니다."
+custom_style: true
 ---
 
-프론트엔드 개발을 하다 보면 API로 데이터를 받아오기 전, 값이 `null`이거나 `undefined`여서 화면이 깨지는 상황을 자주 마주하게 됩니다. 오늘은 방어 코드를 획기적으로 줄여주는 현대 자바스크립트의 핵심 문법 두 가지를 알아보겠습니다.
+## 들어가며
+
+프론트엔드에서 API 데이터를 다루다 보면 아직 값이 없거나, 특정 필드가 내려오지 않는 상황을 자주 만납니다.
+
+이때 안전하게 값을 읽기 위해 사용하는 문법이 Optional Chaining `?.`입니다.
+
+그리고 기본값을 넣을 때 자주 사용하는 문법이 Nullish Coalescing `??`입니다.
+
+두 문법을 함께 사용하면 방어 코드를 훨씬 간결하게 만들 수 있습니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">1. ?. (Optional Chaining) 연산자</b>
+## Optional Chaining이란?
 
-`?.` 연산자는 좌항의 객체가 `null` 또는 `undefined`라면 에러를 발생시키는 대신 **undefined**를 즉시 반환합니다.
+Optional Chaining은 객체의 중첩된 값을 읽을 때, 중간 값이 `null` 또는 `undefined`이면 에러를 내지 않고 `undefined`를 반환합니다.
 
-### 기본 문법
+```js
+const user = null;
 
-```javascript
-const user = {
-  name: "kim",
+console.log(user.name); // TypeError
+console.log(user?.name); // undefined
+```
+
+`user?.name`은 `user`가 있으면 `name`을 읽고, 없으면 바로 `undefined`를 반환합니다.
+
+---
+
+## 중첩 객체에서 사용하기
+
+API 응답은 종종 깊은 구조를 가집니다.
+
+```js
+const response = {
+  user: {
+    profile: {
+      nickname: "taewok",
+    },
+  },
 };
 
-console.log(user?.age); // undefined (에러 발생 X)
+const nickname = response?.user?.profile?.nickname;
+
+console.log(nickname); // "taewok"
 ```
 
-### 실무 활용 (React/TypeScript)
-
-데이터 통신으로 리스트를 받아올 때, 데이터가 아직 도착하지 않은 시점(null/undefined)에서의 런타임 에러를 방지합니다.
-
-```tsx
-// list가 없으면 에러 발생
-{
-  list.data.map((item) => <ListItem key={item.id} />);
-}
-
-// list가 있을 때만 map 실행
-{
-  list?.data.map((item) => <ListItem key={item.id} />);
-}
-```
+중간에 `user`나 `profile`이 없어도 에러가 발생하지 않습니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">2. ?? (Nullish Coalescing) 연산자</b>
+## 배열과 함수에도 사용할 수 있어요
 
-`??` 연산자는 왼쪽 피연산자가 **null** 또는 **undefined**일 때만 오른쪽 값을 반환합니다.
+배열 요소에 접근할 때도 사용할 수 있습니다.
 
-### 기본 문법
+```js
+const users = null;
 
-```javascript
-const response = undefined;
-console.log(response ?? "로딩 중..."); // "로딩 중..."
+console.log(users?.[0]?.name); // undefined
 ```
 
-### 💡 OR(`||`) 연산자와의 결정적 차이
+함수가 있을 때만 호출하고 싶다면 이렇게 쓸 수 있습니다.
 
-이 부분이 가장 중요합니다. `||` 연산자는 **Falsy** 값(`0`, `""`, `false`)을 모두 오른쪽 값으로 대체해버리는 문제가 있습니다.
+```js
+props.onClose?.();
+```
 
-```javascript
+`onClose`가 있으면 호출하고, 없으면 아무 일도 하지 않습니다.
+
+---
+
+## Nullish Coalescing이란?
+
+Nullish Coalescing `??`는 왼쪽 값이 `null` 또는 `undefined`일 때만 오른쪽 값을 사용합니다.
+
+```js
+const nickname = null;
+
+console.log(nickname ?? "익명"); // "익명"
+```
+
+값이 실제로 없을 때만 기본값을 넣고 싶을 때 사용합니다.
+
+---
+
+## ||와 ??의 차이
+
+`||`는 falsy 값을 모두 기본값으로 바꿉니다.
+
+```js
 const count = 0;
 
-// OR 연산자: 0을 유효한 값으로 처리하지 못함
 console.log(count || 10); // 10
-
-// Nullish 연산자: null/undefined만 체크하므로 0을 유지함
 console.log(count ?? 10); // 0
 ```
 
-따라서 **0이나 빈 문자열("")이 유효한 데이터**인 경우에는 반드시 `??`를 사용해야 합니다.
+`0`, `""`, `false`도 유효한 값으로 봐야 한다면 `??`를 사용하는 것이 안전합니다.
+
+```js
+const title = "";
+
+console.log(title || "제목 없음"); // "제목 없음"
+console.log(title ?? "제목 없음"); // ""
+```
+
+빈 문자열도 의도한 값이라면 `??`가 더 적절합니다.
 
 ---
 
-## 3. 요약 및 조합해서 사용하기
+## 함께 사용하기
 
-이 두 문법을 조합하면 데이터 바인딩 시 매우 강력한 힘을 발휘합니다.
+Optional Chaining과 Nullish Coalescing은 함께 사용할 때 특히 편합니다.
 
-```javascript
-// 사용자 이름이 없으면 '익명'을 표시 (방어 코드 최적화)
-const userName = apiResponse?.user?.name ?? "익명";
+```js
+const nickname = response?.user?.profile?.nickname ?? "익명";
+```
+
+`nickname`이 존재하면 해당 값을 사용하고, 중간 값이 없거나 최종 값이 `null` 또는 `undefined`이면 `"익명"`을 사용합니다.
+
+React에서도 자주 사용합니다.
+
+```tsx
+const UserName = ({ user }: Props) => {
+  return <span>{user?.profile?.nickname ?? "익명 사용자"}</span>;
+};
 ```
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## 마무리
 
-<p>코드의 가독성을 높이고 런타임 에러를 줄여주는 <code>?.</code>와 <code>??</code>는 이제 선택이 아닌 필수입니다. 특히 API 연동이 잦은 프론트엔드 환경에서 적극적으로 활용하기 좋습니다.</p>
+`?.`는 중간 값이 없을 때 에러를 막아주는 문법입니다.
 
-<p>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+`??`는 값이 `null` 또는 `undefined`일 때만 기본값을 적용하는 문법입니다.
+
+API 응답처럼 값이 항상 보장되지 않는 데이터를 다룰 때 두 문법을 함께 사용하면 코드가 훨씬 안전하고 읽기 쉬워집니다.

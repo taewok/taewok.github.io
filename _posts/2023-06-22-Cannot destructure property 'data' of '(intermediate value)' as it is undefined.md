@@ -1,80 +1,110 @@
 ---
-title: "[Error] console.log(Error) 객체 안나오는 현상"
-date: 2023-06-22T18:13:000
+title: "[Error] Cannot destructure property 'data' of undefined 해결하기"
+date: 2023-06-22T18:13:00
 categories: [error]
-tags: [error] #소문자만 가능
+tags: [error, axios, interceptor, javascript]
+description: "axios 응답 인터셉터에서 Promise.reject를 반환하지 않아 호출부에서 undefined를 구조 분해하게 되는 문제를 정리했습니다."
+custom_style: true
 ---
 
----
+## 발생한 에러
 
-## <b style="border-bottom:2px solid gray" class="h2">Cannot destructure property 'data' of '(intermediate value)' as it is undefined. 발생</b>
+API 요청을 처리하던 중 다음과 같은 에러를 만났습니다.
 
-<img src="https://github.com/TWOGATH3R/twogather-web-frontend/assets/88264006/df319a46-ad81-4eaa-beb8-d2535b80b9d9"/>
+```txt
+Cannot destructure property 'data' of '(intermediate value)' as it is undefined.
+```
 
-원래 평상시에 위처럼 찍혀야 할 error 코드가 아래처럼 나오기 시작했다....<br/>
-백에서 어떤 error인지 보내준 message 확인해야 하는데....
-
-<img src="https://github.com/TWOGATH3R/twogather-web-frontend/assets/88264006/efaf403d-53fe-4976-8b7a-a80f458ca917"/>
-
-<blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">
-원인
-</blockquote>
-
-응답이 올 떄 통신을 가로채는 코드가 문제였던 것 이다...<br/>
-이미 진짜 error 코드는 여기서 쓰였다...
+보통 이런 코드를 작성했을 때 발생할 수 있습니다.
 
 ```js
-// 응답 인터셉터 추가하기
+const { data } = await api.get("/users/me");
+```
+
+`api.get()`의 결과가 정상적인 response 객체가 아니라 `undefined`가 되어버리면, `data`를 구조 분해할 수 없어 에러가 발생합니다.
+
+---
+
+## 원인
+
+문제는 axios response interceptor의 에러 처리 부분에 있었습니다.
+
+```js
 api.interceptors.response.use(
-  function (response) {
-    // 응답 데이터가 있는 작업 수행
+  (response) => {
     return response;
   },
-  function (error) {
-    const {
-      response: { status },
-    } = error;
-    // 응답 오류가 있는 작업 수행
+  (error) => {
+    const status = error.response.status;
+
     if (status === 401) {
       removeCookie();
       window.location.replace("/login");
-      window.location.reload();
     }
   },
 );
 ```
 
-<blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">
-해결
-</blockquote>
+에러가 발생했을 때 아무것도 반환하지 않고 있습니다.
 
-Promise.reject(error)를 return 해주니 다시 정상적인 error 코드가 나온다.
+JavaScript 함수에서 return이 없으면 기본적으로 `undefined`가 반환됩니다.
+
+그 결과 API 호출부에서는 에러가 던져지는 대신 `undefined`를 받게 되고, `const { data } = undefined` 상황이 되어 에러가 발생합니다.
+
+---
+
+## 해결 방법
+
+에러 처리 후에는 반드시 `Promise.reject(error)`를 반환해야 합니다.
 
 ```js
-// 응답 인터셉터 추가하기
 api.interceptors.response.use(
-  function (response) {
-    // 응답 데이터가 있는 작업 수행
+  (response) => {
     return response;
   },
-  function (error) {
-    const {
-      response: { status },
-    } = error;
-    // 응답 오류가 있는 작업 수행
+  (error) => {
+    const status = error.response?.status;
+
     if (status === 401) {
       removeCookie();
       window.location.replace("/login");
-      window.location.reload();
     }
+
     return Promise.reject(error);
   },
 );
 ```
 
+이렇게 하면 인터셉터에서 공통 처리를 한 뒤에도, 호출한 쪽의 `catch`나 React Query의 `onError`로 에러가 정상적으로 전달됩니다.
+
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## optional chaining도 함께 사용하기
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+네트워크 에러처럼 서버 응답 자체가 없는 경우에는 `error.response`가 없을 수 있습니다.
+
+그래서 아래 코드처럼 바로 구조 분해하면 또 다른 에러가 날 수 있습니다.
+
+```js
+const {
+  response: { status },
+} = error;
+```
+
+조금 더 안전하게 쓰려면 optional chaining을 사용합니다.
+
+```js
+const status = error.response?.status;
+```
+
+이렇게 하면 `response`가 없는 에러도 안전하게 처리할 수 있습니다.
+
+---
+
+## 마무리
+
+이 에러의 핵심 원인은 API 응답이 정말 `undefined`라기보다, interceptor에서 에러를 제대로 다시 던지지 않았다는 점이었습니다.
+
+axios 응답 인터셉터에서 에러를 처리했다면 마지막에 `return Promise.reject(error)`를 작성해야 합니다.
+
+또한 `error.response?.status`처럼 안전하게 접근하면 네트워크 에러 상황에서도 코드가 더 안정적으로 동작합니다.

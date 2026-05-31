@@ -1,70 +1,136 @@
 ---
-title: "[JavaScript] async,await 사용하기"
-date: 2023-07-07T16:18:000
+title: "[JavaScript] async와 await 기본 사용법"
+date: 2023-07-07T16:18:00
 categories: [javascript]
-tags: [javascript] #소문자만 가능
+tags: [javascript, async, await, promise]
+description: "JavaScript에서 async와 await를 사용해 비동기 코드를 읽기 쉽게 작성하는 방법을 정리했습니다."
+custom_style: true
 ---
 
----
+## async와 await가 필요한 이유
 
-## <b style="border-bottom:2px solid gray" class="h2">async & await이란?</b>
+JavaScript에서는 API 요청, 타이머, 파일 처리처럼 시간이 걸리는 작업을 비동기로 처리합니다.
 
-자바스크립트는 비동기 처리가 기반인 언어이다.<br/>
-async와 await는 JavaScript에서 비동기 프로그래밍을 할 때 사용되는 키워드이다. 이 키워드를 사용하면 비동기 작업을 동기적으로 처리할 수 있어 코드의 가독성과 유지보수성을 높일 수 있습니다.
-
-<h3><blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">async</blockquote></h3>
-
-async 키워드는 함수를 비동기 함수로 정의할 때 사용됩니다. <br/>
-이 함수는 항상 Promise 객체를 반환하며, 함수 내부에서 비동기 작업을 수행할 수 있다. <br/>
+예전에는 Promise의 `then`을 이어 붙여서 처리하는 경우가 많았습니다.
 
 ```js
-const fn = async () => {
+fetchUser()
+  .then((user) => fetchPosts(user.id))
+  .then((posts) => console.log(posts))
+  .catch((error) => console.error(error));
+```
+
+이 방식도 사용할 수 있지만, 로직이 길어질수록 코드 흐름을 따라가기 어려워질 수 있습니다.
+
+`async`와 `await`를 사용하면 비동기 코드를 동기 코드처럼 위에서 아래로 읽을 수 있습니다.
+
+---
+
+## async란?
+
+`async`는 함수를 비동기 함수로 만들어주는 키워드입니다.
+
+```js
+const getNumber = async () => {
   return 1;
 };
 
-const result = fn();
-console.log(result); //Promise{1}
+const result = getNumber();
+
+console.log(result); // Promise { 1 }
 ```
 
-실제 결과를 얻기 위해서는 Promise의 메서드인 then이나 await를 사용하여 비동기 작업의 완료를 기다려야 한다.
+`async` 함수는 항상 Promise를 반환합니다.
 
-<h3><blockquote style="color:black; padding: 0.5rem 1rem; border-left: 5px solid #5cc55b;">await</blockquote></h3>
-
-await 키워드는 Promise 객체가 처리될 때까지 함수의 실행을 일시 중지할 때 사용되며.
-await을 사용하려면 async함수 안에서 사용해야한다.
-
-```js
-const f = async () => {
-  let promise = new Promise((resolve, reject) => {
-    setTimeout(() => resolve("완료!"), 1000);
-  });
-
-  let result = await promise; // 프라미스가 이행될 때까지 기다림 (*)
-
-  console.log(result); //완료!
-  //await이 없었다면 Promise {<pending>}을 반환
-};
-
-f();
-```
-
-## <b style="border-bottom:2px solid gray" class="h2">async & await 기본 사용법</b>
-
-```js
-const Name = async () => {
- const res = await axios.get("https://toOnline.com/api");
- # 비동기 작업 완료 후 처리할 로직
-}
-
-```
-
-먼저 함수의 앞에 async 라는 예약어를 붙입니다. 그러고 통신을 하는 비동기 처리 코드 앞에 await를 붙입니다. 여기서 주의 할 점은 비동기 처리 메서드가 꼭 프로미스 객체를 반환해야한다.
-
-일반적으로 await의 대상이 되는 비동기 처리 코드는 Axios 등 프로미스를 반환하는 API 호출 함수이다.
+함수 안에서 단순히 `1`을 반환해도 실제 반환값은 `Promise`로 감싸집니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## await란?
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+`await`는 Promise가 처리될 때까지 기다린 뒤 결과값을 꺼내는 키워드입니다.
+
+```js
+const getNumber = async () => {
+  return 1;
+};
+
+const run = async () => {
+  const result = await getNumber();
+  console.log(result); // 1
+};
+
+run();
+```
+
+`await`는 `async` 함수 안에서 사용할 수 있습니다.
+
+Promise가 fulfilled 상태가 되면 결과값을 반환하고, rejected 상태가 되면 에러를 던집니다.
+
+---
+
+## API 요청 예시
+
+```js
+const getUser = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/users/1");
+  const data = await response.json();
+
+  return data;
+};
+```
+
+첫 번째 `await`는 서버 응답을 기다립니다.
+
+두 번째 `await`는 응답 body를 JSON으로 변환하는 작업을 기다립니다.
+
+---
+
+## try-catch로 에러 처리하기
+
+`await` 중 에러가 발생할 수 있으므로 실제 코드에서는 `try-catch`를 함께 사용하는 것이 좋습니다.
+
+```js
+const getUser = async () => {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/users/1");
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("사용자 정보를 가져오지 못했습니다.", error);
+    return null;
+  }
+};
+```
+
+API 요청 실패, 네트워크 오류, JSON 변환 실패 같은 상황을 한곳에서 처리할 수 있습니다.
+
+---
+
+## Promise.all과 함께 사용하기
+
+여러 비동기 작업을 동시에 실행해야 한다면 `Promise.all`을 함께 사용할 수 있습니다.
+
+```js
+const getPageData = async () => {
+  const [user, posts] = await Promise.all([
+    fetchUser(),
+    fetchPosts(),
+  ]);
+
+  return { user, posts };
+};
+```
+
+서로 의존하지 않는 요청이라면 순서대로 기다리는 것보다 동시에 실행하는 편이 더 빠릅니다.
+
+---
+
+## 마무리
+
+`async`는 함수를 Promise를 반환하는 비동기 함수로 만들어줍니다.
+
+`await`는 Promise가 끝날 때까지 기다린 뒤 결과를 꺼내줍니다.
+
+둘을 함께 사용하면 비동기 코드를 훨씬 읽기 쉽게 만들 수 있습니다. 실제 API 요청에서는 `try-catch`까지 함께 작성해두면 에러 상황도 안정적으로 처리할 수 있습니다.

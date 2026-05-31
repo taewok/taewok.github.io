@@ -1,63 +1,134 @@
 ---
-title: "[React] lazy란?"
-date: 2023-07-29T18:39:000
+title: "[React] lazy와 Suspense로 코드 스플리팅하기"
+date: 2023-07-29T18:39:00
 categories: [react]
-tags: [react] #소문자만 가능
+tags: [react, lazy, suspense, code-splitting]
+description: "React lazy와 Suspense를 사용해 필요한 컴포넌트를 늦게 불러오고 초기 번들 크기를 줄이는 방법을 정리했습니다."
+custom_style: true
 ---
 
----
+## React lazy란?
 
-## <b>lazy란?</b>
+`React.lazy`는 컴포넌트를 필요한 시점에 동적으로 불러오게 해주는 기능입니다.
 
-<h3><blockquote>정의
-</blockquote></h3>
+앱이 커지면 처음 로딩할 때 다운로드해야 하는 JavaScript 번들 크기도 커집니다.
 
-React에서 lazy란 코드 스플리팅(Code Splitting)을 지원하기 위한 기능 중 하나이며, 코드 스플리팅은 애플리케이션의 번들 크기를 줄이고 초기 로딩 속도를 개선하는 데 사용되는 기술입니다.
+모든 페이지 코드를 처음부터 한 번에 불러오기보다, 사용자가 해당 페이지에 접근했을 때 필요한 코드만 불러오면 초기 로딩을 줄일 수 있습니다.
 
-<h3><blockquote>장점
-</blockquote></h3>
-
-- 초기 로딩 속도 개선: 사용자가 애플리케이션을 처음 방문할 때 필요한 컴포넌트만 로드되므로 초기 로딩 속도가 개선됩니다.
-
-- 작은 번들 크기: 코드 스플리팅을 통해 애플리케이션 번들의 크기가 줄어듭니다. 작은 번들은 사용자가 애플리케이션을 다운로드하는 데 걸리는 시간을 단축시키며, 데이터 사용량을 줄여줍니다.
-
-- 효율적인 자원 사용: lazy를 사용하면 사용자가 실제로 필요로 하는 컴포넌트만 로드되므로, 불필요한 자원 로딩을 방지할 수 있습니다. 이로 인해 메모리 사용과 네트워크 요청이 최적화됩니다.
-
-- 유연한 로딩 전략: React.lazy와 React.Suspense를 활용하면 로딩 화면을 커스텀하게 처리할 수 있습니다. 로딩 중에 표시할 UI나 메시지를 자유롭게 설정하여 사용자 경험을 개선할 수 있습니다.
+이 방식을 코드 스플리팅이라고 부릅니다.
 
 ---
 
-## <b>lazy 사용</b>
+## 기본 사용법
 
-Suspense를 감싸는 절차가 꼭 필요하진 않지만 동적으로 불러온 컴포넌트의 로딩 상태를 처리할 수 있는 직접적인 방법이 없으므로 강력하게 추천된다.
+```tsx
+import { lazy, Suspense } from "react";
 
-```js
+const MyPage = lazy(() => import("./MyPage"));
+
+const App = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MyPage />
+    </Suspense>
+  );
+};
+
+export default App;
+```
+
+`lazy`는 동적 import를 사용해 컴포넌트를 불러옵니다.
+
+`Suspense`는 컴포넌트가 로딩되는 동안 보여줄 fallback UI를 담당합니다.
+
+---
+
+## 라우트 단위로 나누기
+
+실무에서는 페이지 단위로 lazy를 적용하는 경우가 많습니다.
+
+```tsx
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-// 1. 코드 스플리팅할 컴포넌트 생성
-const MyComponent = lazy(() => import("./MyComponent"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const MyPage = lazy(() => import("./pages/MyPage"));
 
-function MyAppComponent() {
+const App = () => {
   return (
     <BrowserRouter>
-      {/* 2. Suspense 컴포넌트로 감싸기 */}
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          {/* 3. lazy 함수로 동적 로드된 컴포넌트 사용 */}
-          <Route path={"/mypage"} element={<MyComponent />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
   );
-}
+};
+
+export default App;
 ```
 
-- <b>fallback</b>: <strong>lazy()</strong>로 인해 코드 스플리팅된 컴포넌트가 로드되기를 기다리는 동안 보여줄 컨텐츠를 지정하는데 사용됩니다.
+이렇게 하면 사용자가 `/mypage`에 접근할 때 `MyPage` 관련 코드가 로드됩니다.
 
 ---
 
-## <b>마치며</b>
+## fallback UI
 
-<P>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+`fallback`에는 로딩 중 보여줄 UI를 넣습니다.
+
+```tsx
+<Suspense fallback={<PageSpinner />}>
+  <MyPage />
+</Suspense>
+```
+
+단순한 텍스트보다 스피너나 skeleton UI를 넣으면 사용자 입장에서 더 자연스럽게 느껴질 수 있습니다.
+
+---
+
+## lazy를 사용할 때 주의할 점
+
+`React.lazy`는 default export를 기대합니다.
+
+```tsx
+export default MyPage;
+```
+
+만약 named export만 있는 파일이라면 바로 lazy로 가져오기 어렵습니다.
+
+그럴 때는 중간에서 default 형태로 맞춰줘야 합니다.
+
+```tsx
+const MyPage = lazy(() =>
+  import("./MyPage").then((module) => ({
+    default: module.MyPage,
+  })),
+);
+```
+
+---
+
+## 언제 사용하면 좋을까요?
+
+lazy는 모든 컴포넌트에 무조건 적용하는 기능은 아닙니다.
+
+자주 쓰는 작은 컴포넌트까지 나누면 오히려 네트워크 요청이 많아지고 관리가 복잡해질 수 있습니다.
+
+보통은 아래처럼 크고 독립적인 단위에 적용합니다.
+
+- 페이지 컴포넌트
+- 관리자 화면
+- 모달 안의 무거운 기능
+- 차트, 에디터처럼 용량이 큰 라이브러리를 사용하는 영역
+
+---
+
+## 마무리
+
+`React.lazy`와 `Suspense`를 사용하면 필요한 컴포넌트를 필요한 시점에 불러올 수 있습니다.
+
+초기 번들 크기를 줄이고 싶다면 페이지 단위 코드 스플리팅부터 적용해보는 것이 좋습니다.
+
+다만 너무 작은 단위까지 나누기보다, 실제로 로딩 비용이 큰 화면이나 기능을 중심으로 적용하는 편이 효과적입니다.
