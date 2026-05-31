@@ -1,92 +1,145 @@
 ---
-title: "[JavaScript] 배열 조작: push, pop, unshift, shift 성능과 실전 팁"
-date: 2023-03-22T11:30:000
+title: "[JavaScript] 배열 앞뒤를 조작하는 push, pop, unshift, shift 정리"
+date: 2023-03-22T11:30:00
 categories: [javascript]
-tags: [javascript] #소문자만 가능
+tags: [javascript, array, push, pop, shift, unshift]
+description: "JavaScript 배열의 앞뒤를 조작하는 push, pop, unshift, shift의 차이와 원본 배열 변경 여부, 성능상 주의점을 정리했습니다."
+custom_style: true
 ---
 
-자바스크립트에서 배열(Array)은 가장 많이 다루는 데이터 구조입니다. 단순히 값을 넣고 빼는 것을 넘어, 각 메서드가 배열의 어느 위치에 영향을 주는지와 그에 따른 성능 차이를 이해하는 것이 중요합니다.
+## 🧐 배열 앞뒤에 값을 넣고 빼는 방법
 
-오늘은 배열의 앞뒤를 조작하는 4가지 핵심 메서드와 실무 환경에서의 주의점을 정리해 보겠습니다.
+JavaScript에서 배열은 정말 자주 사용하는 자료구조입니다. 단순히 값을 저장하는 것뿐 아니라, 앞이나 뒤에 값을 추가하고 제거하는 일도 많습니다.
+
+이때 사용하는 대표적인 메서드가 `push`, `pop`, `unshift`, `shift`입니다.
+
+이번 글에서는 네 가지 메서드가 배열의 어느 위치를 조작하는지, 그리고 사용할 때 어떤 점을 주의해야 하는지 정리해보겠습니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">1. 배열 뒤쪽 조작: push() & pop()</b>
+## ➕ push: 배열 끝에 추가하기
 
-배열의 **끝부분**을 조작하며, 기존 요소들의 인덱스를 건드리지 않기 때문에 속도가 매우 빠릅니다.
-
-### push(): 끝에 추가
+`push`는 배열의 끝에 값을 추가합니다.
 
 ```js
 const stack = [1, 2, 3];
+
 stack.push(4);
-console.log(stack); // [1, 2, 3, 4]
+
+console.log(stack);
+// [1, 2, 3, 4]
 ```
 
-### pop(): 끝에서 삭제 및 추출
+기존 배열의 뒤에 값이 붙습니다.
+
+---
+
+## ➖ pop: 배열 끝에서 제거하기
+
+`pop`은 배열의 마지막 값을 제거하고, 제거한 값을 반환합니다.
 
 ```js
 const stack = [1, 2, 3];
+
 const lastValue = stack.pop();
 
-console.log(lastValue); // 3 (삭제된 값 반환)
-console.log(stack); // [1, 2]
+console.log(lastValue);
+// 3
+
+console.log(stack);
+// [1, 2]
 ```
+
+스택처럼 마지막에 들어간 값을 먼저 꺼내는 구조에서 자주 사용합니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">2. 배열 앞쪽 조작: unshift() & shift()</b>
+## ⬅️ unshift: 배열 앞에 추가하기
 
-배열의 **맨 앞**을 조작합니다. 이 작업은 뒤에 있는 모든 요소의 인덱스를 하나씩 뒤로 밀거나 앞으로 당겨야 하므로, 데이터 양이 많을 경우 성능에 영향을 줄 수 있습니다.
-
-### unshift(): 앞에 추가
+`unshift`는 배열의 맨 앞에 값을 추가합니다.
 
 ```js
 const queue = [1, 2, 3];
+
 queue.unshift(0);
-console.log(queue); // [0, 1, 2, 3]
+
+console.log(queue);
+// [0, 1, 2, 3]
 ```
 
-### shift(): 앞에서 삭제 및 추출
+다만 앞에 값을 추가하면 기존 요소들의 인덱스가 모두 뒤로 밀립니다.
+
+---
+
+## ➡️ shift: 배열 앞에서 제거하기
+
+`shift`는 배열의 첫 번째 값을 제거하고, 제거한 값을 반환합니다.
 
 ```js
 const queue = [1, 2, 3];
+
 const firstValue = queue.shift();
 
-console.log(firstValue); // 1 (삭제된 값 반환)
-console.log(queue); // [2, 3]
+console.log(firstValue);
+// 1
+
+console.log(queue);
+// [2, 3]
 ```
+
+큐처럼 먼저 들어간 값을 먼저 꺼내는 구조에서 사용할 수 있습니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">3. 실전 개발 경험: 성능과 불변성</b>
+## ⚠️ 원본 배열을 직접 변경합니다
 
-### ① 성능 최적화 팁
-
-만약 수만 개의 데이터를 다루는 루프 안에서 배열을 조작해야 한다면, 가급적 `unshift/shift`보다는 `push/pop`을 사용하는 것이 유리합니다. 앞쪽 조작은 $O(n)$의 시간이 걸리지만, 뒤쪽 조작은 $O(1)$로 처리가 가능하기 때문입니다.
-
-- $O(1)$ : 상수 시간 (Constant Time)데이터가 1개든 100만 개든 상관없이 항상 일정한 시간이 걸리는 경우입니다. 가장 이상적이고 빠른 속도죠.
-- $O(n)$ : 선형 시간 (Linear Time)데이터의 양($n$)에 비례해서 시간도 정비례하게 늘어나는 경우입니다.
-
-### ② 원본 배열을 지키고 싶다면? (Immutability)
-
-위의 메서드들은 모두 **원본 배열을 직접 수정(Mutable)**합니다. 리액트(React)와 같은 프레임워크에서 상태를 업데이트할 때는 원본을 유지해야 하므로 스프레드 연산자(`...`)를 권장합니다.
+`push`, `pop`, `unshift`, `shift`는 모두 원본 배열을 직접 변경합니다.
 
 ```js
 const original = [1, 2, 3];
 
-// push 대신 새 배열 생성
-const added = [...original, 4]; // [1, 2, 3, 4]
+original.push(4);
 
-// unshift 대신 새 배열 생성
-const prepended = [0, ...original]; // [0, 1, 2, 3]
+console.log(original);
+// [1, 2, 3, 4]
+```
+
+React 상태를 업데이트할 때는 원본 배열을 직접 수정하지 않는 것이 중요합니다. 그래서 스프레드 연산자로 새 배열을 만드는 패턴을 자주 사용합니다.
+
+```js
+const original = [1, 2, 3];
+
+const added = [...original, 4];
+const prepended = [0, ...original];
 ```
 
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## 📊 성능 관점에서 보기
 
-<p>큐(Queue)와 스택(Stack) 구조를 구현할 때 이 메서드들의 차이를 꼭 기억해 두기</p>
+배열의 끝을 조작하는 `push`, `pop`은 보통 빠르게 처리됩니다. 기존 요소들의 인덱스를 바꿀 필요가 거의 없기 때문입니다.
 
-<p>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+반면 배열의 앞을 조작하는 `unshift`, `shift`는 기존 요소들의 인덱스를 다시 계산해야 합니다.
+
+```txt
+push / pop
+→ 배열 끝 조작, 비교적 빠름
+
+unshift / shift
+→ 배열 앞 조작, 많은 요소의 인덱스가 바뀜
+```
+
+데이터가 적을 때는 큰 차이를 느끼기 어렵지만, 매우 큰 배열을 자주 조작한다면 앞쪽 조작은 주의하는 것이 좋습니다.
+
+---
+
+## ✅ 정리
+
+배열의 앞뒤를 조작할 때는 다음 메서드를 사용할 수 있습니다.
+
+- `push`: 배열 끝에 추가합니다.
+- `pop`: 배열 끝에서 제거합니다.
+- `unshift`: 배열 앞에 추가합니다.
+- `shift`: 배열 앞에서 제거합니다.
+
+네 메서드는 모두 원본 배열을 직접 변경합니다. React 상태처럼 불변성이 중요한 데이터라면 스프레드 연산자 등을 사용해 새 배열을 만드는 방식을 고려하면 좋습니다.

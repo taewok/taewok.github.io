@@ -1,83 +1,114 @@
 ---
-title: "[React] 내 사이트에 깃허브 잔디 심기: react-github-calendar 사용법"
+title: "[React] react-github-calendar로 깃허브 잔디 보여주기"
 date: 2023-02-24T18:34:00
 categories: [react]
 tags: [react, react-github-calendar, github, portfolio, frontend]
-description: "React 프로젝트에서 백엔드 도움 없이 프론트엔드 라이브러리(react-github-calendar)만으로 깃허브 커밋 기록(잔디)을 가져오는 방법과 다양한 커스텀 옵션을 알아봅니다."
+description: "React 프로젝트에서 react-github-calendar를 사용해 깃허브 커밋 기록을 화면에 보여주는 방법을 정리했습니다."
 custom_style: true
 ---
 
-개발자 포트폴리오를 만들 때 빠질 수 없는 것이 바로 **'깃허브 잔디(Contribution Graph)'**입니다. 🌱
+## 🧐 포트폴리오에 깃허브 잔디를 보여주고 싶다면?
 
-처음에는 백엔드 API를 통해 User 정보를 받아와야 하나 고민했지만, 찾아보니 프론트엔드에서 **`react-github-calendar`** 라이브러리만 사용하면 아주 간편하게 잔디를 심을 수 있다는 것을 알게 되었습니다.
+개발자 포트폴리오를 만들다 보면 깃허브 잔디, 즉 Contribution Graph를 보여주고 싶을 때가 있습니다.
 
-이번 글에서는 설치부터 커스텀 옵션까지 빠르게 정리해 보겠습니다.
+직접 GitHub API를 호출해서 데이터를 가져올 수도 있지만, 간단히 보여주는 목적이라면 `react-github-calendar` 라이브러리를 사용하면 편합니다.
+
+이번 글에서는 `react-github-calendar`를 설치하고 화면에 적용하는 방법을 정리해보겠습니다.
 
 ---
 
-## 1. 라이브러리 설치
+## 📦 라이브러리 설치하기
 
 먼저 프로젝트 터미널에서 패키지를 설치합니다.
 
 ```bash
-# npm 사용 시
 npm install react-github-calendar
+```
 
-# yarn 사용 시
+`yarn`을 사용한다면 다음 명령어를 사용하면 됩니다.
+
+```bash
 yarn add react-github-calendar
 ```
 
 ---
 
-## 2. 기본 사용법 (Basic Usage)
+## 🛠️ 기본 사용법
 
-사용법은 매우 간단합니다. 컴포넌트를 import 하고 `username` 속성에 본인의 **깃허브 아이디**만 넣어주면 끝입니다.
+사용법은 간단합니다.
+
+`GitHubCalendar` 컴포넌트를 import하고, `username`에 깃허브 아이디를 넣어주면 됩니다.
 
 ```jsx
-import React from "react";
 import GitHubCalendar from "react-github-calendar";
 
-const App = () => {
+function App() {
   return (
     <div>
-      {/* username에 본인의 깃허브 아이디를 입력하세요 */}
-      <GitHubCalendar username="유저이름" />
+      <GitHubCalendar username="github-username" />
     </div>
   );
-};
+}
 
 export default App;
 ```
 
-### 실행 결과
-
-코드를 실행하면 아래와 같이 내 깃허브의 잔디가 예쁘게 불러와진 것을 확인할 수 있습니다.
-
-![react-github-calendar 적용 예시](https://user-images.githubusercontent.com/88264006/221151045-f4bd2e6c-e759-4fd3-be4e-467d33b4db10.png)
+`github-username` 부분에는 본인의 GitHub 아이디를 넣으면 됩니다.
 
 ---
 
-## 3. 다양한 옵션 (Props)
+## 🎨 옵션으로 스타일 조정하기
 
-`GitHubCalendar` 컴포넌트는 다양한 Props를 통해 스타일을 커스텀할 수 있습니다.
+`GitHubCalendar` 컴포넌트는 여러 props를 제공합니다.
 
-| 속성 (Prop)     | 설명                                                | 예시 코드                            |
-| :-------------- | :-------------------------------------------------- | :----------------------------------- |
-| **year**        | 특정 연도의 데이터를 가져옵니다. (기본값: 작년)     | `<GitHubCalendar year="2023" />`     |
-| **color**       | 잔디의 색상(테마)을 설정합니다. (가장 진한 색 기준) | `<GitHubCalendar color="#ffffff" />` |
-| **fontSize**    | 글자 크기를 조절합니다.                             | `<GitHubCalendar fontSize={16} />`   |
-| **blockSize**   | 잔디 블록(네모) 하나의 크기를 조절합니다.           | `<GitHubCalendar blockSize={15} />`  |
-| **blockMargin** | 잔디 블록 사이의 간격을 조절합니다.                 | `<GitHubCalendar blockMargin={5} />` |
-| **blockRadius** | 잔디 블록의 둥근 정도(Border Radius)를 설정합니다.  | `<GitHubCalendar blockRadius={2} />` |
+| prop | 설명 | 예시 |
+| :--- | :--- | :--- |
+| `year` | 특정 연도의 데이터를 보여줍니다. | `<GitHubCalendar year={2023} />` |
+| `fontSize` | 글자 크기를 조절합니다. | `<GitHubCalendar fontSize={16} />` |
+| `blockSize` | 잔디 블록 하나의 크기를 조절합니다. | `<GitHubCalendar blockSize={15} />` |
+| `blockMargin` | 잔디 블록 사이의 간격을 조절합니다. | `<GitHubCalendar blockMargin={5} />` |
+| `blockRadius` | 잔디 블록의 둥근 정도를 조절합니다. | `<GitHubCalendar blockRadius={2} />` |
 
-> **Tip:** 최근 버전에서는 `color` 대신 `theme` 속성을 사용하거나 색상 팔레트를 직접 주입해야 하는 경우도 있으니, 적용이 안 된다면 [공식 문서](https://www.npmjs.com/package/react-github-calendar)를 확인해 보세요.
+예를 들어 블록 크기와 간격을 조정하고 싶다면 다음처럼 작성할 수 있습니다.
+
+```jsx
+<GitHubCalendar
+  username="github-username"
+  blockSize={14}
+  blockMargin={4}
+  blockRadius={3}
+/>
+```
 
 ---
 
-## 마치며
+## 🌈 테마 커스텀하기
 
-백엔드 연동 없이 라이브러리 하나로 포트폴리오의 퀄리티를 높일 수 있어 매우 유용했습니다.  
-여러분도 자신의 사이트에 멋진 잔디를 심어보세요! 🌿
+버전에 따라 색상 설정 방식이 다를 수 있습니다.
 
-혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.  
-지적이나 피드백은 언제나 환영입니다. 👋
+최근 버전에서는 `theme`을 사용해 단계별 색상을 직접 지정할 수 있습니다.
+
+```jsx
+const theme = {
+  light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+  dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+};
+
+<GitHubCalendar username="github-username" theme={theme} />;
+```
+
+적용이 잘 되지 않는다면 사용 중인 `react-github-calendar` 버전의 공식 문서를 함께 확인하는 것이 좋습니다.
+
+---
+
+## ✅ 정리
+
+`react-github-calendar`를 사용하면 React 프로젝트에서 깃허브 잔디를 간단히 보여줄 수 있습니다.
+
+- `npm install react-github-calendar`로 설치합니다.
+- `GitHubCalendar` 컴포넌트를 import합니다.
+- `username`에 GitHub 아이디를 넣습니다.
+- `blockSize`, `blockMargin`, `blockRadius` 같은 props로 모양을 조정할 수 있습니다.
+- 색상은 버전에 따라 `theme` 설정을 확인해야 합니다.
+
+포트폴리오에 GitHub 활동 기록을 보여주고 싶다면 가볍게 적용해보기 좋은 라이브러리입니다.

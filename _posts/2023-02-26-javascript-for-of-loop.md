@@ -1,36 +1,45 @@
 ---
-title: "[JavaScript] 자바스크립트 반복문 정리: for...in vs for...of 차이점"
+title: "[JavaScript] for...in과 for...of 차이점 정리"
 date: 2023-02-26T15:30:00
 categories: [javascript]
 tags: [javascript, for-in, for-of, loop, es6]
-description: "자바스크립트의 향상된 반복문인 for...in과 for...of의 문법과 차이점, 그리고 각각 언제 사용해야 하는지 예제를 통해 알아봅니다."
+description: "JavaScript의 반복문 for...in과 for...of의 문법과 차이점, 각각 언제 사용하는지 예제로 정리했습니다."
 custom_style: true
 ---
 
-프로그래머스 등 코딩 테스트 문제를 풀다 보면 기본 `for` 문(`for(let i=0; i<len; i++)`) 대신 더 간결한 형태의 반복문을 마주치게 됩니다.
+## 🧐 for...in과 for...of는 뭐가 다를까요?
 
-바로 ES6에서 도입된 **`for...of`**와 기존에 있던 **`for...in`** 입니다. 얼핏 보면 비슷해 보이지만 용도가 완전히 다르기 때문에 확실히 구분해서 사용해야 합니다. 🧐
+JavaScript에서 반복문을 사용하다 보면 `for...in`과 `for...of`를 만나게 됩니다.
 
-이번 글에서는 두 반복문의 차이점과 사용법을 정리해 보겠습니다.
+이름이 비슷해서 헷갈리기 쉽지만, 두 반복문은 사용하는 목적이 다릅니다.
+
+간단히 말하면 다음과 같습니다.
+
+```txt
+for...in
+→ key를 순회합니다.
+
+for...of
+→ value를 순회합니다.
+```
+
+이번 글에서는 두 반복문의 차이를 예제로 정리해보겠습니다.
 
 ---
 
-## 1. for...in 문 (객체 순회용)
+## 🔑 for...in
 
-`for...in` 문은 객체의 **속성 키(Property Key)**, 즉 배열에서는 **인덱스(Index)**를 순회할 때 사용합니다.
+`for...in`은 객체의 key를 순회할 때 사용합니다.
 
-- **용도:** 객체(Object)의 키를 순회할 때 주로 사용
-- **주의:** 배열에 사용하면 인덱스가 (문자열 형태로) 나옵니다.
+배열에 사용하면 배열의 index가 나옵니다.
 
-```javascript
+```js
 const array = ["문동은", "손명오", "박재준", "이사라", "최혜정"];
 
-// index 변수에 배열의 인덱스(0, 1, 2...)가 차례로 들어옵니다.
-for (let index in array) {
+for (const index in array) {
   console.log(index);
 }
 
-// 실행 결과
 // "0"
 // "1"
 // "2"
@@ -38,26 +47,43 @@ for (let index in array) {
 // "4"
 ```
 
-**Tip:** `for...in`은 배열보다는 **일반 객체(Object)**의 속성을 꺼낼 때 더 적합합니다.
+배열의 값이 아니라 인덱스가 출력되는 것을 볼 수 있습니다.
+
+객체에서는 다음처럼 key를 순회할 수 있습니다.
+
+```js
+const user = {
+  name: "문동은",
+  age: 23,
+  job: "teacher",
+};
+
+for (const key in user) {
+  console.log(key, user[key]);
+}
+
+// name 문동은
+// age 23
+// job teacher
+```
+
+그래서 `for...in`은 배열보다 객체를 순회할 때 더 잘 어울립니다.
 
 ---
 
-## 2. for...of 문 (배열 값 순회용)
+## 📦 for...of
 
-`for...of` 문은 반복 가능한 객체(Iterable)의 **값(Value)**을 순회할 때 사용합니다. 우리가 흔히 원하는 "배열의 요소 하나하나 꺼내기"에 딱 맞는 문법입니다.
+`for...of`는 반복 가능한 객체의 value를 순회할 때 사용합니다.
 
-- **용도:** 배열(Array), 문자열, Map, Set 등의 **요소 값**을 순회할 때 사용
-- **특징:** 코드가 훨씬 직관적이고 간결합니다.
+배열의 실제 값을 하나씩 꺼내고 싶다면 `for...of`가 더 적합합니다.
 
-```javascript
+```js
 const array = ["문동은", "손명오", "박재준", "이사라", "최혜정"];
 
-// value 변수에 배열의 실제 값("문동은", "손명오"...)이 차례로 들어옵니다.
-for (let value of array) {
+for (const value of array) {
   console.log(value);
 }
 
-// 실행 결과
 // "문동은"
 // "손명오"
 // "박재준"
@@ -65,21 +91,62 @@ for (let value of array) {
 // "최혜정"
 ```
 
+문자열도 반복 가능한 값이기 때문에 `for...of`로 순회할 수 있습니다.
+
+```js
+const text = "hello";
+
+for (const char of text) {
+  console.log(char);
+}
+
+// h
+// e
+// l
+// l
+// o
+```
+
 ---
 
-## 3. 요약: 언제 무엇을 써야 할까?
+## 📊 비교 정리
 
-가장 헷갈리는 두 가지를 한 줄로 요약하면 다음과 같습니다.
-
-|     구분     |       키워드       |     반환 값     | 추천 사용처                     |
-| :----------: | :----------------: | :-------------: | :------------------------------ |
-| **for...in** |  **In**dex (Key)   |   인덱스 (키)   | **객체(Object)**의 속성을 돌 때 |
-| **for...of** | **O**bject (Value) | 실제 값 (Value) | **배열(Array)**의 값을 돌 때    |
+| 구분 | for...in | for...of |
+| :--- | :--- | :--- |
+| 순회 대상 | key 또는 index | value |
+| 배열에서 결과 | 인덱스 | 실제 값 |
+| 객체 순회 | 적합 | 일반 객체에는 바로 사용 불가 |
+| 배열 순회 | 권장하지 않음 | 적합 |
 
 ---
 
-## 마치며
+## ✅ 언제 무엇을 쓰면 좋을까요?
 
-코딩 테스트나 실무에서 배열의 값을 꺼낼 때는 `for...of`를, 객체의 키를 확인해야 할 때는 `for...in`을 사용하는 습관을 들이면 좋습니다!
+객체의 key를 순회해야 한다면 `for...in`을 사용할 수 있습니다.
 
-혹시 궁금한 점이나 피드백이 있다면 편하게 댓글 달아주세요. 👋
+```js
+for (const key in object) {
+  console.log(key, object[key]);
+}
+```
+
+배열이나 문자열의 값을 순회해야 한다면 `for...of`를 사용하면 됩니다.
+
+```js
+for (const item of array) {
+  console.log(item);
+}
+```
+
+---
+
+## ✅ 정리
+
+`for...in`과 `for...of`는 비슷해 보이지만 목적이 다릅니다.
+
+- `for...in`은 key를 순회합니다.
+- `for...of`는 value를 순회합니다.
+- 배열의 값을 꺼낼 때는 `for...of`가 더 자연스럽습니다.
+- 객체의 key를 확인할 때는 `for...in`을 사용할 수 있습니다.
+
+배열인지 객체인지, 그리고 key가 필요한지 value가 필요한지를 기준으로 선택하면 덜 헷갈립니다.

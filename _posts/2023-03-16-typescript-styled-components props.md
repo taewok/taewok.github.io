@@ -1,95 +1,132 @@
 ---
-title: "[TypeScript] styled-components에서 Props 타입 지정하기"
-date: 2023-03-16T17:01:000
-categories: [typescript]
-tags: [typescript] #소문자만 가능
+title: "[TypeScript] styled-components props 타입 지정하기"
+date: 2023-03-16T17:01:00
+categories: [typescript, react]
+tags: [typescript, react, styled-components, props]
+description: "TypeScript와 styled-components를 함께 사용할 때 props 타입을 지정하고 조건부 스타일을 안전하게 작성하는 방법을 정리했습니다."
+custom_style: true
 ---
 
-리액트에서 스타일을 입힐 때 자주 사용하는 **styled-components**를 타입스크립트와 함께 사용하면, Props를 통해 전달되는 값에 타입을 엄격하게 지정하여 런타임 에러를 방지할 수 있습니다.
+## 🧐 styled-components props에도 타입이 필요해요
 
-오늘은 설치 방법부터 단일/다중 Props 타입 지정 방식까지 정리해 보겠습니다.
+`styled-components`에서는 props를 이용해 스타일을 동적으로 바꿀 수 있습니다. 예를 들어 버튼의 색상, 크기, 애니메이션 지연 시간 등을 props로 전달할 수 있어요.
+
+TypeScript를 함께 사용한다면 이 props에도 타입을 지정해두는 것이 좋습니다. 그래야 어떤 값이 들어와야 하는지 컴포넌트를 사용하는 시점에 바로 확인할 수 있습니다.
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">1. 환경 설정</b>
+## 📦 설치하기
 
-타입스크립트 프로젝트에서 styled-components를 사용하려면 라이브러리 본체와 함께 타입 정의 파일(`@types`)을 별도로 설치해야 합니다.
+TypeScript 프로젝트에서 `styled-components`를 사용하려면 라이브러리를 설치합니다.
 
 ```bash
-# 라이브러리 설치
-npm i styled-components
+npm install styled-components
+```
 
-# 타입 정의 파일 설치 (개발 의존성)
-npm i -D @types/styled-components
+사용 중인 버전에 따라 타입 패키지가 필요할 수 있습니다.
+
+```bash
+npm install -D @types/styled-components
 ```
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">2. Props 전달하기</b>
+## 🛠️ props 전달하기
 
-컴포넌트에서 스타일 컴포넌트로 동적인 값을 전달하는 상황입니다. 예를 들어, 애니메이션 지연 시간(`delay`)을 각각 다르게 주고 싶을 때 다음과 같이 작성합니다.
+예를 들어 여러 input에 서로 다른 애니메이션 지연 시간을 주고 싶다고 해볼게요.
 
 ```tsx
 const Answer = () => {
   return (
     <>
-      <Input delay={100} />
-      <Input delay={300} />
-      <Input delay={500} />
+      <Input $delay={100} />
+      <Input $delay={300} />
+      <Input $delay={500} />
     </>
   );
 };
+```
 
-export default Answer;
+여기서 `$delay`는 스타일 계산에만 사용할 props입니다.
+
+---
+
+## 🧩 단일 props 타입 지정하기
+
+전달할 props가 하나라면 제네릭으로 바로 타입을 지정할 수 있습니다.
+
+```tsx
+const Input = styled.input<{ $delay: number }>`
+  animation-delay: ${({ $delay }) => $delay}ms;
+`;
+```
+
+이제 `$delay`에는 숫자만 전달할 수 있습니다.
+
+```tsx
+<Input $delay={300} />
+```
+
+문자열을 넣으면 TypeScript가 에러를 알려줍니다.
+
+```tsx
+<Input $delay="300" />
 ```
 
 ---
 
-## <b style="border-bottom:2px solid gray" class="h2">3. 스타일 컴포넌트에서 타입 정의하기</b>
+## 🧱 여러 props는 interface로 분리하기
 
-스타일 정의부에서 Generic(`<>`)을 사용하여 Props의 타입을 선언합니다.
-
-### ① 단일 Props 사용 시
-
-전달할 속성이 하나라면 태그 옆에 바로 타입을 지정할 수 있습니다.
-
-```tsx
-const Input = styled.input<{ delay: number }>`
-  animation-delay: ${(props) => props.delay}ms;
-`;
-```
-
-### ② 다수 Props 사용 시 (Interface 권장)
-
-전달해야 할 속성이 많아지면 `interface`를 별도로 선언하여 관리하는 것이 가독성 면에서 훨씬 유리합니다. `css` 블록을 활용하면 조건부 스타일링도 깔끔하게 처리할 수 있습니다.
+전달할 props가 많아지면 `interface`로 분리하는 편이 읽기 좋습니다.
 
 ```tsx
 import styled, { css } from "styled-components";
 
-// Props 타입 정의
 interface InputProps {
-  delay: number;
-  check: boolean;
+  $delay: number;
+  $checked: boolean;
 }
 
 const Input = styled.input<InputProps>`
   width: 100px;
   height: 40px;
 
-  // check가 true일 때만 animation-delay 적용
-  ${(props) =>
-    props.check &&
+  ${({ $checked, $delay }) =>
+    $checked &&
     css`
-      animation-delay: ${props.delay}ms;
+      animation-delay: ${$delay}ms;
     `}
 `;
 ```
 
+`$checked`가 `true`일 때만 `animation-delay` 스타일이 적용됩니다.
+
 ---
 
-## <b style="border-bottom:2px solid gray"><b>마치며</b></b>
+## 💡 props 이름 앞에 $를 붙이는 이유
 
-<p>타입스크립트와 styled-components를 조합하면 어떤 Props가 필요한지 코드를 작성하는 단계에서 바로 알 수 있어 개발 생산성이 크게 향상됩니다. 특히 <code>interface</code>를 활용해 복잡한 스타일 로직을 안전하게 관리해 보세요!</p>
+예제에서는 `delay` 대신 `$delay`를 사용했습니다.
 
-<p>혹시 잘못된 정보나 궁금하신 게 있다면 편하게 댓글 달아주세요.<br/>
-지적이나 피드백은 언제나 환영입니다.</p>
+`$`가 붙은 props는 styled-components에서 transient props로 취급됩니다. 스타일 계산에는 사용할 수 있지만 실제 DOM 속성으로는 전달되지 않습니다.
+
+이렇게 하면 다음처럼 알 수 없는 속성이 HTML에 내려가는 일을 막을 수 있습니다.
+
+```html
+<input delay="300" />
+```
+
+스타일 전용 props라면 `$delay`, `$checked`처럼 `$`를 붙이는 습관을 들이면 좋습니다.
+
+---
+
+## ✅ 정리
+
+TypeScript와 `styled-components`를 함께 사용할 때는 스타일 props에도 타입을 지정하는 것이 좋습니다.
+
+- 제네릭으로 props 타입을 넘길 수 있습니다.
+- props가 하나라면 inline 타입으로도 충분합니다.
+- props가 많다면 `interface`로 분리하면 읽기 좋습니다.
+- 스타일 전용 props에는 `$`를 붙여 DOM 전달을 막을 수 있습니다.
+- 조건부 스타일에는 `css` helper를 함께 사용할 수 있습니다.
+
+동적인 스타일이 많아질수록 props 타입을 명확히 해두는 것이 유지보수에 도움이 됩니다.
