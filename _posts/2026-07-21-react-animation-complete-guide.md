@@ -1,6 +1,6 @@
 ---
 title: "[React] 프론트엔드 애니메이션 제대로 이해하고 사용하기"
-date: 2026-07-21T10:00:00Z
+date: 2026-07-20T10:00:00Z
 categories: [frontend]
 tags: [react, animation, css, requestanimationframe, framer-motion, frontend]
 description: "React에서 CSS transition, keyframes, requestAnimationFrame, Web Animations API, Motion 라이브러리까지 애니메이션 기술을 상황별로 이해하고 활용하는 방법을 정리했습니다."
@@ -366,7 +366,9 @@ React에서 애니메이션을 만들 때 가장 많이 막히는 부분이 exit
 예를 들어 이렇게 조건부 렌더링을 하면:
 
 ```tsx
-{isOpen && <Modal />}
+{
+  isOpen && <Modal />;
+}
 ```
 
 `isOpen`이 `false`가 되는 순간 `Modal`은 React 트리에서 바로 사라집니다.
@@ -415,11 +417,7 @@ export default function FadeModal({ open }: { open: boolean }) {
     return null;
   }
 
-  return (
-    <div className={open ? "modal modal-open" : "modal"}>
-      모달 내용
-    </div>
-  );
+  return <div className={open ? "modal modal-open" : "modal"}>모달 내용</div>;
 }
 ```
 
@@ -519,11 +517,7 @@ const itemVariants = {
 
 export default function AnimatedList() {
   return (
-    <motion.ul
-      variants={listVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <motion.ul variants={listVariants} initial="hidden" animate="visible">
       {["React", "CSS", "Motion"].map((item) => (
         <motion.li key={item} variants={itemVariants}>
           {item}
@@ -552,11 +546,7 @@ Motion은 이런 layout 변화도 `layout` prop으로 처리할 수 있습니다
 import { motion } from "motion/react";
 
 export default function Card({ children }: { children: React.ReactNode }) {
-  return (
-    <motion.div layout>
-      {children}
-    </motion.div>
-  );
+  return <motion.div layout>{children}</motion.div>;
 }
 ```
 
@@ -565,14 +555,14 @@ export default function Card({ children }: { children: React.ReactNode }) {
 탭 underline처럼 서로 다른 요소 사이를 이어주고 싶다면 `layoutId`를 사용할 수 있어요.
 
 ```tsx
-{tabs.map((tab) => (
-  <button key={tab.id} onClick={() => setActiveTab(tab.id)}>
-    {tab.label}
-    {activeTab === tab.id && (
-      <motion.span layoutId="tab-underline" />
-    )}
-  </button>
-))}
+{
+  tabs.map((tab) => (
+    <button key={tab.id} onClick={() => setActiveTab(tab.id)}>
+      {tab.label}
+      {activeTab === tab.id && <motion.span layoutId="tab-underline" />}
+    </button>
+  ));
+}
 ```
 
 이런 애니메이션은 CSS만으로 처리하기보다 Motion의 도움을 받는 편이 훨씬 자연스럽습니다.
@@ -745,17 +735,17 @@ export default function AccessibleMotionBox() {
 
 상황별로 어떤 도구를 선택하면 좋을지 정리해보면 이렇습니다.
 
-| 상황 | 추천 방식 |
-| --- | --- |
-| hover, focus, active 상태 | CSS transition |
-| 로딩 스피너, 반복 효과 | CSS keyframes |
-| 단순 open / close | CSS transition |
-| mount animation | CSS keyframes 또는 Motion |
-| unmount / exit animation | Motion AnimatePresence |
-| 리스트 재정렬, layout 변화 | Motion layout |
-| canvas, 게임, 직접 프레임 제어 | requestAnimationFrame |
-| 브라우저 내장 JS 애니메이션 제어 | Web Animations API |
-| 스크롤 진행률 연동 | Motion useScroll 또는 requestAnimationFrame |
+| 상황                             | 추천 방식                                   |
+| -------------------------------- | ------------------------------------------- |
+| hover, focus, active 상태        | CSS transition                              |
+| 로딩 스피너, 반복 효과           | CSS keyframes                               |
+| 단순 open / close                | CSS transition                              |
+| mount animation                  | CSS keyframes 또는 Motion                   |
+| unmount / exit animation         | Motion AnimatePresence                      |
+| 리스트 재정렬, layout 변화       | Motion layout                               |
+| canvas, 게임, 직접 프레임 제어   | requestAnimationFrame                       |
+| 브라우저 내장 JS 애니메이션 제어 | Web Animations API                          |
+| 스크롤 진행률 연동               | Motion useScroll 또는 requestAnimationFrame |
 
 처음부터 무거운 도구를 고를 필요는 없어요.
 
